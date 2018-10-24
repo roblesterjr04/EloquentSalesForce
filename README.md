@@ -1,9 +1,9 @@
 # Eloquent Sales Force
 
-[![Build Status](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/badges/build.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/build-status/master)
-[![Code Intelligence Status](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/build.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/build-status/master)
+[![Code Intelligence Status](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
 
 [![Latest Stable Version](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/v/stable.svg)](https://packagist.org/packages/live-person-inc/live-engage-laravel)
 [![Latest Unstable Version](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/v/unstable.svg)](https://packagist.org/packages/live-person-inc/live-engage-laravel)
