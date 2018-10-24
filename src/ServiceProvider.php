@@ -28,5 +28,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             self::CONFIG_PATH,
             'eloquent_sf'
         );
+        
+        $this->app->register(
+		    'Omniphx\Forrest\Providers\Laravel\ForrestServiceProvider'
+		);
+		
+		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
+		$loader->alias('Forrest', 'Omniphx\Forrest\Providers\Laravel\Facades\Forrest');
     }
 }
