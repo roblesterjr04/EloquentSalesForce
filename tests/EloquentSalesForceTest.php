@@ -22,9 +22,7 @@ class EloquentSalesForceTest extends TestCase
     public function testObject()
     {
 	    
-	    fwrite(STDERR, print_r("\n" . config('database.connections.soql.authentication')));
-	    
-	    //$lead = TestModel::first();
+	    $lead = TestModel::first();
 	    
         $this->assertEquals(1, 1);
     }
@@ -34,7 +32,8 @@ class EloquentSalesForceTest extends TestCase
 		parent::setUp();
 		
 		config([
-			'app.key' => 'base64:WRAf0EDpFqwpbS829xKy2MGEkcJxIEmMrwFIZbGxIqE='
+			'app.key' => 'base64:WRAf0EDpFqwpbS829xKy2MGEkcJxIEmMrwFIZbGxIqE=',
+			'cache.stores.file.path' => __DIR__
 		]);
 		
 		config([
