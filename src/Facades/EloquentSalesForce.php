@@ -1,6 +1,6 @@
 <?php
 
-namespace RobLesterJr04\EloquentSalesForce\Facades;
+namespace Lester\EloquentSalesForce\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

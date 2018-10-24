@@ -1,6 +1,6 @@
 <?php
 
-namespace RobLesterJr04\EloquentSalesForce;
+namespace Lester\EloquentSalesForce;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace RobLesterJr04\EloquentSalesForce;
+namespace Lester\EloquentSalesForce;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
-use RobLesterJr04\EloquentSalesForce\Database\SOQLBuilder as Builder;
-use RobLesterJr04\EloquentSalesForce\Database\SOQLHasMany as HasMany;
+use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
+use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
 
 class Model extends EloquentModel
 {

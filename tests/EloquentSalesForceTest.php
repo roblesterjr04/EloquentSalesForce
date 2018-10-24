@@ -1,9 +1,9 @@
 <?php
 
-namespace RobLesterJr04\EloquentSalesForce\Tests;
+namespace Lester\EloquentSalesForce\Tests;
 
-use RobLesterJr04\EloquentSalesForce\Facades\EloquentSalesForce;
-use RobLesterJr04\EloquentSalesForce\ServiceProvider;
+use Lester\EloquentSalesForce\Facades\EloquentSalesForce;
+use Lester\EloquentSalesForce\ServiceProvider;
 use Orchestra\Testbench\TestCase;
 
 class EloquentSalesForceTest extends TestCase

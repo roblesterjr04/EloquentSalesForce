@@ -25,12 +25,12 @@
   },
   "autoload": {
     "psr-4": {
-      "RobLesterJr04\\EloquentSalesForce\\": "src"
+      "Lester\\EloquentSalesForce\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "RobLesterJr04\\EloquentSalesForce\\Tests\\": "tests"
+      "Lester\\EloquentSalesForce\\Tests\\": "tests"
     },
     "files": [
       "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
@@ -42,7 +42,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "RobLesterJr04\\EloquentSalesForce\\ServiceProvider"
+        "Lester\\EloquentSalesForce\\ServiceProvider"
       ]
     }
   },

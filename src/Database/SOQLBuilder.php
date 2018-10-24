@@ -1,6 +1,6 @@
 <?php
 	
-namespace RobLesterJr04\EloquentSalesForce\Database;
+namespace Lester\EloquentSalesForce\Database;
 
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -26,7 +26,7 @@ class SOQLBuilder extends Builder
     public function getModels($columns = ['*'])
     {
 	    if ($columns == ['*']) {
-		    $layouts = \Forrest::sobjects($this->model->getTable() . '/describe/compactLayouts/primary/');
+		    $layouts = \Forrest::sobjects($this->model->getTable() . '/' . config('eloquent_sf.layout', 'describe/compactLayouts/primary') . '/');
 		    $columns = array_pluck($layouts["fieldItems"], 'layoutComponents.0.details.name');
 		    $columns = array_merge($columns, ['Id']);
 	    }

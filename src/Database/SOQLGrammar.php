@@ -1,6 +1,6 @@
 <?php
 
-namespace RobLesterJr04\EloquentSalesForce\Database;
+namespace Lester\EloquentSalesForce\Database;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;

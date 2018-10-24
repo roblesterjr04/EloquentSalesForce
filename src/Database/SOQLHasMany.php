@@ -1,9 +1,9 @@
 <?php
 
-namespace RobLesterJr04\EloquentSalesForce\Database;
+namespace Lester\EloquentSalesForce\Database;
 
 use Illuminate\Database\Eloquent\Collection;
-use RobLesterJr04\EloquentSalesForce\Database\SOQLHasOneOrMany as HasOneOrMany;
+use Lester\EloquentSalesForce\Database\SOQLHasOneOrMany as HasOneOrMany;
 
 class SOQLHasMany extends HasOneOrMany
 {

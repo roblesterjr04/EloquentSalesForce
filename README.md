@@ -26,20 +26,20 @@ auto discovery feature.**
 
 Add service provider to `config/app.php` in `providers` section
 ```php
-RobLesterJr04\EloquentSalesForce\ServiceProvider::class,
+Lester\EloquentSalesForce\ServiceProvider::class,
 ```
 
 ### Register Facade
 
 Register package facade in `config/app.php` in `aliases` section
 ```php
-RobLesterJr04\EloquentSalesForce\Facades\EloquentSalesForce::class,
+Lester\EloquentSalesForce\Facades\EloquentSalesForce::class,
 ```
 
 ### Publish Configuration File
 
 ```bash
-php artisan vendor:publish --provider="RobLesterJr04\EloquentSalesForce\ServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Lester\EloquentSalesForce\ServiceProvider" --tag="config"
 ```
 
 ## Usage

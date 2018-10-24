@@ -1,6 +1,6 @@
 <?php
 	
-namespace RobLesterJr04\EloquentSalesForce\Database;
+namespace Lester\EloquentSalesForce\Database;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\MySqlBuilder;
@@ -54,10 +54,12 @@ class SOQLConnection extends Connection
 	
 	private function prepare($query, $bindings)
 	{
+		$format = config('eloquent_sf.dateFormat', 'Y-m-d');
+		
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
-			$d = \DateTime::createFromFormat('Y-m-d', $item);
-		    if ($d && $d->format('Y-m-d') === $item) {
+			$d = \DateTime::createFromFormat($format, $item);
+		    if ($d && $d->format($format) === $item) {
 			    return "$item";
 		    }
 			return "'$item'";
