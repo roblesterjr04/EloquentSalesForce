@@ -26,7 +26,7 @@ class SOQLConnection extends Connection
         return $this->run($query, $bindings, function ($query, $bindings) use ($useReadPdo) {
 	        
 	        $statement = $this->prepare($query, $bindings);
-	        
+	        \Forrest::authenticate();
 	        return \Forrest::query($statement)['records'];
 	        
         });
@@ -54,13 +54,17 @@ class SOQLConnection extends Connection
 	
 	private function prepare($query, $bindings)
 	{
-		$format = config('eloquent_sf.dateFormat', 'Y-m-d');
-		
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
-			$d = \DateTime::createFromFormat($format, $item);
-		    if ($d && $d->format($format) === $item) {
-			    return "$item";
+			$dformat = config('eloquent_sf.dateFormat');
+			$tformat = config('eloquent_sf.dateTimeFormat');
+			$d = \DateTime::createFromFormat($dformat, $item);
+			$t = \DateTime::createFromFormat($tformat, $item);
+		    if ($d && $d->format($dformat) === $item) {
+			    return $item;
+		    }
+		    if ($t && $t->format($tformat) === $item) {
+			    return $item;
 		    }
 			return "'$item'";
 		}, $bindings);

@@ -4,7 +4,7 @@ namespace Lester\EloquentSalesForce;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    const CONFIG_PATH = __DIR__ . '/../config/eloquent-sales-force.php';
+    const CONFIG_PATH = __DIR__ . '/../config/eloquent_sf.php';
 
     public function boot()
     {
@@ -17,10 +17,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		    ]
 	    );
 	    
-	    \Forrest::authenticate();
-	    
 	    $this->publishes([
-            self::CONFIG_PATH => config_path('eloquent-sales-force.php'),
+            self::CONFIG_PATH => config_path('eloquent_sf.php'),
         ], 'config');
     }
 
@@ -28,7 +26,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->mergeConfigFrom(
             self::CONFIG_PATH,
-            'eloquent-sales-force'
+            'eloquent_sf'
         );
 
         $this->app->bind('eloquent-sales-force', function () {

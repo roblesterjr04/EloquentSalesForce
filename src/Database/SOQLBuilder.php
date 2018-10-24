@@ -26,8 +26,8 @@ class SOQLBuilder extends Builder
     public function getModels($columns = ['*'])
     {
 	    if ($columns == ['*']) {
-		    $layouts = \Forrest::sobjects($this->model->getTable() . '/' . config('eloquent_sf.layout', 'describe/compactLayouts/primary') . '/');
-		    $columns = array_pluck($layouts["fieldItems"], 'layoutComponents.0.details.name');
+		    $layouts = \Forrest::sobjects($this->model->getTable() . '/' . config('eloquent_sf.layout') . '/');
+		    $columns = array_pluck($layouts["fieldItems"], config('eloquent_sf.column'));
 		    $columns = array_merge($columns, ['Id']);
 	    }
 	    
