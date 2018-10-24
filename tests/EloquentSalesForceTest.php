@@ -2,8 +2,8 @@
 
 namespace Lester\EloquentSalesForce\Tests;
 
-use Lester\EloquentSalesForce\Facades\EloquentSalesForce;
 use Lester\EloquentSalesForce\ServiceProvider;
+use Lester\EloquentSalesForce\TestModel;
 use Orchestra\Testbench\TestCase;
 
 class EloquentSalesForceTest extends TestCase
@@ -13,15 +13,11 @@ class EloquentSalesForceTest extends TestCase
         return [ServiceProvider::class];
     }
 
-    protected function getPackageAliases($app)
+    public function testObject()
     {
-        return [
-            'eloquent-sales-force' => EloquentSalesForce::class,
-        ];
-    }
-
-    public function testExample()
-    {
+	    
+	    $lead = TestModel::first();
+	    
         $this->assertEquals(1, 1);
     }
 }
