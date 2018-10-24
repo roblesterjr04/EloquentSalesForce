@@ -63,9 +63,9 @@ In your `config/database.php` file, add the following driver to the connections 
 
 ```php
 'soql' => [
-	'driver' => 'soql',
+    'driver' => 'soql',
     'database' => null,
-	'consumerKey'    => env('CONSUMER_KEY'),
+    'consumerKey'    => env('CONSUMER_KEY'),
     'consumerSecret' => env('CONSUMER_SECRET'),
     'loginURL'       => env('LOGIN_URL'),
     'authentication' => 'UserPassword',
