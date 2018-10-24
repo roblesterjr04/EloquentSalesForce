@@ -1,0 +1,54 @@
+{
+  "name": "rob-lester-jr04/eloquent-sales-force",
+  "description": "A eloquent sales force",
+  "license": "MIT",
+  "keywords": [
+    "eloquent",
+    "sales",
+    "force"
+  ],
+  "type": "library",
+  "authors": [
+    {
+      "name": "",
+      "email": ""
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "laravel/framework": ">=5.5",
+    "omniphx/forrest": "2.*"
+  },
+  "require-dev": {
+    "orchestra/testbench": "~3.6.0",
+    "phpunit/phpunit": "~7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "RobLesterJr04\\EloquentSalesForce\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RobLesterJr04\\EloquentSalesForce\\Tests\\": "tests"
+    },
+    "files": [
+      "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
+    ]
+  },
+  "scripts": {
+    "phpunit": "phpunit"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "RobLesterJr04\\EloquentSalesForce\\ServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
+}
