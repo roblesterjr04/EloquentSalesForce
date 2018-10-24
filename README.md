@@ -10,7 +10,7 @@
 [![Packagist](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/d/total.svg)](https://packagist.org/packages/live-person-inc/live-engage-laravel)
 
 
-Package description: CHANGE ME
+Work with SalesForce APIs via the Eloquent Model.
 
 ## Installation
 
