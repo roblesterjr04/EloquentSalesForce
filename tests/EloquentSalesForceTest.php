@@ -22,7 +22,9 @@ class EloquentSalesForceTest extends TestCase
     public function testObject()
     {
 	    
-	    $lead = TestModel::first();
+	    fwrite(STDERR, print_r("\n" . config('database.connections.soql.authentication')));
+	    
+	    //$lead = TestModel::first();
 	    
         $this->assertEquals(1, 1);
     }
