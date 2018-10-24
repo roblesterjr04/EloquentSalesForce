@@ -28,9 +28,5 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             self::CONFIG_PATH,
             'eloquent_sf'
         );
-
-        $this->app->bind('eloquent-sales-force', function () {
-            return new EloquentSalesForce();
-        });
     }
 }

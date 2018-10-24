@@ -15,6 +15,7 @@ Package description: CHANGE ME
 ## Installation
 
 Install via composer
+
 ```bash
 composer require rob-lester-jr04/eloquent-sales-force
 ```
@@ -25,18 +26,14 @@ composer require rob-lester-jr04/eloquent-sales-force
 auto discovery feature.**
 
 Add service provider to `config/app.php` in `providers` section
+
 ```php
 Lester\EloquentSalesForce\ServiceProvider::class,
 ```
 
-### Register Facade
-
-Register package facade in `config/app.php` in `aliases` section
-```php
-Lester\EloquentSalesForce\Facades\EloquentSalesForce::class,
-```
-
 ### Publish Configuration File
+
+**Note that this is optional and in most cases, the configuration here is not needed.
 
 ```bash
 php artisan vendor:publish --provider="Lester\EloquentSalesForce\ServiceProvider" --tag="config"
@@ -44,7 +41,129 @@ php artisan vendor:publish --provider="Lester\EloquentSalesForce\ServiceProvider
 
 ## Usage
 
-CHANGE ME
+###Setting up your connected app
+1. Log into to your Salesforce org
+2. Click on Setup in the upper right-hand menu
+3. Under Build click `Create > Apps`
+4. Scroll to the bottom and click `New` under Connected Apps.
+5. Enter the following details for the remote application:
+    * Connected App Name
+    * API Name
+    * Contact Email
+    * Enable OAuth Settings under the API dropdown
+    * Callback URL
+    * Select access scope (If you need a refresh token, specify it here)
+6. Click `Save`
+
+After saving, you will now be given a Consumer Key and Consumer Secret. Update your config file with values for `consumerKey`, `consumerSecret`, and `loginURL`.
+
+### Configuration
+
+In your `config/database.php` file, add the following driver to the connections array
+
+```php
+'soql' => [
+	'driver' => 'soql',
+    'database' => null,
+	'consumerKey'    => env('CONSUMER_KEY'),
+    'consumerSecret' => env('CONSUMER_SECRET'),
+    'loginURL'       => env('LOGIN_URL'),
+    'authentication' => 'UserPassword',
+
+    // Only required for UserPassword authentication:
+    'username'       => env('USERNAME'),
+    // Security token might need to be ammended to password unless IP Address is whitelisted
+    'password'       => env('PASSWORD')
+],
+```
+
+### Using Models
+
+Create a model for the object you want to use, example: `artisan make:model Lead`
+
+Open the model file, it will look like this:
+
+```php
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Lead extends Model
+{
+    //
+}
+```
+
+Replace the `use` statement so your model looks like:
+
+```php
+<?php
+
+namespace App;
+
+use Lester\EloquentSalesForce\Model;
+
+class Lead extends Model
+{
+    //
+}
+```
+
+Now use it like you normally would!
+
+```php
+$leads = Lead::where('email', 'user@test.com')->get();
+
+$lead = Lead::find('00Q1J00000cQ08eUAC');
+```
+
+### Relationships
+
+Relationships work the same way.
+
+Create a model like above for `Account` and `Contact`
+
+In the `Contact` model, add a method for a relationship like you normally would
+
+```php
+## Contact.php
+public function account()
+{
+	return $this->belongsTo(Account::class);
+}
+```
+
+So you can call now:
+
+```php
+$contact = Contact::where('email', 'some@email.com')->first();
+$account = $contact->account;
+```
+
+And the reverse is true
+
+```php
+## Account.php
+public function contacts()
+{
+	return $this->hasMany(Contact::class);
+}
+```
+
+```php
+$contacts = $account->contacts;
+```
+
+### Joins
+You are also able to use manual joins
+
+```php
+$account = Account::join('Contact', 'AccountId')->first();
+```
+
+These aren't as easy to work with as **Relationships** because the SalesForce API still returns the array nested in the `records` property.
 
 ## Security
 
@@ -53,8 +172,8 @@ instead of using the issue tracker.
 
 ## Credits
 
-- [](https://github.com/rob-lester-jr04/eloquent-sales-force)
-- [All contributors](https://github.com/rob-lester-jr04/eloquent-sales-force/graphs/contributors)
+- [Rob Lester](https://github.com/roblesterjr04/EloquentSalesForce)
+- [All contributors](https://github.com/roblesterjr04/EloquentSalesForce/graphs/contributors)
 
 This package is bootstrapped with the help of
 [melihovv/laravel-package-generator](https://github.com/melihovv/laravel-package-generator).
