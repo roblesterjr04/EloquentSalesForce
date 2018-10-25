@@ -68,8 +68,6 @@ In your `config/database.php` file, add the following driver to the connections 
     'consumerKey'    => env('CONSUMER_KEY'),
     'consumerSecret' => env('CONSUMER_SECRET'),
     'loginURL'       => env('LOGIN_URL'),
-    'authentication' => 'UserPassword',
-
     // Only required for UserPassword authentication:
     'username'       => env('USERNAME'),
     // Security token might need to be ammended to password unless IP Address is whitelisted
@@ -122,7 +120,15 @@ $lead = Lead::find('00Q1J00000cQ08eUAC');
 Update properties like you normally would...
 
 ```php
-$lead->Name = 'Robert Lester';
+$lead->FirstName = 'Robert Lester';
+$lead->save();
+```
+
+```php
+$lead = new Lead();
+$lead->FirstName = 'Foo';
+$lead->LastName = 'Bar';
+$lead->Company = 'Test';
 $lead->save();
 ```
 
@@ -130,6 +136,8 @@ OR:
 
 ```php
 $lead->update(['Name' => 'Robert Lester']);
+
+$lead = Lead::create(['FirstName' => 'Foo', 'LastName' => 'Bar', 'Company' => 'Test Company']);
 ```
 
 ### Relationships
