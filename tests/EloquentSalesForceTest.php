@@ -41,7 +41,7 @@ class EloquentSalesForceTest extends TestCase
 				'consumerKey'    => getenv('CONSUMER_KEY'),
 		        'consumerSecret' => getenv('CONSUMER_SECRET'),
 		        'callbackURI'    => getenv('CALLBACK_URI'),
-		        'loginURL'       => getenv('LOGIN_URL'),
+		        'loginURL'       => 'https://login.salesforce.com',
 		        
 		        // Only required for UserPassword authentication:
 		        'username'       => getenv('USERNAME'),
