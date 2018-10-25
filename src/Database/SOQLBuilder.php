@@ -27,8 +27,21 @@ class SOQLBuilder extends Builder
     {
 	    if ($columns == ['*']) {
 		    $layouts = \Forrest::sobjects($this->model->getTable() . '/' . config('eloquent_sf.layout') . '/');
-		    $columns = array_pluck($layouts["fieldItems"], config('eloquent_sf.column'));
-		    $columns = array_merge($columns, ['Id']);
+		    $fields = array_pluck($layouts["fieldItems"], 'layoutComponents.0');
+		    $columns = ['Id'];
+		    foreach ($fields as $field) {
+			    if ($field['details']['updateable'] == true) {
+				    $columns[] = $field['details']['name'];
+			    }
+			    if (isset($field['components'])) {
+				    foreach ($field['components'] as $component) {
+					    $columns[] = $component['details']['name'];
+				    }
+			    }
+		    }
+		    
+		    
+		    
 	    }
 	    
 	    return parent::getModels($columns);

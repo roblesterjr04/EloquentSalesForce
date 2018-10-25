@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
 
-class Model extends EloquentModel
+abstract class Model extends EloquentModel
 {
 	protected $guarded = [];
 	
@@ -34,8 +34,8 @@ class Model extends EloquentModel
 	
 	public static function create(array $attributes)
     {
-	    $object = new self($attributes);
-	    return $object->save($options);
+	    $object = new static($attributes);
+	    return $object->save();
     }
     
     public function update(array $attributes = array(), array $options = array())
@@ -47,18 +47,20 @@ class Model extends EloquentModel
     public function save(array $options = array())
     {
 	    $body = $this->attributes;
-	    
+	    unset($body['attributes']);
 	    if (isset($body['Id'])) {
 		    unset($body['Id']);
 		    $updated = \Forrest::sobjects($this->table . '/' . $this->Id, [
 			    'method' => 'patch',
 			    'body' => $body
 		    ]);
+		    return $this;
 	    } else {
 		    $new = \Forrest::sobjects($this->table, [
 			    'method' => 'post',
 			    'body' => $body,
 		    ]);
+		    if ($new['success']) return $this->find($new['id']);
 	    }
 		return $this;
     }
