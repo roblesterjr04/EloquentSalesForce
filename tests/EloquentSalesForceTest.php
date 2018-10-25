@@ -33,7 +33,7 @@ class EloquentSalesForceTest extends TestCase
 		
 		config([
 			'app.key' => 'base64:WRAf0EDpFqwpbS829xKy2MGEkcJxIEmMrwFIZbGxIqE=',
-			'cache.stores.file.path' => __DIR__
+			'cache.stores.file.path' => __DIR__,
 		]);
 		
 		config([

@@ -8,15 +8,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function boot()
     {
-	    config(
-		    [
-			    'forrest.authentication' => config('database.connections.soql.authentication'),
-			    'forrest.credentials' => config('database.connections.soql'),
-			    'forrest.storage.type' => 'cache',
-			    'forrest.storage.store_forever' => true
-		    ]
-	    );
-	    
 	    $this->publishes([
             self::CONFIG_PATH => config_path('eloquent_sf.php'),
         ], 'config');
@@ -32,6 +23,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->register(
 		    'Omniphx\Forrest\Providers\Laravel\ForrestServiceProvider'
 		);
+		
+		config(
+		    [
+			    'forrest.authentication' => config('database.connections.soql.authentication'),
+			    'forrest.credentials' => config('database.connections.soql'),
+			    'forrest.storage.type' => 'cache',
+			    'forrest.storage.store_forever' => true
+		    ]
+	    );
 		
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 		$loader->alias('Forrest', 'Omniphx\Forrest\Providers\Laravel\Facades\Forrest');

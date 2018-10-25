@@ -28,7 +28,7 @@ class Model extends EloquentModel
 	public function __construct(Array $attributes = [])
 	{
 		$this->table = $this->table ?: class_basename($this);
-		
+		\Forrest::authenticate();
 		parent::__construct($attributes);
 	}
 	

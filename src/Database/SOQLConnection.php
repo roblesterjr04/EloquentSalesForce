@@ -26,7 +26,6 @@ class SOQLConnection extends Connection
         return $this->run($query, $bindings, function ($query, $bindings) use ($useReadPdo) {
 	        
 	        $statement = $this->prepare($query, $bindings);
-	        \Forrest::authenticate();
 	        return \Forrest::query($statement)['records'];
 	        
         });
