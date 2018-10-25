@@ -34,7 +34,8 @@ class Model extends EloquentModel
 	
 	public static function create(array $attributes)
     {
-	    
+	    $object = new self($attributes);
+	    return $object->save($options);
     }
     
     public function update(array $attributes = array(), array $options = array())
@@ -46,11 +47,19 @@ class Model extends EloquentModel
     public function save(array $options = array())
     {
 	    $body = $this->attributes;
-	    unset($body['Id']);
-	    $updated = \Forrest::sobjects($this->table . '/' . $this->Id, [
-		    'method' => 'patch',
-		    'body' => $body
-	    ]);
+	    
+	    if (isset($body['Id'])) {
+		    unset($body['Id']);
+		    $updated = \Forrest::sobjects($this->table . '/' . $this->Id, [
+			    'method' => 'patch',
+			    'body' => $body
+		    ]);
+	    } else {
+		    $new = \Forrest::sobjects($this->table, [
+			    'method' => 'post',
+			    'body' => $body,
+		    ]);
+	    }
 		return $this;
     }
     

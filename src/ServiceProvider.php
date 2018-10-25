@@ -8,14 +8,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function boot()
     {
-	    config(
-		    [
-			    'forrest.authentication' => config('database.connections.soql.authentication'),
-			    'forrest.credentials' => config('database.connections.soql'),
-			    'forrest.storage.type' => 'cache',
-			    'forrest.storage.store_forever' => true
-		    ]
-	    );
 		
 		$this->publishes([
             self::CONFIG_PATH => config_path('eloquent_sf.php'),
@@ -24,6 +16,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function register()
     {
+	    config(
+		    [
+			    'forrest.authentication' => 'UserPassword',
+			    'forrest.credentials' => config('database.connections.soql'),
+			    'forrest.storage.type' => 'cache',
+			    'forrest.storage.store_forever' => true
+		    ]
+	    );
+	    
         $this->mergeConfigFrom(
             self::CONFIG_PATH,
             'eloquent_sf'

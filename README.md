@@ -119,6 +119,19 @@ $leads = Lead::where('email', 'user@test.com')->get();
 $lead = Lead::find('00Q1J00000cQ08eUAC');
 ```
 
+Update properties like you normally would...
+
+```php
+$lead->Name = 'Robert Lester';
+$lead->save();
+```
+
+OR:
+
+```php
+$lead->update(['Name' => 'Robert Lester']);
+```
+
 ### Relationships
 
 Relationships work the same way.
