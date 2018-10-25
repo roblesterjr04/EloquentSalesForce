@@ -35,13 +35,13 @@ class EloquentSalesForceTest extends TestCase
 			'app.key' => 'base64:WRAf0EDpFqwpbS829xKy2MGEkcJxIEmMrwFIZbGxIqE=',
 			'cache.stores.file.path' => __DIR__,
 			'cache.default' => 'file',
-			'database.connections.soql' => [
+			'forrest.credentials' => [
 				'driver' => 'soql',
 			    'database' => null,
 				'consumerKey'    => getenv('CONSUMER_KEY'),
 		        'consumerSecret' => getenv('CONSUMER_SECRET'),
 		        'callbackURI'    => getenv('CALLBACK_URI'),
-		        'loginURL'       => 'https://login.salesforce.com',
+		        'loginURL'       => getenv('LOGIN_URL'),
 		        
 		        // Only required for UserPassword authentication:
 		        'username'       => getenv('USERNAME'),
