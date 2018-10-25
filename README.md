@@ -140,6 +140,24 @@ $lead->update(['Name' => 'Robert Lester']);
 $lead = Lead::create(['FirstName' => 'Foo', 'LastName' => 'Bar', 'Company' => 'Test Company']);
 ```
 
+#### Columns/Properties
+By default, the object is loaded with the columns found in the primary compactLayout. If you'd like additional columns, you would use the `select` method on the model. For example:
+
+```php
+$leads = Lead::select('Id', 'Name', 'Email', 'Custom_Field__c')->limit(10)->get();
+```
+
+#### Where / Order By
+The `where` and `orderBy` methods work as usual as well.
+
+```php
+$contacts = Contact::where('Email', 'test@test.com')->first();
+
+$contacts = Contact::where('Name', 'like', 'Donuts%')->get();
+
+$contacts = Contact::limit(20)->orderBy('Name')->get();
+```
+
 ### Relationships
 
 Relationships work the same way.
