@@ -4,6 +4,7 @@ namespace Lester\EloquentSalesForce\Database;
 
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Pagination\Paginator;
 
 class SOQLBuilder extends Builder
 {
@@ -25,8 +26,42 @@ class SOQLBuilder extends Builder
     
     public function getModels($columns = ['*'])
     {
+	    return parent::getModels($this->getSalesForceColumns($columns));
+    }
+    
+    /**
+     * Paginate the given query.
+     *
+     * @param  int  $perPage
+     * @param  array  $columns
+     * @param  string  $pageName
+     * @param  int|null  $page
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
+    {
+	    $columns = $this->getSalesForceColumns($columns);
+	    
+	    $table = $this->model->getTable();
+		$total = \Forrest::query("SELECT COUNT() FROM $table")['totalSize'];
+		
+		$page = $page ?: Paginator::resolveCurrentPage($pageName);
+        $perPage = $perPage ?: $this->model->getPerPage();
+        $results = $total
+                                    ? $this->forPage($page, $perPage)->get($columns)
+                                    : $this->model->newCollection();
+        return $this->paginator($results, $total, $perPage, $page, [
+            'path' => Paginator::resolveCurrentPath(),
+            'pageName' => $pageName,
+        ]);
+    }
+    
+    protected function getSalesForceColumns($columns, $table = null) {
+	    $table = $table ?: $this->model->getTable();
 	    if ($columns == ['*']) {
-		    $layouts = \Forrest::sobjects($this->model->getTable() . '/' . config('eloquent_sf.layout') . '/');
+		    $layouts = \Forrest::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
 		    $fields = array_pluck($layouts["fieldItems"], 'layoutComponents.0');
 		    $columns = ['Id'];
 		    foreach ($fields as $field) {
@@ -40,11 +75,8 @@ class SOQLBuilder extends Builder
 			    }
 		    }
 		    
-		    
-		    
 	    }
-	    
-	    return parent::getModels($columns);
+	    return $columns;
     }
 	
 	

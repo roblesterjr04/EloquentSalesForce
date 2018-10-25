@@ -11,13 +11,6 @@ use Illuminate\Database\Query\Grammars\Grammar;
 class SOQLGrammar extends Grammar
 {
     /**
-     * The grammar specific operators.
-     *
-     * @var array
-     */
-    protected $operators = ['sounds like'];
-
-    /**
      * The components that make up a select clause.
      *
      * @var array
@@ -91,7 +84,7 @@ class SOQLGrammar extends Grammar
     {
 	    return collect($joins)->map(function ($join) use ($query) {
             $table = $join->table;
-            $layouts = \Forrest::sobjects("$table/describe/compactLayouts/primary/");
+            $layouts = \Forrest::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
 		    $columns = array_pluck($layouts["fieldItems"], 'layoutComponents.0.details.name');
 		    $columns = collect($columns)->implode(',');
             
