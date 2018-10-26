@@ -1,6 +1,6 @@
 {
   "name": "rob-lester-jr04/eloquent-sales-force",
-  "description": "A eloquent sales force",
+  "description": "An eloquent model data source for sales force",
   "license": "MIT",
   "keywords": [
     "eloquent",
