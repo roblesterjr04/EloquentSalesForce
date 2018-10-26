@@ -6,8 +6,8 @@ class TestTask extends Model
 {
 	protected $table = 'Task';
 	
-    public function lead()
-    {
-	    return $this->belongsTo(Task::class, 'WhoID');
-    }
+	public function lead()
+	{
+		return $this->belongsTo(Task::class, 'WhoID');
+	}
 }
