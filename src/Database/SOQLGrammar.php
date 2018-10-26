@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JsonExpression;
 use Illuminate\Database\Query\Grammars\Grammar;
+use Lester\EloquentSalesForce\ServiceProvider;
 
 class SOQLGrammar extends Grammar
 {
@@ -60,20 +61,6 @@ class SOQLGrammar extends Grammar
     }
     
     /**
-     * Compile a "where date" clause.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function whereDate(Builder $query, $where)
-    {
-	    $value = $this->parameter($where['value']);
-
-        return $this->wrap($where['column']).' '.$where['operator'].' '.$value;
-    }
-    
-    /**
      * Compile the "join" portions of the query.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
@@ -84,13 +71,12 @@ class SOQLGrammar extends Grammar
     {
 	    return collect($joins)->map(function ($join) use ($query) {
             $table = $join->table;
-            $layouts = \Forrest::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
-		    $columns = array_pluck($layouts["fieldItems"], 'layoutComponents.0.details.name');
-		    $columns = collect($columns)->implode(',');
+            
+            $columns = ServiceProvider::objectFields($table, ['*']);
+            $columns = collect($columns)->implode(',');
             
             $table_p = str_plural($this->wrapTable($table));
             
-            //$nestedJoins = is_null($join->joins) ? '' : ' '.$this->compileJoins($query, $join->joins);
             return trim(", (select $columns from {$table_p})");
         })->implode(' ');
     }

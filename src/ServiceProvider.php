@@ -37,4 +37,35 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 		$loader->alias('Forrest', 'Omniphx\Forrest\Providers\Laravel\Facades\Forrest');
     }
+    
+    public static function objectFields($table, $columns)
+    {
+	    if ($columns == ['*']) {
+		    $layouts = \Forrest::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
+		    $fields = array_pluck($layouts["fieldItems"], 'layoutComponents.0');
+		    $columns = ['Id'];
+		    self::getDetailNames($fields, $columns);
+	    }
+	    return $columns;
+	    
+    }
+    
+    /**
+     * getDetailNames function.
+     * 
+     * @access private
+     * @param mixed $fields
+     * @param mixed &$columns
+     * @return void
+     */
+    private static function getDetailNames($fields, &$columns) {
+	    foreach ($fields as $field) {
+		    if ($field['details']['updateable'] == true) {
+			    $columns[] = $field['details']['name'];
+		    }
+		    if (isset($field['components'])) {
+			    self::getDetailNames($field['components'], $columns);
+		    }
+		}
+    }
 }

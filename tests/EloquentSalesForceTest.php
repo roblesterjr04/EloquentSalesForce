@@ -3,7 +3,7 @@
 namespace Lester\EloquentSalesForce\Tests;
 
 use Lester\EloquentSalesForce\ServiceProvider;
-use Lester\EloquentSalesForce\TestModel;
+use Lester\EloquentSalesForce\TestLead;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
 
@@ -17,7 +17,7 @@ class EloquentSalesForceTest extends TestCase
     private $lead;
 
 	/**
-	 * @covers Lester\EloquentSalesForce\TestModel
+	 * @covers Lester\EloquentSalesForce\TestLead
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Model::create
 	 * @covers Lester\EloquentSalesForce\Model::save
@@ -29,8 +29,8 @@ class EloquentSalesForceTest extends TestCase
     public function testObjectCreate()
     {
 	    $email = strtolower(str_random(10) . '@test.com');
-	    $lead = TestModel::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
-	    $lead = TestModel::where('Email', $email)->first();
+	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+	    $lead = TestLead::where('Email', $email)->first();
 	    
         $this->assertEquals($lead->Email, $email);
         $lead->delete();
@@ -44,9 +44,9 @@ class EloquentSalesForceTest extends TestCase
     public function testObjectUpdate()
     {
 	    $email = strtolower(str_random(10) . '@test.com');
-	    $lead = TestModel::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead->update(['FirstName' => 'Robert']);
-        $lead = TestModel::where('Email', $email)->first();
+        $lead = TestLead::where('Email', $email)->first();
         
         $this->assertEquals($lead->FirstName, 'Robert');
         $lead->delete();
@@ -58,7 +58,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testWhereBasic()
     {
-	    $leads = TestModel::where('FirstName', 'not like', 'xxxxxxxxxxxxx')->limit(5)->get();
+	    $leads = TestLead::where('FirstName', 'not like', 'xxxxxxxxxxxxx')->limit(5)->get();
 	    $this->assertCount(5, $leads);
     }
     
@@ -68,7 +68,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testWhereDate()
     {
-	    $leads = TestModel::where('CreatedDate', '>=', '2018-10-01T12:00:00.000+00:00')->limit(5)->get();
+	    $leads = TestLead::where('CreatedDate', '>=', '2010-10-01T12:00:00.000+00:00')->limit(5)->get();
 	    $this->assertCount(5, $leads);
     }
     
@@ -79,10 +79,46 @@ class EloquentSalesForceTest extends TestCase
     public function testObjectDelete()
     {
 	    $email = strtolower(str_random(10) . '@test.com');
-	    $lead = TestModel::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead->delete();
-	    $lead = TestModel::where('Email', $email)->get();
+	    $lead = TestLead::where('Email', $email)->get();
         $this->assertCount(0, $lead);
+    }
+    
+    /*
+	 * @covers Lester\EloquentSalesForce\Model
+	 * @covers Lester\EloquentSalesForce\Database\SOQLHasMany
+	 * @covers Lester\EloquentSalesForce\Database\SOQLHasOneOrMany
+	 */
+    public function testRelationships()
+    {
+	    $email = strtolower(str_random(10) . '@test.com');
+	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+	    
+	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
+	    
+	    $this->assertCount(1, $lead->tasks);
+	    
+	    $lead->delete();
+	    
+    }
+    
+    /*
+	 * @covers Lester\EloquentSalesForce\Model
+	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::compileJoins
+	 */
+    public function testJoins()
+    {
+	    $email = strtolower(str_random(10) . '@test.com');
+	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+	    
+	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
+	    
+	    $joined = TestLead::join('Task', 'WhoId')->where('Email', $email)->first();
+	    
+	    $this->assertCount(1, $joined->Tasks['records']);
+	    
+	    $lead->delete();
     }
     
     public function setUp()

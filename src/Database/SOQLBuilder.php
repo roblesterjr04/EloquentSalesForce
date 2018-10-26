@@ -5,6 +5,7 @@ namespace Lester\EloquentSalesForce\Database;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
+use Lester\EloquentSalesForce\ServiceProvider;
 
 class SOQLBuilder extends Builder
 {
@@ -75,32 +76,8 @@ class SOQLBuilder extends Builder
      */
     protected function getSalesForceColumns($columns, $table = null) {
 	    $table = $table ?: $this->model->getTable();
-	    if ($columns == ['*']) {
-		    $layouts = \Forrest::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
-		    $fields = array_pluck($layouts["fieldItems"], 'layoutComponents.0');
-		    $columns = ['Id'];
-		    $this->getDetailNames($fields, $columns);
-	    }
-	    return $columns;
-    }
-    
-    /**
-     * getDetailNames function.
-     * 
-     * @access private
-     * @param mixed $fields
-     * @param mixed &$columns
-     * @return void
-     */
-    private function getDetailNames($fields, &$columns) {
-	    foreach ($fields as $field) {
-		    if ($field['details']['updateable'] == true) {
-			    $columns[] = $field['details']['name'];
-		    }
-		    if (isset($field['components'])) {
-			    $this->getDetailNames($field['components'], $columns);
-		    }
-		}
+	    
+	    return ServicePRovider::objectFields($table, $columns);
     }
 	
 	

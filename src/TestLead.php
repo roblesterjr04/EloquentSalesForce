@@ -2,12 +2,12 @@
 
 namespace Lester\EloquentSalesForce;
 
-class TestModel extends Model
+class TestLead extends Model
 {
 	protected $table = 'Lead';
 	
     public function tasks()
     {
-	    return $this->hasMany('Task', 'WhoID');
+	    return $this->hasMany(TestTask::class, 'WhoId');
     }
 }
