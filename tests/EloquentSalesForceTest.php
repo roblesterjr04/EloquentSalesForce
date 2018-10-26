@@ -59,6 +59,16 @@ class EloquentSalesForceTest extends TestCase
 				        'compression'     => false,
 				        'compressionType' => 'gzip',
 				    ],
+				    
+				    /*
+				     * Where do you want to store access tokens fetched from Salesforce
+				     */
+				    'storage'        => [
+				        'type'          => 'cache', // 'session' or 'cache' are the two options
+				        'path'          => 'forrest_', // unique storage path to avoid collisions
+				        'expire_in'     => 20, // number of minutes to expire cache/session
+				        'store_forever' => false, // never expire cache/session
+				    ],
 				
 				    /*
 				     * If you'd like to specify an API version manually it can be done here.
