@@ -1,13 +1,16 @@
 # Eloquent Sales Force
 
+[![Laravel](https://img.shields.io/badge/Laravel-5.5^-orange.svg)](http://laravel.com)
 [![Build Status](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/build.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/build-status/master)
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
 
-[![Latest Stable Version](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/v/stable.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
-[![Latest Unstable Version](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/v/unstable.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
-[![Packagist](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/d/total.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
+[![Code Coverage](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
+[![Latest Stable Version](https://img.shields.io/packagist/v/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
+[![Latest Unstable Version](https://img.shields.io/packagist/vpre/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
+[![Packagist](https://img.shields.io/packagist/dm/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
+[![Packagist](https://img.shields.io/packagist/l/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
+
 
 
 Work with SalesForce APIs via the Eloquent Model.
