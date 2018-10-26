@@ -58,6 +58,14 @@ class SOQLBuilder extends Builder
         ]);
     }
     
+    /**
+     * getSalesForceColumns function.
+     * 
+     * @access protected
+     * @param mixed $columns
+     * @param mixed $table (default: null)
+     * @return void
+     */
     protected function getSalesForceColumns($columns, $table = null) {
 	    $table = $table ?: $this->model->getTable();
 	    if ($columns == ['*']) {

@@ -48,6 +48,12 @@ class EloquentSalesForceTest extends TestCase
 		        // Security token might need to be ammended to password unless IP Address is whitelisted
 		        'password'       => getenv('PASSWORD')
 			],
+			'forrest.defaults'    => [
+		        'method'          => 'get',
+		        'format'          => 'json',
+		        'compression'     => false,
+		        'compressionType' => 'gzip',
+		    ],
 		]);
 		
 		/*config([
