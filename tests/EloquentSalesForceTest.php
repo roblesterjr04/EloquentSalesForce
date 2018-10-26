@@ -13,30 +13,56 @@ class EloquentSalesForceTest extends TestCase
     {
         return [ServiceProvider::class];
     }
+    
+    private $lead;
 
 	/**
-	 * @use Lester\EloquentSalesForce\TestModel
+	 * @covers Lester\EloquentSalesForce\TestModel
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Model::create
 	 * @covers Lester\EloquentSalesForce\Model::save
-	 * @use Lester\EloquentSalesForce\Database\SOQLBuilder
-	 * @use Lester\EloquentSalesForce\Database\SOQLConnection
-	 * @use Lester\EloquentSalesForce\Database\SOQLGrammar
+	 * @covers Lester\EloquentSalesForce\Database\SOQLBuilder
+	 * @covers Lester\EloquentSalesForce\Database\SOQLConnection
+	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
+	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereBasic
 	 */
-    public function testObject()
+    public function testObjectCreate()
     {
 	    $email = strtolower(str_random(10) . '@test.com');
 	    $lead = TestModel::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
-	    $lead = null;
 	    $lead = TestModel::where('Email', $email)->first();
 	    
         $this->assertEquals($lead->Email, $email);
-        
         $lead->delete();
+    }
+    
+    /*
+	 * @covers Lester\EloquentSalesForce\Model
+	 * @covers Lester\EloquentSalesForce\Model::save
+	 * @covers Lester\EloquentSalesForce\Model::update
+	 */
+    public function testObjectUpdate()
+    {
+	    $email = strtolower(str_random(10) . '@test.com');
+	    $lead = TestModel::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+	    $lead->update(['FirstName' => 'Robert']);
+        $lead = TestModel::where('Email', $email)->first();
         
-        $lead = TestModel::where('Email', $email)->get();
+        $this->assertEquals($lead->FirstName, 'Robert');
+        $lead->delete();
+    }
+    
+    /*
+	 * @covers Lester\EloquentSalesForce\Model
+	 * @covers Lester\EloquentSalesForce\Model::delete
+	 */
+    public function testObjectDelete()
+    {
+	    $email = strtolower(str_random(10) . '@test.com');
+	    $lead = TestModel::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+	    $lead->delete();
+	    $lead = TestModel::where('Email', $email)->get();
         $this->assertCount(0, $lead);
-        
     }
     
     public function setUp()
