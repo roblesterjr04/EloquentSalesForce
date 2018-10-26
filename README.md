@@ -41,7 +41,7 @@ php artisan vendor:publish --provider="Lester\EloquentSalesForce\ServiceProvider
 
 ## Usage
 
-###Setting up your connected app
+### Setting up your connected app
 
 1. Log into to your Salesforce org
 2. Click on Setup in the upper right-hand menu
