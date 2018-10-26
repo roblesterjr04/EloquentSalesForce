@@ -121,7 +121,7 @@ $lead = Lead::find('00Q1J00000cQ08eUAC');
 Update properties like you normally would...
 
 ```php
-$lead->FirstName = 'Robert Lester';
+$lead->FirstName = 'Robert';
 $lead->save();
 ```
 
@@ -136,7 +136,7 @@ $lead->save();
 OR:
 
 ```php
-$lead->update(['Name' => 'Robert Lester']);
+$lead->update(['LastName' => 'Lester']);
 
 $lead = Lead::create(['FirstName' => 'Foo', 'LastName' => 'Bar', 'Company' => 'Test Company']);
 ```
