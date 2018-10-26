@@ -44,6 +44,13 @@ abstract class Model extends EloquentModel
 	    return $this->save($options);
     }
     
+    public function delete()
+    {
+	    \Forrest::sobjects($this->table . '/' . $this->Id, [
+		    'method' => 'delete'
+	    ]);
+    }
+    
     public function save(array $options = array())
     {
 	    $body = $this->attributes;

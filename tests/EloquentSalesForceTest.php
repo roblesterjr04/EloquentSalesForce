@@ -15,16 +15,28 @@ class EloquentSalesForceTest extends TestCase
     }
 
 	/**
-	 * @covers Lester\EloquentSalesForce\TestModel
-	 * @covers Lester\EloquentSalesForce\Database\SOQLBuilder
-	 * @covers Lester\EloquentSalesForce\Database\SOQLConnection
-	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
+	 * @use Lester\EloquentSalesForce\TestModel
+	 * @covers Lester\EloquentSalesForce\Model
+	 * @covers Lester\EloquentSalesForce\Model::create
+	 * @covers Lester\EloquentSalesForce\Model::save
+	 * @use Lester\EloquentSalesForce\Database\SOQLBuilder
+	 * @use Lester\EloquentSalesForce\Database\SOQLConnection
+	 * @use Lester\EloquentSalesForce\Database\SOQLGrammar
 	 */
     public function testObject()
     {
-	    $lead = TestModel::first();
+	    $email = strtolower(str_random(10) . '@test.com');
+	    $lead = TestModel::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+	    $lead = null;
+	    $lead = TestModel::where('Email', $email)->first();
 	    
-        $this->assertEquals(1, 1);
+        $this->assertEquals($lead->Email, $email);
+        
+        $lead->delete();
+        
+        $lead = TestModel::where('Email', $email)->get();
+        $this->assertCount(0, $lead);
+        
     }
     
     public function setUp()

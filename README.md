@@ -42,6 +42,7 @@ php artisan vendor:publish --provider="Lester\EloquentSalesForce\ServiceProvider
 ## Usage
 
 ###Setting up your connected app
+
 1. Log into to your Salesforce org
 2. Click on Setup in the upper right-hand menu
 3. Under Build click `Create > Apps`
@@ -158,6 +159,15 @@ $contacts = Contact::where('Name', 'like', 'Donuts%')->get();
 $contacts = Contact::limit(20)->orderBy('Name')->get();
 ```
 
+#### Delete
+Exactly as you'd expect.
+
+```php
+$lead = Lead::first();
+
+$lead->delete();
+```
+
 ### Relationships
 
 Relationships work the same way.
@@ -203,6 +213,9 @@ $account = Account::join('Contact', 'AccountId')->first();
 ```
 
 These aren't as easy to work with as **Relationships** because the SalesForce API still returns the array nested in the `records` property.
+
+## Testing
+
 
 ## Security
 
