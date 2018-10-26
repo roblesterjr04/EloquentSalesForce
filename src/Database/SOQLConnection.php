@@ -56,9 +56,12 @@ class SOQLConnection extends Connection
 	{
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
-			//$dformat = config('eloquent_sf.dateFormat', 'Y-m-d\TH:i:s.vP');
-			if (Carbon::parse($item) !== false) {
-				return $item;
+			try {
+				if (Carbon::parse($item) !== false) {
+					return $item;
+			    }
+		    } catch (\Exception $e) {
+			    return "'$item'";
 		    }
 			return "'$item'";
 		}, $bindings);
