@@ -16,14 +16,34 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
 	public function register()
 	{
-		config(
-			[
-				'forrest.authentication' => 'UserPassword',
-				'forrest.credentials' => config('database.connections.soql'),
-				'forrest.storage.type' => 'cache',
-				'forrest.storage.store_forever' => true
+		config([
+			'forrest' => [
+				'authentication'	=> 'UserPassword',
+				'credentials' => config('database.connections.soql'),
+				/*
+			     * Default settings for resource requests.
+			     * Format can be 'json', 'xml' or 'none'
+			     * Compression can be set to 'gzip' or 'deflate'
+			     */
+			    'defaults'       => [
+			        'method'          => 'get',
+			        'format'          => 'json',
+			        'compression'     => false,
+			        'compressionType' => 'gzip',
+			    ],
+			
+			    /*
+			     * Where do you want to store access tokens fetched from Salesforce
+			     */
+			    'storage'        => [
+			        'type'          => 'cache', // 'session' or 'cache' are the two options
+			        'path'          => 'forrest_', // unique storage path to avoid collisions
+			        'expire_in'     => 20, // number of minutes to expire cache/session
+			        'store_forever' => false, // never expire cache/session
+			    ],
+			    'version'        => '',
 			]
-		);
+		]);
 	    
 		$this->mergeConfigFrom(
 			self::CONFIG_PATH,
