@@ -58,25 +58,36 @@ abstract class Model extends EloquentModel
     
 	public function save(array $options = array())
 	{
+		$object = $this->sfObject();
+		
+		$method = $this->sfMethod();
+		
 		$body = $this->attributes;
-		unset($body['attributes']);
-		if (isset($body['Id'])) {
-			unset($body['Id']);
-			$updated = \Forrest::sobjects($this->table . '/' . $this->Id, [
-				'method' => 'patch',
+		
+		unset($body['attributes'], $body['Id']);
+		
+		try {
+			$result = \Forrest::sobjects($object, [
+				'method' => $method,
 				'body' => $body
 			]);
-			return $this;
-		} else {
-			$new = \Forrest::sobjects($this->table, [
-				'method' => 'post',
-				'body' => $body,
-			]);
-			if ($new['success']) return $this->find($new['id']);
+			
+			return isset($result['success']) ? $this->find($result['id']) : $this;
+		} catch (\Exception $e) {
+			throw $e;
 		}
-		return $this;
 	}
-    
+	
+	private function sfObject()
+	{
+		return isset($this->attributes['Id']) ? $this->table . '/' . $this->Id : $this->table;
+	}
+	
+	private function sfMethod()
+	{
+		return isset($this->attributes['Id']) ? 'patch' : 'post';
+	}
+	
 	/**
 	 * Create a new Eloquent query builder for the model.
 	 *

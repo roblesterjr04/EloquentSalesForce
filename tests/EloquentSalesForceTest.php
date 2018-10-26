@@ -87,6 +87,8 @@ class EloquentSalesForceTest extends TestCase
     
     /*
 	 * @covers Lester\EloquentSalesForce\Model
+	 * @covers Lester\EloquentSalesForce\Model::belongsTo
+	 * @covers Lester\EloquentSalesForce\Model::hasMany
 	 * @covers Lester\EloquentSalesForce\Database\SOQLHasMany
 	 * @covers Lester\EloquentSalesForce\Database\SOQLHasOneOrMany
 	 */
@@ -97,7 +99,11 @@ class EloquentSalesForceTest extends TestCase
 	    
 	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
 	    
+	    $lead = $task->lead;
+	    
 	    $this->assertCount(1, $lead->tasks);
+	    
+	    $task->delete();
 	    
 	    $lead->delete();
 	    
@@ -118,7 +124,21 @@ class EloquentSalesForceTest extends TestCase
 	    
 	    $this->assertCount(1, $joined->Tasks['records']);
 	    
+	    $task->delete();
+	    
 	    $lead->delete();
+    }
+    
+    /*
+	 * @covers Lester\EloquentSalesForce\Model
+	 * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::paginate
+	 */
+    public function testPaginate()
+    {
+	    $pageone = TestLead::paginate(3);
+	    
+	    $this->assertCount(3, $pageone);
+	    
     }
     
     public function setUp()

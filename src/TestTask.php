@@ -8,6 +8,6 @@ class TestTask extends Model
 	
 	public function lead()
 	{
-		return $this->belongsTo(Task::class, 'WhoID');
+		return $this->belongsTo(TestLead::class, 'WhoId');
 	}
 }
