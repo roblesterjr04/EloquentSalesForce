@@ -5,9 +5,9 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
 
-[![Latest Stable Version](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/v/stable.svg)](https://packagist.org/packages/live-person-inc/live-engage-laravel)
-[![Latest Unstable Version](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/v/unstable.svg)](https://packagist.org/packages/live-person-inc/live-engage-laravel)
-[![Packagist](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/d/total.svg)](https://packagist.org/packages/live-person-inc/live-engage-laravel)
+[![Latest Stable Version](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/v/stable.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
+[![Latest Unstable Version](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/v/unstable.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
+[![Packagist](https://poser.pugx.org/rob-lester-jr04/eloquent-sales-force/d/total.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
 
 
 Work with SalesForce APIs via the Eloquent Model.
