@@ -80,6 +80,7 @@ abstract class Model extends EloquentModel
 	
 	private function sfObject()
 	{
+		/** @scrutinizer ignore-call */
 		return isset($this->attributes['Id']) ? $this->table . '/' . $this->Id : $this->table;
 	}
 	
