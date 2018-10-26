@@ -33,6 +33,13 @@ class EloquentSalesForceTest extends TestCase
 	    $lead = TestLead::where('Email', $email)->first();
 	    
         $this->assertEquals($lead->Email, $email);
+        
+        try {
+        	$lead->update(['Name' => 'test']);
+        } catch (\Exception $e) {
+
+        }
+        
         $lead->delete();
     }
     

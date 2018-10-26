@@ -106,7 +106,7 @@ abstract class Model extends EloquentModel
 	 * @param  string  $related
 	 * @param  string  $foreignKey
 	 * @param  string  $localKey
-	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 * @return \Lester\EloquentSalesForce\Database\SOQLHasMany
 	 */
 	public function hasMany($related, $foreignKey = null, $localKey = null)
 	{
@@ -159,7 +159,7 @@ abstract class Model extends EloquentModel
 	 * @param  \Illuminate\Database\Eloquent\Model  $parent
 	 * @param  string  $foreignKey
 	 * @param  string  $localKey
-	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 * @return \Lester\EloquentSalesForce\Database\SOQLHasMany
 	 */
 	protected function newSOQLHasMany(Builder $query, Model $parent, $foreignKey, $localKey)
 	{
