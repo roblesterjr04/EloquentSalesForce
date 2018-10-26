@@ -9,6 +9,7 @@ use Doctrine\DBAL\Driver\PDOMySql\Driver as DoctrineDriver;
 use Illuminate\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
 use Closure;
+use Carbon\Carbon;
 
 class SOQLConnection extends Connection
 {
@@ -36,7 +37,7 @@ class SOQLConnection extends Connection
 		$start = microtime(true);
 		
 		try {
-            $result = $this->runQueryCallback($query, $bindings, $callback);
+			$result = $this->runQueryCallback($query, $bindings, $callback);
         } catch (QueryException $e) {
             $result = $this->handleQueryException(
                 $e, $query, $bindings, $callback
@@ -55,18 +56,13 @@ class SOQLConnection extends Connection
 	{
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
-			$dformat = config('eloquent_sf.dateFormat');
-			$tformat = config('eloquent_sf.dateTimeFormat');
-			$d = \DateTime::createFromFormat($dformat, $item);
-			$t = \DateTime::createFromFormat($tformat, $item);
-		    if ($d && $d->format($dformat) === $item) {
-			    return $item;
-		    }
-		    if ($t && $t->format($tformat) === $item) {
-			    return $item;
+			//$dformat = config('eloquent_sf.dateFormat', 'Y-m-d\TH:i:s.vP');
+			if (Carbon::parse($item) !== false) {
+				return $item;
 		    }
 			return "'$item'";
 		}, $bindings);
+		
 		$query = str_replace_array('?', $bindings, $query);
 		
 		return $query;

@@ -71,7 +71,7 @@ class SOQLBuilder extends Builder
      * @access protected
      * @param mixed $columns
      * @param mixed $table (default: null)
-     * @return void
+     * @return array
      */
     protected function getSalesForceColumns($columns, $table = null) {
 	    $table = $table ?: $this->model->getTable();

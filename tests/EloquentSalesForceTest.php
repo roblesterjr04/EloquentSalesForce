@@ -52,6 +52,26 @@ class EloquentSalesForceTest extends TestCase
         $lead->delete();
     }
     
+    /**
+	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
+	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereBasic
+	 */
+    public function testWhereBasic()
+    {
+	    $leads = TestModel::where('FirstName', 'not like', 'xxxxxxxxxxxxx')->limit(5)->get();
+	    $this->assertCount(5, $leads);
+    }
+    
+    /**
+	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
+	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereDate
+	 */
+    public function testWhereDate()
+    {
+	    $leads = TestModel::where('CreatedDate', '>=', '2018-10-01T12:00:00.000+00:00')->limit(5)->get();
+	    $this->assertCount(5, $leads);
+    }
+    
     /*
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Model::delete
