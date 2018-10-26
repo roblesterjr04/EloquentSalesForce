@@ -24,6 +24,13 @@ class SOQLBuilder extends Builder
 	    parent::__construct($query);
     }
     
+    /**
+     * getModels function.
+     * 
+     * @access public
+     * @param string $columns (default: ['*'])
+     * @return void
+     */
     public function getModels($columns = ['*'])
     {
 	    return parent::getModels($this->getSalesForceColumns($columns));
@@ -77,6 +84,14 @@ class SOQLBuilder extends Builder
 	    return $columns;
     }
     
+    /**
+     * getDetailNames function.
+     * 
+     * @access private
+     * @param mixed $fields
+     * @param mixed &$columns
+     * @return void
+     */
     private function getDetailNames($fields, &$columns) {
 	    foreach ($fields as $field) {
 		    if ($field['details']['updateable'] == true) {
