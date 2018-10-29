@@ -216,8 +216,24 @@ $account = Account::join('Contact', 'AccountId')->first();
 
 These aren't as easy to work with as **Relationships** because the SalesForce API still returns the array nested in the `records` property.
 
-## Testing
+### Custom Objects
 
+To use custom objects (or an object with a special object name, different from the model), set the protected `$table` property in the model.
+
+```php
+<?php
+
+namespace App;
+
+use Lester\EloquentSalesForce\Model;
+
+class TouchPoint extends Model
+{
+    protected $table = 'TouchPoint__c';
+    
+    /** Any other overrides **/
+}
+```
 
 ## Security
 
