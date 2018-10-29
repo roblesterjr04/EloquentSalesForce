@@ -7,7 +7,6 @@
 
 [![Code Coverage](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
-[![Latest Unstable Version](https://img.shields.io/packagist/vpre/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
 [![Packagist](https://img.shields.io/packagist/dm/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
 [![Packagist](https://img.shields.io/packagist/l/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
 
@@ -228,6 +227,7 @@ instead of using the issue tracker.
 ## Credits
 
 - [Rob Lester](https://github.com/roblesterjr04/EloquentSalesForce)
+- [Omniphx/Forrest SalesForce for Laravel](https://github.com/omniphx/forrest)
 - [All contributors](https://github.com/roblesterjr04/EloquentSalesForce/graphs/contributors)
 
 This package is bootstrapped with the help of
