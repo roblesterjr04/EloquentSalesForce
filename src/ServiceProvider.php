@@ -12,38 +12,50 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		$this->publishes([
 			self::CONFIG_PATH => config_path('eloquent_sf.php'),
 		], 'config');
+		
+		$this->loadRoutesFrom(__DIR__.'/Routes.php');
+		
 	}
 
 	public function register()
 	{
-		config([
-			'forrest' => [
-				'authentication'	=> 'UserPassword',
-				'credentials' => config('database.connections.soql'),
-				/*
-			     * Default settings for resource requests.
-			     * Format can be 'json', 'xml' or 'none'
-			     * Compression can be set to 'gzip' or 'deflate'
-			     */
-			    'defaults'       => [
-			        'method'          => 'get',
-			        'format'          => 'json',
-			        'compression'     => false,
-			        'compressionType' => 'gzip',
-			    ],
-			
-			    /*
-			     * Where do you want to store access tokens fetched from Salesforce
-			     */
-			    'storage'        => [
-			        'type'          => 'cache', // 'session' or 'cache' are the two options
-			        'path'          => 'forrest_', // unique storage path to avoid collisions
-			        'expire_in'     => 20, // number of minutes to expire cache/session
-			        'store_forever' => false, // never expire cache/session
-			    ],
-			    'version'        => '',
-			]
-		]);
+		if (config('database.connections.soql')) {
+			config([
+				'forrest' => [
+					'authentication'	=> config('database.connections.soql.authentication', 'UserPassword'),
+					'credentials' => config('database.connections.soql'),
+					/*
+				     * Default settings for resource requests.
+				     * Format can be 'json', 'xml' or 'none'
+				     * Compression can be set to 'gzip' or 'deflate'
+				     */
+				    'defaults'       => [
+				        'method'          => 'get',
+				        'format'          => 'json',
+				        'compression'     => false,
+				        'compressionType' => 'gzip',
+				    ],
+				
+				    /*
+				     * Where do you want to store access tokens fetched from Salesforce
+				     */
+				    'storage'        => config('database.connections.soql.storage', [
+				        'type'          => 'cache', // 'session' or 'cache' are the two options
+				        'path'          => 'forrest_', // unique storage path to avoid collisions
+				        'expire_in'     => 20, // number of minutes to expire cache/session
+				        'store_forever' => false, // never expire cache/session
+				    ]),
+				    'version'        => config('database.connections.soql.version', ''),
+				    'parameters'     => config('eloquent_sf.parameters', [
+				        'display'   => '',
+				        'immediate' => false,
+				        'state'     => '',
+				        'scope'     => '',
+				        'prompt'    => '',
+				    ])
+				]
+			]);
+		}
 	    
 		$this->mergeConfigFrom(
 			self::CONFIG_PATH,
@@ -56,6 +68,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 		$loader->alias('Forrest', 'Omniphx\Forrest\Providers\Laravel\Facades\Forrest');
+		
+		
 	}
     
 	public static function objectFields($table, $columns)
