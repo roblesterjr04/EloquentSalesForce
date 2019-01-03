@@ -58,8 +58,8 @@ abstract class Model extends EloquentModel
 
 	public function save(array $options = array())
 	{
+		$this->authenticateForrest();
 		$object = $this->sfObject();
-
 		$method = $this->sfMethod();
 
 		$body = $this->attributes;
@@ -97,7 +97,7 @@ abstract class Model extends EloquentModel
 	 */
 	public function newEloquentBuilder($query)
 	{
-		\Forrest::authenticate();
+		$this->authenticateForrest();
 		return new Builder($query);
 	}
 
@@ -175,5 +175,10 @@ abstract class Model extends EloquentModel
 	public function getForeignKey()
 	{
 		return camel_case(class_basename($this).'_'.$this->getKeyName());
+	}
+
+	private function authenticateForrest()
+	{
+		\Forrest::authenticate();
 	}
 }
