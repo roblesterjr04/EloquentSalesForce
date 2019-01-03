@@ -1,5 +1,5 @@
 <?php
-	
+
 namespace Lester\EloquentSalesForce\Database;
 
 use Illuminate\Database\Eloquent\Builder as Builder;
@@ -9,8 +9,8 @@ use Lester\EloquentSalesForce\ServiceProvider;
 
 class SOQLBuilder extends Builder
 {
-	
-	
+
+
 	/**
 	 * Create a new Eloquent query builder instance.
 	 *
@@ -21,13 +21,13 @@ class SOQLBuilder extends Builder
 	{
 		$query->connection = new SOQLConnection(null);
 		$query->grammar = new SOQLGrammar();
-	    
+
 		parent::__construct($query);
 	}
-    
+
 	/**
 	 * getModels function.
-	 * 
+	 *
 	 * @access public
 	 * @param string $columns (default: ['*'])
 	 * @return void
@@ -36,7 +36,7 @@ class SOQLBuilder extends Builder
 	{
 		return parent::getModels($this->getSalesForceColumns($columns));
 	}
-    
+
 	/**
 	 * Paginate the given query.
 	 *
@@ -51,10 +51,10 @@ class SOQLBuilder extends Builder
 	public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
 	{
 		$columns = $this->getSalesForceColumns($columns);
-	    
+
 		$table = $this->model->getTable();
 		$total = \Forrest::query("SELECT COUNT() FROM $table")['totalSize'];
-		
+
 		$page = $page ?: Paginator::resolveCurrentPage($pageName);
 		$perPage = $perPage ?: $this->model->getPerPage();
 		$results = $total
@@ -65,10 +65,10 @@ class SOQLBuilder extends Builder
 			'pageName' => $pageName,
 		]);
 	}
-    
+
 	/**
 	 * getSalesForceColumns function.
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $columns
 	 * @param mixed $table (default: null)
@@ -76,9 +76,9 @@ class SOQLBuilder extends Builder
 	 */
 	protected function getSalesForceColumns($columns, $table = null) {
 		$table = $table ?: $this->model->getTable();
-	    
-		return ServicePRovider::objectFields($table, $columns);
+
+		return ServiceProvider::objectFields($table, $columns);
 	}
-	
-	
+
+
 }
