@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
+use Forrest;
 
 abstract class Model extends EloquentModel
 {
@@ -179,6 +180,6 @@ abstract class Model extends EloquentModel
 
 	private function authenticateForrest()
 	{
-		\Forrest::authenticate();
+		Forrest::authenticate();
 	}
 }
