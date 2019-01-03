@@ -10,40 +10,40 @@ use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
 abstract class Model extends EloquentModel
 {
 	protected $guarded = [];
-	
+
 	/**
 	 * The primary key for the model.
 	 *
 	 * @var string
 	 */
 	protected $primaryKey = 'Id';
-    
+
 	/**
 	 * The "type" of the auto-incrementing ID.
 	 *
 	 * @var string
 	 */
 	protected $keyType = 'string';
-	
+
 	public function __construct(Array $attributes = [])
 	{
 		$this->table = $this->table ?: class_basename($this);
-		\Forrest::authenticate();
+		//\Forrest::authenticate();
 		parent::__construct($attributes);
 	}
-	
+
 	public static function create(array $attributes)
 	{
 		$object = new static($attributes);
 		return $object->save();
 	}
-    
+
 	public function update(array $attributes = array(), array $options = array())
 	{
 		$this->attributes = array_merge($this->attributes, $attributes);
 		return $this->save($options);
 	}
-    
+
 	public function delete()
 	{
 		try {
@@ -55,40 +55,40 @@ abstract class Model extends EloquentModel
 			return false;
 		}
 	}
-    
+
 	public function save(array $options = array())
 	{
 		$object = $this->sfObject();
-		
+
 		$method = $this->sfMethod();
-		
+
 		$body = $this->attributes;
-		
+
 		unset($body['attributes'], $body['Id']);
-		
+
 		try {
 			$result = \Forrest::sobjects($object, [
 				'method' => $method,
 				'body' => $body
 			]);
-			
+
 			return isset($result['success']) ? $this->find($result['id']) : $this;
 		} catch (\Exception $e) {
 			throw $e;
 		}
 	}
-	
+
 	private function sfObject()
 	{
 		/** @scrutinizer ignore-call */
 		return isset($this->attributes['Id']) ? $this->table . '/' . $this->Id : $this->table;
 	}
-	
+
 	private function sfMethod()
 	{
 		return isset($this->attributes['Id']) ? 'patch' : 'post';
 	}
-	
+
 	/**
 	 * Create a new Eloquent query builder for the model.
 	 *
@@ -97,9 +97,10 @@ abstract class Model extends EloquentModel
 	 */
 	public function newEloquentBuilder($query)
 	{
+		\Forrest::authenticate();
 		return new Builder($query);
 	}
-    
+
 	/**
 	 * Define a one-to-many relationship.
 	 *
@@ -117,7 +118,7 @@ abstract class Model extends EloquentModel
 			$instance->newQuery(), $this, $foreignKey, $localKey
 		);
 	}
-    
+
 	/**
 	 * Define an inverse one-to-one or many relationship.
 	 *
@@ -142,7 +143,7 @@ abstract class Model extends EloquentModel
 		if (is_null($foreignKey)) {
 			$foreignKey = ucwords(Str::camel($relation.'_'.$instance->getKeyName()));
 		}
-        
+
 		// Once we have the foreign key names, we'll just create a new Eloquent query
 		// for the related models and returns the relationship instance which will
 		// actually be responsible for retrieving and hydrating every relations.
@@ -151,7 +152,7 @@ abstract class Model extends EloquentModel
 			$instance->newQuery(), $this, $foreignKey, $ownerKey, $relation
 		);
 	}
-    
+
 	/**
 	 * Instantiate a new HasMany relationship.
 	 *
@@ -165,7 +166,7 @@ abstract class Model extends EloquentModel
 	{
 		return new HasMany($query, $parent, $foreignKey, $localKey);
 	}
-    
+
 	/**
 	 * Get the default foreign key name for the model.
 	 *
