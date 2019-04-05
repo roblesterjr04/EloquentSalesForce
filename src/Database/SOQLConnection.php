@@ -1,5 +1,5 @@
 <?php
-	
+
 namespace Lester\EloquentSalesForce\Database;
 
 use Illuminate\Database\Connection;
@@ -13,7 +13,7 @@ use Carbon\Carbon;
 
 class SOQLConnection extends Connection
 {
-	
+
 	/**
      * Run a select statement against the database.
      *
@@ -25,17 +25,17 @@ class SOQLConnection extends Connection
     public function select($query, $bindings = [], $useReadPdo = true)
     {
         return $this->run($query, $bindings, function ($query, $bindings) use ($useReadPdo) {
-	        
+
 	        $statement = $this->prepare($query, $bindings);
 	        return \Forrest::query($statement)['records'];
-	        
+
         });
     }
-	
+
 	protected function run($query, $bindings, Closure $callback)
 	{
 		$start = microtime(true);
-		
+
 		try {
 			$result = $this->runQueryCallback($query, $bindings, $callback);
         } catch (QueryException $e) {
@@ -51,7 +51,7 @@ class SOQLConnection extends Connection
         );
         return $result;
 	}
-	
+
 	private function prepare($query, $bindings)
 	{
 		$query = str_replace('`', '', $query);
@@ -65,9 +65,8 @@ class SOQLConnection extends Connection
 		    }
 			return "'$item'";
 		}, $bindings);
-		
+
 		$query = str_replace_array('?', $bindings, $query);
-		
 		return $query;
 	}
 }

@@ -67,6 +67,17 @@ class SOQLBuilder extends Builder
 	}
 
 	/**
+	 * Mass insert of models
+	 * @return Collection of models.
+	 */
+	public function insert(array $values)
+	{
+		$table = $this->model->getTable();
+
+
+	}
+
+	/**
 	 * getSalesForceColumns function.
 	 *
 	 * @access protected

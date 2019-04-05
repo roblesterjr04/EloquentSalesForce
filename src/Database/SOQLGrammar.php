@@ -41,6 +41,11 @@ class SOQLGrammar extends Grammar
 		return $value === '*' ? $value : '`'.str_replace('`', '``', $value).'`';
 	}
 
+	protected function unWrapValue($value)
+	{
+		return str_replace('`', '', $value);
+	}
+
 	/**
 	 * {@inheritdoc}
 	 *
@@ -59,7 +64,7 @@ class SOQLGrammar extends Grammar
 		}
 		return parent::whereBasic($query, $where);
 	}
-    
+
 	/**
 	 * Compile the "join" portions of the query.
 	 *
@@ -71,16 +76,15 @@ class SOQLGrammar extends Grammar
 	{
 		return collect($joins)->map(function ($join) use ($query) {
 			$table = $join->table;
-            
+
 			$columns = ServiceProvider::objectFields($table, ['*']);
 			$columns = collect($columns)->implode(',');
-            
-			$table_p = str_plural($this->wrapTable($table));
-            
-			return trim(", (select $columns from {$table_p})");
+
+			$table_p = $this->unWrapValue(str_plural($this->wrapTable($table)));
+            return trim(", (select $columns from {$table_p})");
 		})->implode(' ');
 	}
-    
+
 	/**
 	 * Format the where clause statements into one string.
 	 *
@@ -93,7 +97,7 @@ class SOQLGrammar extends Grammar
 		$conjunction = 'where';
 		return $conjunction.' '.$this->removeLeadingBoolean(implode(' ', $sql));
 	}
-	
+
 	/**
      * Compile an aggregated select clause.
      *

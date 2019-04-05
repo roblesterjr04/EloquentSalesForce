@@ -29,7 +29,10 @@ abstract class Model extends EloquentModel
 	public function __construct(Array $attributes = [])
 	{
 		$this->table = $this->table ?: class_basename($this);
-		//\Forrest::authenticate();
+		$this->attributes['attributes'] = [
+			'type' => $this->table
+		];
+
 		parent::__construct($attributes);
 	}
 
@@ -181,5 +184,15 @@ abstract class Model extends EloquentModel
 	private function authenticateForrest()
 	{
 		Forrest::authenticate();
+	}
+
+	public function getSfAttributesAttribute()
+	{
+		return isset($this->attributes['attributes']) ? $this->attributes['attributes'] : null;
+	}
+
+	public function setSfAttributesAttribute(array $value)
+	{
+		$this->attributes['attributes'] = $value;
 	}
 }
