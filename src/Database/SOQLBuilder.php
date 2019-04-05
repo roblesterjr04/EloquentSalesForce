@@ -70,16 +70,35 @@ class SOQLBuilder extends Builder
 	 * Mass insert of models
 	 * @return Collection of models.
 	 */
-	public function insert(array $values)
+	public function insert(\Illuminate\Support\Collection $values)
 	{
 		$table = $this->model->getTable();
 
-		$response = \Forrest::composite('tree/' . $table, [
+		if (is_array($values)) {
+			$values = collect($values);
+		}
+		$counter = 1;
+		$values = $values->map(function($object, $index) {
+			$attrs = $object->sf_attributes;
+			$attrs['referenceId'] = 'ref' . $index;
+			$object->sf_attributes = $attrs;
+			return $object;
+		});
+
+		$payload = [
             'method' => 'post',
             'body' => [
-                'records' => $values
+                'records' => $values->toArray()
             ]
-        ]);
+        ];
+
+		$response = \Forrest::composite('tree/' . $table, $payload);
+
+		$response = collect($response['results']);
+		$model = $this->model;
+		$response = $response->map(function($item) use ($model) {
+			return new $model($item);
+		});
 
 		return $response;
 	}
