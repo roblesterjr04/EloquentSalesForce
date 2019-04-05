@@ -74,7 +74,14 @@ class SOQLBuilder extends Builder
 	{
 		$table = $this->model->getTable();
 
+		$response = \Forrest::composite('tree/' . $table, [
+            'method' => 'post',
+            'body' => [
+                'records' => $values
+            ]
+        ]);
 
+		return $response;
 	}
 
 	/**
