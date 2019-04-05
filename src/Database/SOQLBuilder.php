@@ -97,6 +97,7 @@ class SOQLBuilder extends Builder
 		$response = collect($response['results']);
 		$model = $this->model;
 		$response = $response->map(function($item) use ($model) {
+			unset($item['referenceId']);
 			return new $model($item);
 		});
 
