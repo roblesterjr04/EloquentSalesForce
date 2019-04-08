@@ -98,6 +98,10 @@ class SOQLBuilder extends Builder
 		$model = $this->model;
 		$response = $response->map(function($item) use ($model) {
 			unset($item['referenceId']);
+			foreach ($item as $key => $value) {
+				$item[ucwords($key)] = $value;
+				unset($item[$key]);
+			}
 			return new $model($item);
 		});
 
