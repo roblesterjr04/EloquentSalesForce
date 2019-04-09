@@ -105,13 +105,14 @@ class SOQLBuilder extends Builder
 		return $response;
 	}
 
-	public function updateMultiple(\Illuminate\Support\Collection $collection)
+	public function updateMultiple(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
 		$table = $this->model->getTable();
 
 		$payload = [
-            'method' => 'post',
+            'method' => 'patch',
             'body' => [
+				'allOrNone' => $allOrNone,
                 'records' => $collection->toArray()
             ]
         ];
