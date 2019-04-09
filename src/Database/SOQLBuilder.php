@@ -70,15 +70,12 @@ class SOQLBuilder extends Builder
 	 * Mass insert of models
 	 * @return Collection of models.
 	 */
-	public function insert(\Illuminate\Support\Collection $values)
+	public function insert(\Illuminate\Support\Collection $collection)
 	{
 		$table = $this->model->getTable();
 
-		if (is_array($values)) {
-			$values = collect($values);
-		}
 		$counter = 1;
-		$values = $values->map(function($object, $index) {
+		$collection = $collection->map(function($object, $index) {
 			$attrs = $object->sf_attributes;
 			$attrs['referenceId'] = 'ref' . $index;
 			$object->sf_attributes = $attrs;
@@ -88,7 +85,7 @@ class SOQLBuilder extends Builder
 		$payload = [
             'method' => 'post',
             'body' => [
-                'records' => $values->toArray()
+                'records' => $collection->toArray()
             ]
         ];
 
@@ -106,6 +103,22 @@ class SOQLBuilder extends Builder
 		});
 
 		return $response;
+	}
+
+	public function updateMultiple(\Illuminate\Support\Collection $collection)
+	{
+		$table = $this->model->getTable();
+
+		$payload = [
+            'method' => 'post',
+            'body' => [
+                'records' => $collection->toArray()
+            ]
+        ];
+
+		$response = \Forrest::composite('sobjects', $payload);
+
+		return $collection;
 	}
 
 	/**

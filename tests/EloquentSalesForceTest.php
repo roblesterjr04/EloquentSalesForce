@@ -13,7 +13,7 @@ class EloquentSalesForceTest extends TestCase
     {
         return [ServiceProvider::class];
     }
-    
+
     private $lead;
 
 	/**
@@ -31,18 +31,18 @@ class EloquentSalesForceTest extends TestCase
 	    $email = strtolower(str_random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead = TestLead::where('Email', $email)->first();
-	    
+
         $this->assertEquals($lead->Email, $email);
-        
+
         try {
         	$lead->update(['Name' => 'test']);
         } catch (\Exception $e) {
 
         }
-        
+
         $lead->delete();
     }
-    
+
     /*
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Model::save
@@ -54,11 +54,11 @@ class EloquentSalesForceTest extends TestCase
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead->update(['FirstName' => 'Robert']);
         $lead = TestLead::where('Email', $email)->first();
-        
+
         $this->assertEquals($lead->FirstName, 'Robert');
         $lead->delete();
     }
-    
+
     /**
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereBasic
@@ -68,7 +68,7 @@ class EloquentSalesForceTest extends TestCase
 	    $leads = TestLead::where('FirstName', 'not like', 'xxxxxxxxxxxxx')->limit(5)->get();
 	    $this->assertCount(5, $leads);
     }
-    
+
     /**
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereDate
@@ -78,7 +78,7 @@ class EloquentSalesForceTest extends TestCase
 	    $leads = TestLead::where('CreatedDate', '>=', '2010-10-01T12:00:00.000+00:00')->limit(5)->get();
 	    $this->assertCount(5, $leads);
     }
-    
+
     /*
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Model::delete
@@ -91,7 +91,7 @@ class EloquentSalesForceTest extends TestCase
 	    $lead = TestLead::where('Email', $email)->get();
         $this->assertCount(0, $lead);
     }
-    
+
     /*
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Model::belongsTo
@@ -103,19 +103,19 @@ class EloquentSalesForceTest extends TestCase
     {
 	    $email = strtolower(str_random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
-	    
+
 	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
-	    
+
 	    $lead = $task->lead;
-	    
+
 	    $this->assertCount(1, $lead->tasks);
-	    
+
 	    $task->delete();
-	    
+
 	    $lead->delete();
-	    
+
     }
-    
+
     /*
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::compileJoins
@@ -124,18 +124,18 @@ class EloquentSalesForceTest extends TestCase
     {
 	    $email = strtolower(str_random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
-	    
+
 	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
-	    
+
 	    $joined = TestLead::join('Task', 'WhoId')->where('Email', $email)->first();
-	    
+
 	    $this->assertCount(1, $joined->Tasks['records']);
-	    
+
 	    $task->delete();
-	    
+
 	    $lead->delete();
     }
-    
+
     /*
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::paginate
@@ -143,16 +143,16 @@ class EloquentSalesForceTest extends TestCase
     public function testPaginate()
     {
 	    $pageone = TestLead::paginate(3);
-	    
+
 	    $this->assertCount(3, $pageone);
-	    
+
     }
-    
+
     public function setUp()
 	{
 		parent::setUp();
-		
-		
+
+
 		if (getenv('SCRUT_TEST')) {
 			config([
 				'forrest' => [
@@ -168,7 +168,7 @@ class EloquentSalesForceTest extends TestCase
 				        'scope'     => '',
 				        'prompt'    => '',
 				    ],
-				
+
 				    /*
 				     * Default settings for resource requests.
 				     * Format can be 'json', 'xml' or 'none'
@@ -180,7 +180,7 @@ class EloquentSalesForceTest extends TestCase
 				        'compression'     => false,
 				        'compressionType' => 'gzip',
 				    ],
-				    
+
 				    /*
 				     * Where do you want to store access tokens fetched from Salesforce
 				     */
@@ -190,23 +190,23 @@ class EloquentSalesForceTest extends TestCase
 				        'expire_in'     => 20, // number of minutes to expire cache/session
 				        'store_forever' => false, // never expire cache/session
 				    ],
-				
+
 				    /*
 				     * If you'd like to specify an API version manually it can be done here.
 				     * Format looks like '32.0'
 				     */
 				    'version'        => '',
-				
+
 				    /*
 				     * Optional (and not recommended) if you need to override the instance_url returned from Saleforce
 				     */
 				    'instanceURL'    => '',
-				
+
 				    /*
 				     * Language
 				     */
 				    'language'       => 'en_US',
-				    
+
 				    'credentials' => [
 						'driver' => 'soql',
 					    'database' => null,
@@ -214,7 +214,7 @@ class EloquentSalesForceTest extends TestCase
 				        'consumerSecret' => getenv('CONSUMER_SECRET'),
 				        'callbackURI'    => getenv('CALLBACK_URI'),
 				        'loginURL'       => getenv('LOGIN_URL'),
-				        
+
 				        // Only required for UserPassword authentication:
 				        'username'       => getenv('USERNAME'),
 				        // Security token might need to be ammended to password unless IP Address is whitelisted
@@ -223,29 +223,29 @@ class EloquentSalesForceTest extends TestCase
 				]
 			]);
 		}
-		
+
 		config([
 			'app.key' => 'base64:WRAf0EDpFqwpbS829xKy2MGEkcJxIEmMrwFIZbGxIqE=',
 			'cache.stores.file.path' => __DIR__,
 			'cache.default' => 'file',
 		]);
-				
+
 	}
-	
+
 	/**
 	 * Creates the application.
 	 *
 	 * @return \Illuminate\Foundation\Application
 	 */
-	
+
 	public function createApplication()
 	{
 		if (getenv('SCRUT_TEST')) return parent::createApplication();
-		
-		$app = require __DIR__.'/../../../../bootstrap/app.php';
-	
+
+		$app = require __DIR__.'/../../../bootstrap/app.php';
+
 		$app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
-	
+
 		$app->loadEnvironmentFrom('.env');
 
 		return $app;
