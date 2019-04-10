@@ -2,6 +2,8 @@
 
 namespace Lester\EloquentSalesForce;
 
+use Lester\EloquentSalesForce\Facades\SObjects as SfFacade;
+
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
 	const CONFIG_PATH = __DIR__ . '/../config/eloquent_sf.php';
@@ -47,7 +49,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	public static function objectFields($table, $columns)
 	{
 		if ($columns == ['*']) {
-			$layouts = \Forrest::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
+			$layouts = SfFacade::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
 			$fields = array_pluck($layouts["fieldItems"], 'layoutComponents.0');
 			$columns = ['Id'];
 			self::getDetailNames($fields, $columns);

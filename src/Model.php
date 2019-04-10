@@ -6,8 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
-use Forrest;
-use SObjects;
+use Lester\EloquentSalesForce\Facades\SObjects;
 
 abstract class Model extends EloquentModel
 {
@@ -52,7 +51,7 @@ abstract class Model extends EloquentModel
 	public function delete()
 	{
 		try {
-			\Forrest::sobjects($this->table . '/' . $this->Id, [
+			SObjects::sobjects($this->table . '/' . $this->Id, [
 				'method' => 'delete'
 			]);
 			return true;
@@ -72,7 +71,7 @@ abstract class Model extends EloquentModel
 		unset($body['attributes'], $body['Id']);
 
 		try {
-			$result = \Forrest::sobjects($object, [
+			$result = SObjects::sobjects($object, [
 				'method' => $method,
 				'body' => $body
 			]);

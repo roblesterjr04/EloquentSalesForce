@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder as Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Lester\EloquentSalesForce\ServiceProvider;
+use Lester\EloquentSalesForce\Facades\SObjects;
 
 class SOQLBuilder extends Builder
 {
@@ -53,7 +54,7 @@ class SOQLBuilder extends Builder
 		$columns = $this->getSalesForceColumns($columns);
 
 		$table = $this->model->getTable();
-		$total = \Forrest::query("SELECT COUNT() FROM $table")['totalSize'];
+		$total = SObjects::query("SELECT COUNT() FROM $table")['totalSize'];
 
 		$page = $page ?: Paginator::resolveCurrentPage($pageName);
 		$perPage = $perPage ?: $this->model->getPerPage();
@@ -89,7 +90,7 @@ class SOQLBuilder extends Builder
             ]
         ];
 
-		$response = \Forrest::composite('tree/' . $table, $payload);
+		$response = SObjects::composite('tree/' . $table, $payload);
 
 		$response = collect($response['results']);
 		$model = $this->model;
