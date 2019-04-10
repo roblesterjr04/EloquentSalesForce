@@ -38,6 +38,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		$loader->alias('SObjects', 'Lester\EloquentSalesForce\Facades\SObjects');
 	}
 
+	/**
+	 * [objectFields description]
+	 * @param  [type] $table   [description]
+	 * @param  [type] $columns [description]
+	 * @return [type]          [description]
+	 */
 	public static function objectFields($table, $columns)
 	{
 		if ($columns == ['*']) {

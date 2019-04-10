@@ -68,7 +68,7 @@ class SOQLBuilder extends Builder
 
 	/**
 	 * Mass insert of models
-	 * @return Collection of models.
+	 * @return Illuminate\Support\Collection of models.
 	 */
 	public function insert(\Illuminate\Support\Collection $collection)
 	{
@@ -121,7 +121,7 @@ class SOQLBuilder extends Builder
 
 	/**
 	 * describe function. returns columns of object.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function describe()

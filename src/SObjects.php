@@ -2,6 +2,8 @@
 
 namespace Lester\EloquentSalesForce;
 
+use Forrest;
+
 class SObjects
 {
 
@@ -22,7 +24,7 @@ class SObjects
             ]
         ];
 
-		$response = \Forrest::composite('sobjects', $payload);
+		$response = Forrest::composite('sobjects', $payload);
 
 		return $response;
 	}
