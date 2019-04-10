@@ -8,7 +8,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
 	public function boot()
 	{
-		
+
 		$this->publishes([
 			self::CONFIG_PATH => config_path('eloquent_sf.php'),
 		], 'config');
@@ -16,48 +16,28 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
 	public function register()
 	{
-		config([
-			'forrest' => [
-				'authentication'	=> 'UserPassword',
-				'credentials' => config('database.connections.soql'),
-				/*
-			     * Default settings for resource requests.
-			     * Format can be 'json', 'xml' or 'none'
-			     * Compression can be set to 'gzip' or 'deflate'
-			     */
-			    'defaults'       => [
-			        'method'          => 'get',
-			        'format'          => 'json',
-			        'compression'     => false,
-			        'compressionType' => 'gzip',
-			    ],
-			
-			    /*
-			     * Where do you want to store access tokens fetched from Salesforce
-			     */
-			    'storage'        => [
-			        'type'          => 'cache', // 'session' or 'cache' are the two options
-			        'path'          => 'forrest_', // unique storage path to avoid collisions
-			        'expire_in'     => 20, // number of minutes to expire cache/session
-			        'store_forever' => false, // never expire cache/session
-			    ],
-			    'version'        => '',
-			]
-		]);
-	    
 		$this->mergeConfigFrom(
 			self::CONFIG_PATH,
 			'eloquent_sf'
 		);
-        
+
+		config([
+			'forrest' => config('eloquent_sf.forrest'),
+		]);
+
 		$this->app->register(
 			'Omniphx\Forrest\Providers\Laravel\ForrestServiceProvider'
 		);
-		
+
+		$this->app->bind('sobjects', function() {
+			return new SObjects();
+		});
+
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 		$loader->alias('Forrest', 'Omniphx\Forrest\Providers\Laravel\Facades\Forrest');
+		$loader->alias('SObjects', 'Lester\EloquentSalesForce\Facades\SObjects');
 	}
-    
+
 	public static function objectFields($table, $columns)
 	{
 		if ($columns == ['*']) {
@@ -67,12 +47,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			self::getDetailNames($fields, $columns);
 		}
 		return $columns;
-	    
 	}
-    
+
 	/**
 	 * getDetailNames function.
-	 * 
+	 *
 	 * @access private
 	 * @param mixed $fields
 	 * @param mixed &$columns

@@ -105,23 +105,6 @@ class SOQLBuilder extends Builder
 		return $response;
 	}
 
-	public function updateMultiple(\Illuminate\Support\Collection $collection, $allOrNone = false)
-	{
-		$table = $this->model->getTable();
-
-		$payload = [
-            'method' => 'patch',
-            'body' => [
-				'allOrNone' => $allOrNone,
-                'records' => $collection->toArray()
-            ]
-        ];
-
-		$response = \Forrest::composite('sobjects', $payload);
-
-		return $response;
-	}
-
 	/**
 	 * getSalesForceColumns function.
 	 *
@@ -136,5 +119,16 @@ class SOQLBuilder extends Builder
 		return ServiceProvider::objectFields($table, $columns);
 	}
 
+	/**
+	 * describe function. returns columns of object.
+	 * 
+	 * @return array
+	 */
+	public function describe()
+	{
+		$table = $this->model->getTable();
+
+		return $this->getSalesForceColumns(['*'], $table);
+	}
 
 }

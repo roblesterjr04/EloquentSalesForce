@@ -6,6 +6,7 @@ use Lester\EloquentSalesForce\ServiceProvider;
 use Lester\EloquentSalesForce\TestLead;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
+use Lester\EloquentSalesForce\Facades\SObjects;
 
 class EloquentSalesForceTest extends TestCase
 {
@@ -41,6 +42,37 @@ class EloquentSalesForceTest extends TestCase
         }
 
         $lead->delete();
+    }
+
+    /**
+     * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::insert
+     * @covers Lester\EloquentSalesForce\SObjects::update
+     */
+    public function testObjectMass()
+    {
+        $collection = collect([]);
+        for ($i = 0; $i < 3; $i++) {
+            $email = strtolower(str_random(10) . '@test.com');
+            $collection->push(new TestLead(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]));
+        }
+        $results = TestLead::insert($collection);
+
+        $results = $results->map(function($lead) {
+            $lead->Company = 'Test 2';
+            return $lead;
+        });
+
+        $this->assertCount(3, $results);
+
+        SObjects::update($results);
+
+        $lead = TestLead::find($results->first()->Id);
+
+        $this->assertEquals($lead->Company, 'Test 2');
+
+        foreach ($results as $lead) {
+            $lead->delete();
+        }
     }
 
     /*
@@ -226,7 +258,7 @@ class EloquentSalesForceTest extends TestCase
 
 		config([
 			'app.key' => 'base64:WRAf0EDpFqwpbS829xKy2MGEkcJxIEmMrwFIZbGxIqE=',
-			'cache.stores.file.path' => __DIR__,
+			'cache.stores.file.path' => __DIR__ . '/cache',
 			'cache.default' => 'file',
 		]);
 
@@ -250,4 +282,11 @@ class EloquentSalesForceTest extends TestCase
 
 		return $app;
 	}
+
+    protected function tearDown()
+    {
+        \Artisan::call('cache:clear');
+
+        parent::tearDown();
+    }
 }

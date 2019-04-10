@@ -181,18 +181,30 @@ abstract class Model extends EloquentModel
 		return camel_case(class_basename($this) . '_' . $this->getKeyName());
 	}
 
+	/**
+	 * Authenticates Forrest
+	 */
 	private function authenticateForrest()
 	{
 		Forrest::authenticate();
 	}
 
+	/**
+	 * [getSfAttributesAttribute description]
+	 * @return array
+	 */
 	public function getSfAttributesAttribute()
 	{
 		return isset($this->attributes['attributes']) ? $this->attributes['attributes'] : null;
 	}
 
+	/**
+	 * [setSfAttributesAttribute description]
+	 * @param array $value [description]
+	 */
 	public function setSfAttributesAttribute(array $value)
 	{
 		$this->attributes['attributes'] = $value;
 	}
+
 }
