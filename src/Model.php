@@ -51,6 +51,7 @@ abstract class Model extends EloquentModel
 	public function delete()
 	{
 		try {
+			/** @scrutinizer ignore-call */
 			SObjects::sobjects($this->table . '/' . $this->Id, [
 				'method' => 'delete'
 			]);
@@ -62,6 +63,7 @@ abstract class Model extends EloquentModel
 
 	public function save(array $options = array())
 	{
+		/** @scrutinizer ignore-call */
 		SObjects::authenticate();
 		$object = $this->sfObject();
 		$method = $this->sfMethod();
@@ -71,6 +73,7 @@ abstract class Model extends EloquentModel
 		unset($body['attributes'], $body['Id']);
 
 		try {
+			/** @scrutinizer ignore-call */
 			$result = SObjects::sobjects($object, [
 				'method' => $method,
 				'body' => $body
@@ -101,6 +104,7 @@ abstract class Model extends EloquentModel
 	 */
 	public function newEloquentBuilder($query)
 	{
+		/** @scrutinizer ignore-call */
 		SObjects::authenticate();
 		return new Builder($query);
 	}

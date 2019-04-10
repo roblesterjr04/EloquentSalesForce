@@ -54,6 +54,8 @@ class SOQLBuilder extends Builder
 		$columns = $this->getSalesForceColumns($columns);
 
 		$table = $this->model->getTable();
+
+		/** @scrutinizer ignore-call */
 		$total = SObjects::query("SELECT COUNT() FROM $table")['totalSize'];
 
 		$page = $page ?: Paginator::resolveCurrentPage($pageName);
@@ -90,6 +92,7 @@ class SOQLBuilder extends Builder
             ]
         ];
 
+		/** @scrutinizer ignore-call */
 		$response = SObjects::composite('tree/' . $table, $payload);
 
 		$response = collect($response['results']);

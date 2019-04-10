@@ -49,6 +49,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	public static function objectFields($table, $columns)
 	{
 		if ($columns == ['*']) {
+			/** @scrutinizer ignore-call */
 			$layouts = SfFacade::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
 			$fields = array_pluck($layouts["fieldItems"], 'layoutComponents.0');
 			$columns = ['Id'];
