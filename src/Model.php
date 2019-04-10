@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
 use Forrest;
+use SObjects;
 
 abstract class Model extends EloquentModel
 {
@@ -62,7 +63,7 @@ abstract class Model extends EloquentModel
 
 	public function save(array $options = array())
 	{
-		$this->authenticateForrest();
+		SObjects::authenticate();
 		$object = $this->sfObject();
 		$method = $this->sfMethod();
 
@@ -101,7 +102,7 @@ abstract class Model extends EloquentModel
 	 */
 	public function newEloquentBuilder($query)
 	{
-		$this->authenticateForrest();
+		SObjects::authenticate();
 		return new Builder($query);
 	}
 
@@ -179,14 +180,6 @@ abstract class Model extends EloquentModel
 	public function getForeignKey()
 	{
 		return camel_case(class_basename($this) . '_' . $this->getKeyName());
-	}
-
-	/**
-	 * Authenticates Forrest
-	 */
-	private function authenticateForrest()
-	{
-		Forrest::authenticate();
 	}
 
 	/**

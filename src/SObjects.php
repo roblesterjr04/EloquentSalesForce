@@ -3,6 +3,8 @@
 namespace Lester\EloquentSalesForce;
 
 use Forrest;
+use Cache;
+use Session;
 
 class SObjects
 {
@@ -16,6 +18,8 @@ class SObjects
      */
     public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
+        self::authenticate();
+
 		$payload = [
             'method' => 'patch',
             'body' => [
@@ -28,5 +32,21 @@ class SObjects
 
 		return $response;
 	}
+
+    /**
+	 * Authenticates Forrest
+	 */
+	public function authenticate()
+	{
+        $storage = ucwords(config('eloquent_sf.forrest.storage.type'));
+        if (!$storage::has(config('eloquent_sf.forrest.storage.path').'token'))
+            Forrest::authenticate();
+        return decrypt($storage::get(config('eloquent_sf.forrest.storage.path').'token'));
+	}
+
+    public function __call($name, $arguments)
+    {
+        return Forrest::$name(...$arguments);
+    }
 
 }
