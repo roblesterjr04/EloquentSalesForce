@@ -78,6 +78,14 @@ In your `config/database.php` file, add the following driver to the connections 
 ],
 ```
 
+If you need to modify any more settings for Forrest, publish the config file using the `artisan` command:
+
+```bash
+php artisan vendor:publish
+```
+
+You can find the config file in: `config/eloquent_sf.php`. Any of the same settings that Forrest recognizes will be available to set here.
+
 ### Using Models
 
 Create a model for the object you want to use, example: `artisan make:model Lead`
@@ -127,6 +135,10 @@ $lead->FirstName = 'Robert';
 $lead->save();
 ```
 
+## Inserting and Updating
+
+#### Insert
+
 ```php
 $lead = new Lead();
 $lead->FirstName = 'Foo';
@@ -138,11 +150,55 @@ $lead->save();
 OR:
 
 ```php
-$lead->update(['LastName' => 'Lester']);
-
 $lead = Lead::create(['FirstName' => 'Foo', 'LastName' => 'Bar', 'Company' => 'Test Company']);
 ```
 
+#### Bulk Insert
+
+```php
+$leads = collect([
+	new Lead(['Email' => 'email1@test.com']),
+	new Lead(['Email' => 'email2@test.com'])
+]);
+
+Lead::insert($leads);
+```
+
+#### Update
+
+```php
+$lead = Lead::first();
+$lead->LastName = 'Lester';
+$lead->save();
+```
+
+OR:
+
+```php
+$lead->update(['LastName' => 'Lester']);
+```
+
+#### Bulk Update
+The bulk update method is model agnostic - meaning that this capability, within salesforce, accepts a mix of object types in the collection that gets sent. So this method therefore exists in the new SObjects facade.
+
+```php
+$accounts = Account::where('Company', 'Test Company')->get(); // collection of accounts.
+
+$accounts = $accounts->map(function($account) {
+	$account->Company = 'New Company Name';
+	return $account;
+});
+
+SObjects::update($accounts); // Sends all these objects to SF with updates.
+```
+
+SalesForce will execute each update individually and will not fail the batch if any individual update fails. If you want success to be dependent on all updates succeeding (all or nothing), then you can pass `true` as the second parameter. If this is set, the batch of updates must all succeed, or none will.
+
+```php
+SObjects::update($accounts, true); // All or none.
+```
+
+## Columns, Where, Ordering
 #### Columns/Properties
 By default, the object is loaded with the columns found in the primary compactLayout. If you'd like additional columns, you would use the `select` method on the model. For example:
 
@@ -170,7 +226,7 @@ $lead = Lead::first();
 $lead->delete();
 ```
 
-### Relationships
+## Relationships
 
 Relationships work the same way.
 
@@ -234,6 +290,15 @@ class TouchPoint extends Model
     /** Any other overrides **/
 }
 ```
+
+## The SObjects Facade
+This is a new feature to the package. The SObjects facade serves the purpose of exposing any global features not model specific, such as authentication and mass updates, but also it is a pass-thru mechanism for the Forrest facade.
+
+Any methods such as get, post, patch, resources, etc will pass through to the Forrest facade and accept parameters respectively.
+
+#### Authentication
+The `authenticate()` method in the facade will return the token information that has been stored in cache/session.
+
 
 ## Security
 
