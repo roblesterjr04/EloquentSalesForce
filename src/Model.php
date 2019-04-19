@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
+use Lester\EloquentSalesForce\Database\SOQLHasOne as HasOne;
 use Lester\EloquentSalesForce\Facades\SObjects;
 
 abstract class Model extends EloquentModel
@@ -127,6 +128,16 @@ abstract class Model extends EloquentModel
 		);
 	}
 
+	public function hasOne($related, $foreignKey = null, $localKey = null)
+	{
+		$instance = $this->newRelatedInstance($related);
+		$foreignKey = $foreignKey ?: $this->getForeignKey();
+		$localKey = $localKey ?: $this->getKeyName();
+		return $this->newSOQLHasOne(
+			$instance->newQuery(), $this, $foreignKey, $localKey
+		);
+	}
+
 	/**
 	 * Define an inverse one-to-one or many relationship.
 	 *
@@ -173,6 +184,11 @@ abstract class Model extends EloquentModel
 	protected function newSOQLHasMany(Builder $query, Model $parent, $foreignKey, $localKey)
 	{
 		return new HasMany($query, $parent, $foreignKey, $localKey);
+	}
+
+	protected function newSOQLHasOne(Builder $query, Model $parent, $foreignKey, $localKey)
+	{
+		return new HasOne($query, $parent, $foreignKey, $localKey);
 	}
 
 	/**
