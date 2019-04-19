@@ -27,7 +27,7 @@ class SOQLHasOne extends HasOneOrMany
     public function initRelation(array $models, $relation)
     {
         foreach ($models as $model) {
-            $model->setRelation($relation, $this->related->newCollection());
+            $model->setRelation($relation, $this->getDefaultFor($model));
         }
 
         return $models;
