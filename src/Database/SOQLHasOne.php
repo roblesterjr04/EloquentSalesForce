@@ -14,7 +14,11 @@ class SOQLHasOne extends HasOneOrMany
      */
     public function getResults()
     {
-        return $this->query->get();
+        if (is_null($this->getParentKey())) {
+            return $this->getDefaultFor($this->parent);
+        }
+
+        return $this->query->first() ?: $this->getDefaultFor($this->parent);
     }
 
     /**
