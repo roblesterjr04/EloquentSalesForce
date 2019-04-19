@@ -41,6 +41,7 @@ abstract class SOQLHasOneOrMany extends Relation
      */
     public function __construct(Builder $query, Model $parent, $foreignKey, $localKey)
     {
+
         $this->localKey = $localKey;
         $this->foreignKey = $foreignKey;
 
