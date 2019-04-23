@@ -34,9 +34,9 @@ class SOQLBuilder extends Builder
 	 * @return void
 	 */
 	public function getModels($columns = ['*'])
-	{
-		return parent::getModels($this->getSalesForceColumns($columns));
-	}
+ 	{
+ 		return parent::getModels(count($this->model->columns) && in_array('*', $columns) ? $this->model->columns : $this->getSalesForceColumns($columns));
+ 	}
 
 	/**
 	 * Paginate the given query.

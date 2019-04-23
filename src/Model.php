@@ -13,6 +13,8 @@ abstract class Model extends EloquentModel
 {
 	protected $guarded = [];
 
+	public $columns = [];
+
 	/**
 	 * The primary key for the model.
 	 *
