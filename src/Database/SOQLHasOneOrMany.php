@@ -420,4 +420,15 @@ abstract class SOQLHasOneOrMany extends Relation
     {
         return $this->foreignKey;
     }
+
+    /**
+     * Get default key for the relationship
+     *
+     * @param  [type] $model [description]
+     * @return [type]        [description]
+     */
+    public function getDefaultFor($model)
+    {
+        return $model->foreignKey;
+    }
 }
