@@ -57,7 +57,8 @@ class SOQLConnection extends Connection
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
 			try {
-				if (Carbon::parse($item) !== false) {
+				if (Carbon::parse($item) !== false &&
+                    !$this->isSalesForceId($item)) {
 					return $item;
 			    }
 		    } catch (\Exception $e) {
@@ -69,4 +70,17 @@ class SOQLConnection extends Connection
 		$query = str_replace_array('?', $bindings, $query);
 		return $query;
 	}
+
+    /**
+     * Based on characters and length of $str, determine if it appears to be a
+     * SalesForce ID.
+     *
+     * @param string $str String to test
+     *
+     * @return bool
+     */
+    private function isSalesForceId($str)
+    {
+        return \preg_match('/^[0-9a-zA-Z]{18}$/', $str);
+    }
 }
