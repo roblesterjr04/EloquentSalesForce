@@ -2,6 +2,7 @@
 
 namespace Lester\EloquentSalesForce;
 
+/** @scrutinizer ignore-call */
 use Forrest;
 use Cache;
 use Session;
@@ -18,6 +19,7 @@ class SObjects
      */
     public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
+        /** @scrutinizer ignore-call */
         self::authenticate();
 
 		$payload = [
@@ -51,6 +53,7 @@ class SObjects
 
     public function describe($object, $full = false)
     {
+        /** @scrutinizer ignore-call */
         self::authenticate();
 
         return $full ? $this->object($object)->describe() : Forrest::desribe($object);

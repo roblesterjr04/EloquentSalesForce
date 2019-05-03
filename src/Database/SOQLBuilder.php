@@ -31,11 +31,11 @@ class SOQLBuilder extends Builder
 	 *
 	 * @access public
 	 * @param string $columns (default: ['*'])
-	 * @return void
+	 * @return Array
 	 */
 	public function getModels($columns = ['*'])
  	{
- 		return parent::getModels(count($this->model->columns) && in_array('*', $columns) ? $this->model->columns : $this->getSalesForceColumns($columns));
+ 		return parent::getModels(count($this->model->columns) && in_array('*', /** @scrutinizer ignore-type */ $columns) ? $this->model->columns : $this->getSalesForceColumns($columns));
  	}
 
 	/**
@@ -61,7 +61,7 @@ class SOQLBuilder extends Builder
 		$page = $page ?: Paginator::resolveCurrentPage($pageName);
 		$perPage = $perPage ?: $this->model->getPerPage();
 		$results = $total
-									? $this->forPage($page, $perPage)->get($columns)
+									? /** @scrutinizer ignore-call */ $this->forPage($page, $perPage)->get($columns)
 									: $this->model->newCollection();
 		return $this->paginator($results, $total, $perPage, $page, [
 			'path' => Paginator::resolveCurrentPath(),

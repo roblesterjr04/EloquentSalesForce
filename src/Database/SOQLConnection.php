@@ -5,10 +5,11 @@ namespace Lester\EloquentSalesForce\Database;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\MySqlBuilder;
 use Illuminate\Database\Query\Processors\MySqlProcessor;
-use Doctrine\DBAL\Driver\PDOMySql\Driver as DoctrineDriver;
 use Illuminate\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
 use Closure;
+/** @scrutinizer ignore-call */
+use Forrest;
 use Carbon\Carbon;
 
 class SOQLConnection extends Connection
@@ -24,10 +25,11 @@ class SOQLConnection extends Connection
      */
     public function select($query, $bindings = [], $useReadPdo = true)
     {
-        return $this->run($query, $bindings, function ($query, $bindings) use ($useReadPdo) {
+        return $this->run($query, $bindings, function ($query, $bindings) {
 
 	        $statement = $this->prepare($query, $bindings);
-	        return \Forrest::query($statement)['records'];
+            /** @scrutinizer ignore-call */
+	        return Forrest::query($statement)['records'];
 
         });
     }
