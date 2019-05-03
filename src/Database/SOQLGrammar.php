@@ -71,13 +71,13 @@ class SOQLGrammar extends Grammar
     protected function whereIn(Builder $query, $where)
     {
         if (empty($where['values'])) {
-			// the below statement is invalid in SOQL
-			// return '0 = 1';
-			// since virtually every object in SalesForce has Id column then
-			// compare that field to null which should always be false.
+            // the below statement is invalid in SOQL
+            // return '0 = 1';
+            // since virtually every object in SalesForce has Id column then
+            // compare that field to null which should always be false.
             return 'Id = null';
         }
-		return parent::whereIn($query, $where);
+        return parent::whereIn($query, $where);
     }
 
 	/**
