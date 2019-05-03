@@ -135,6 +135,27 @@ $lead->FirstName = 'Robert';
 $lead->save();
 ```
 
+#### Columns
+
+By default, the selected columns for the record will be the compact layout defined in the SalesForce instance. This is usually enough. If you need to pull specific columns, you have some options.
+
+```php
+// Per select
+$object = Contact::select('Id', 'Name')->get();
+```
+
+You can also define on the model what columns you want to bring back with each record. Add `public $columns` to the top of the model.
+
+```php
+...
+
+    public $columns = [
+        'Name',
+        'Id',
+        'Email',
+    ];
+```
+
 ## Inserting and Updating
 
 #### Insert
