@@ -156,6 +156,12 @@ You can also define on the model what columns you want to bring back with each r
     ];
 ```
 
+To return the columns currently available on a model, use the `describe` method on the object.
+
+```php
+$fields = Lead::describe();
+```
+
 ## Inserting and Updating
 
 #### Insert

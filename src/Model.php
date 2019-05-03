@@ -226,11 +226,4 @@ abstract class Model extends EloquentModel
 		return $this->Id;
 	}
 
-	public function describe()
-	{
-		if (count($this->columns)) return $this->columns;
-
-		return parent::describe();
-	}
-
 }
