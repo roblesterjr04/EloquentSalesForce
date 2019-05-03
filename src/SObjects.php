@@ -49,9 +49,9 @@ class SObjects
         return Forrest::$name(...$arguments);
     }
 
-    public function object($name)
+    public function object($name, $attributes = [])
     {
-        return new Object([], $name);
+        return new Object($attributes, $name);
     }
 
 }

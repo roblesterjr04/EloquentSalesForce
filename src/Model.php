@@ -31,12 +31,12 @@ abstract class Model extends EloquentModel
 
 	public function __construct(Array $attributes = [], $table = null)
 	{
+		parent::__construct($attributes);
+		
 		$this->table = $table ?: $this->table ?: class_basename($this);
 		$this->attributes['attributes'] = [
 			'type' => $this->table
 		];
-
-		parent::__construct($attributes);
 	}
 
 	public static function create(array $attributes)
@@ -219,6 +219,11 @@ abstract class Model extends EloquentModel
 	public function setSfAttributesAttribute(array $value)
 	{
 		$this->attributes['attributes'] = $value;
+	}
+
+	public function __toString()
+	{
+		return $this->Id;
 	}
 
 }

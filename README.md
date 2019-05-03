@@ -286,7 +286,7 @@ use Lester\EloquentSalesForce\Model;
 class TouchPoint extends Model
 {
     protected $table = 'TouchPoint__c';
-    
+
     /** Any other overrides **/
 }
 ```
@@ -299,10 +299,22 @@ Any methods such as get, post, patch, resources, etc will pass through to the Fo
 #### Authentication
 The `authenticate()` method in the facade will return the token information that has been stored in cache/session.
 
+#### Anonymous Objects
+Sometimes you want to grab a record from SalesForce casually without having to pre-generate a model for it. Now you can do that easily with the `object` method on the facade. Example:
+
+```php
+$lead = SObjects::object('Lead')->find('01t1J00000BVyNBQA1'); // Get a single record by ID
+
+$accounts = SObjects::object('Account')->get(); // Returns all of the specified object. `all` won't work here.
+
+$contact = SObjects::object('Contact')->where('Name', 'like', 'Barns %')->get(); // Get all contacts where name starts with Barns.
+```
+
+The class used for each object returned will be `Lester\EloquentSalesForce\Object`.
 
 ## Security
 
-If you discover any security related issues, please email 
+If you discover any security related issues, please email
 instead of using the issue tracker.
 
 ## Credits
