@@ -32,7 +32,7 @@ abstract class Model extends EloquentModel
 	public function __construct(Array $attributes = [], $table = null)
 	{
 		parent::__construct($attributes);
-		
+
 		$this->table = $table ?: $this->table ?: class_basename($this);
 		$this->attributes['attributes'] = [
 			'type' => $this->table
@@ -224,6 +224,13 @@ abstract class Model extends EloquentModel
 	public function __toString()
 	{
 		return $this->Id;
+	}
+
+	public function describe()
+	{
+		if (count($this->columns)) return $this->columns;
+
+		return parent::describe();
 	}
 
 }

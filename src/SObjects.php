@@ -49,6 +49,13 @@ class SObjects
         return Forrest::$name(...$arguments);
     }
 
+    public function describe($object, $full = false)
+    {
+        self::authenticate();
+
+        return $full ? $this->object($object)->describe() : Forrest::desribe($object);
+    }
+
     public function object($name, $attributes = [])
     {
         return new SalesForceObject($attributes, $name);
