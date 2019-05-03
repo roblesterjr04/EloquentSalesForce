@@ -8,8 +8,7 @@ use Illuminate\Database\Query\Processors\MySqlProcessor;
 use Illuminate\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
 use Closure;
-/** @scrutinizer ignore-call */
-use Forrest;
+/** @scrutinizer ignore-call */use Forrest;
 use Carbon\Carbon;
 
 class SOQLConnection extends Connection

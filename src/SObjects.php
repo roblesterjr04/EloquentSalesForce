@@ -2,8 +2,7 @@
 
 namespace Lester\EloquentSalesForce;
 
-/** @scrutinizer ignore-call */
-use Forrest;
+/** @scrutinizer ignore-call */use Forrest;
 use Cache;
 use Session;
 
