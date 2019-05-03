@@ -81,6 +81,6 @@ class SOQLConnection extends Connection
      */
     private function isSalesForceId($str)
     {
-        return \preg_match('/^[0-9a-zA-Z]{18}$/', $str);
+        return \preg_match('/^[0-9a-zA-Z]{15,18}$/', $str);
     }
 }
