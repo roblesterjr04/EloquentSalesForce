@@ -3,6 +3,7 @@
 namespace Lester\EloquentSalesForce;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
@@ -91,12 +92,12 @@ abstract class Model extends EloquentModel
 	private function sfObject()
 	{
 		/** @scrutinizer ignore-call */
-		return isset($this->attributes['Id']) ? $this->table . '/' . $this->Id : $this->table;
+		return Arr::has($this->attributes, 'Id') ? $this->table . '/' . $this->Id : $this->table;
 	}
 
 	private function sfMethod()
 	{
-		return isset($this->attributes['Id']) ? 'patch' : 'post';
+		return Arr::has($this->attributes, 'Id') ? 'patch' : 'post';
 	}
 
 	/**
@@ -209,7 +210,7 @@ abstract class Model extends EloquentModel
 	 */
 	public function getSfAttributesAttribute()
 	{
-		return isset($this->attributes['attributes']) ? $this->attributes['attributes'] : null;
+		return Arr::get($this->attributes, 'attributes');
 	}
 
 	/**
@@ -223,7 +224,7 @@ abstract class Model extends EloquentModel
 
 	public function __toString()
 	{
-		return $this->Id;
+		return Arr::get($this->attributes, 'Id');
 	}
 
 }

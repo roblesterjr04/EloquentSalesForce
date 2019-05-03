@@ -52,24 +52,24 @@ class SOQLConnection extends Connection
         return $result;
 	}
 
-	private function prepare($query, $bindings)
-	{
-		$query = str_replace('`', '', $query);
-		$bindings = array_map(function($item) {
-			try {
-				if (Carbon::parse($item) !== false &&
-                    !$this->isSalesForceId($item)) {
-					return $item;
-			    }
-		    } catch (\Exception $e) {
-			    return "'$item'";
-		    }
-			return "'$item'";
-		}, $bindings);
+    private function prepare($query, $bindings)
+    {
+        $query = str_replace('`', '', $query);
+        $bindings = array_map(function($item) {
+        try {
+            if (Carbon::parse($item) !== false &&
+                !$this->isSalesForceId($item)) {
+                    return $item;
+                }
+            } catch (\Exception $e) {
+                return "'$item'";
+            }
+            return "'$item'";
+        }, $bindings);
 
-		$query = str_replace_array('?', $bindings, $query);
-		return $query;
-	}
+        $query = str_replace_array('?', $bindings, $query);
+        return $query;
+    }
 
     /**
      * Based on characters and length of $str, determine if it appears to be a
@@ -81,6 +81,6 @@ class SOQLConnection extends Connection
      */
     private function isSalesForceId($str)
     {
-        return \preg_match('/^[0-9a-zA-Z]{15,18}$/', $str);
+        return \preg_match('/^[0-9a-zA-Z]{15,18}$/', $str) >= 0;
     }
 }
