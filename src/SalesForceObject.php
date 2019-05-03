@@ -2,7 +2,7 @@
 
 namespace Lester\EloquentSalesForce;
 
-class Object extends Model
+class SalesForceObject extends Model
 {
-	
+
 }

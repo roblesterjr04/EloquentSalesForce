@@ -51,7 +51,7 @@ class SObjects
 
     public function object($name, $attributes = [])
     {
-        return new Object($attributes, $name);
+        return new SalesForceObject($attributes, $name);
     }
 
 }

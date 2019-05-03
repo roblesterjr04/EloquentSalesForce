@@ -308,9 +308,11 @@ $lead = SObjects::object('Lead')->find('01t1J00000BVyNBQA1'); // Get a single re
 $accounts = SObjects::object('Account')->get(); // Returns all of the specified object. `all` won't work here.
 
 $contact = SObjects::object('Contact')->where('Name', 'like', 'Barns %')->get(); // Get all contacts where name starts with Barns.
+
+$newLead = SObjects::object('Lead', ['Email'=>'test@test.com', 'FirstName' => 'Test', 'LastName' => 'Name', 'Company' => 'Test Company'])->save(); // Save a new lead;
 ```
 
-The class used for each object returned will be `Lester\EloquentSalesForce\Object`.
+The class used for each object returned will be `Lester\EloquentSalesForce\SalesForceObject`.
 
 ## Security
 
