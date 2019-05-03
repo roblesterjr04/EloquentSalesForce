@@ -129,10 +129,12 @@ class SOQLBuilder extends Builder
 	 * @return array
 	 */
 	public function describe()
-	{
-		$table = $this->model->getTable();
+ 	{
+ 		$table = $this->model->getTable();
 
-		return $this->getSalesForceColumns(['*'], $table);
-	}
+ 		if (count($this->model->columns)) return $this->model->columns;
+
+ 		return $this->getSalesForceColumns(['*'], $table);
+ 	}
 
 }
