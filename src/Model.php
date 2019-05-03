@@ -29,9 +29,9 @@ abstract class Model extends EloquentModel
 	 */
 	protected $keyType = 'string';
 
-	public function __construct(Array $attributes = [])
+	public function __construct(Array $attributes = [], $table = null)
 	{
-		$this->table = $this->table ?: class_basename($this);
+		$this->table = $table ?: $this->table ?: class_basename($this);
 		$this->attributes['attributes'] = [
 			'type' => $this->table
 		];
