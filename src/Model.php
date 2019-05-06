@@ -86,7 +86,9 @@ abstract class Model extends EloquentModel
 				try {
 					return $this->find($result['id']);
 				} catch (\Exception $e) {
-					;
+					if (isset($result['id'])) {
+						$this->Id = $result['id'];
+					}
 				}
 			}
 			return $this;
