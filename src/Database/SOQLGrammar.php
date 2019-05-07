@@ -95,8 +95,9 @@ class SOQLGrammar extends Grammar
 			$columns = ServiceProvider::objectFields($table, ['*']);
 			$columns = collect($columns)->implode(',');
 
-			$table_p = $this->unWrapValue(str_plural($this->wrapTable($table)));
-            return trim(", (select $columns from {$table_p})");
+			$table_p = $this->unWrapValue($this->grammarPlural($table));
+
+			return trim(", (select $columns from {$table_p})");
 		})->implode(' ');
 	}
 
@@ -131,4 +132,11 @@ class SOQLGrammar extends Grammar
         }
         return 'select '.$aggregate['function'].'('.$column.') aggregate';
     }
+
+	private function grammarPlural($string)
+	{
+		if (Str::endsWith($string, 'try')) return Str::replaceLast('try', 'tries', $string);
+
+		return Str::plural($string);
+	}
 }
