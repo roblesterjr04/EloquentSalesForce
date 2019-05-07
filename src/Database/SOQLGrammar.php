@@ -92,12 +92,19 @@ class SOQLGrammar extends Grammar
 		return collect($joins)->map(function ($join) use ($query) {
 			$table = $join->table;
 
-			$columns = ServiceProvider::objectFields($table, ['*']);
+			$columns = ServiceProvider::objectFields($table, $join->columns ?: ['*']);
 			$columns = collect($columns)->implode(',');
 
 			$table_p = $this->unWrapValue($this->grammarPlural($table));
 
-			return trim(", (select $columns from {$table_p})");
+			$strQuery = "select $columns from {$table_p} ";
+			Arr::forget($join->wheres, 0);
+			
+			if ($join->wheres) $strQuery .= $this->compileWheres($join);
+
+			$strQuery = trim(", ($strQuery)");
+
+			return $strQuery;
 		})->implode(' ');
 	}
 
@@ -133,10 +140,28 @@ class SOQLGrammar extends Grammar
         return 'select '.$aggregate['function'].'('.$column.') aggregate';
     }
 
+	/**
+	 * Modify plural to pluralize try to tries
+	 *
+	 * @param  [type] $string [description]
+	 * @return [type]         [description]
+	 */
 	private function grammarPlural($string)
 	{
 		if (Str::endsWith($string, 'try')) return Str::replaceLast('try', 'tries', $string);
 
 		return Str::plural($string);
 	}
+
+	/**
+     * Compile a "where not null" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereNotNull(Builder $query, $where)
+    {
+        return $this->wrap($where['column']).' <> null';
+    }
 }
