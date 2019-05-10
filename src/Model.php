@@ -48,7 +48,7 @@ abstract class Model extends EloquentModel
 
 	public function update(array $attributes = array(), array $options = array())
 	{
-		$this->attributes = array_merge($this->attributes, $attributes);
+		$this->attributes = $attributes;
 		return $this->save($options);
 	}
 
