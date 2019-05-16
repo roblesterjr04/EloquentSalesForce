@@ -227,4 +227,9 @@ abstract class Model extends EloquentModel
 		return Arr::get($this->attributes, 'Id');
 	}
 
+	public static function columns()
+	{
+		return (new static([]))->columns;
+	}
+
 }
