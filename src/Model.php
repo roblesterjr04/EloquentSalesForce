@@ -83,7 +83,16 @@ abstract class Model extends EloquentModel
 				'body' => $body
 			]);
 
-			return isset($result['success']) ? $this->find($result['id']) : $this;
+			if (isset($result['success'])) {
+				try {
+					return $this->find($result['id']);
+				} catch (\Exception $e) {
+					if (isset($result['id'])) {
+						$this->Id = $result['id'];
+					}
+				}
+			}
+			return $this;
 		} catch (\Exception $e) {
 			throw $e;
 		}
