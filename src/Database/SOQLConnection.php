@@ -7,8 +7,8 @@ use Illuminate\Database\Schema\MySqlBuilder;
 use Illuminate\Database\Query\Processors\MySqlProcessor;
 use Illuminate\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
+use Lester\EloquentSalesForce\Facades\SObjects;
 use Closure;
-/** @scrutinizer ignore-call */use Forrest;
 use Carbon\Carbon;
 
 class SOQLConnection extends Connection
@@ -28,7 +28,7 @@ class SOQLConnection extends Connection
 
 	        $statement = $this->prepare($query, $bindings);
             /** @scrutinizer ignore-call */
-	        return Forrest::query($statement)['records'];
+	        return SObjects::query($statement)['records'];
 
         });
     }

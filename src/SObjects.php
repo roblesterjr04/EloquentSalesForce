@@ -9,6 +9,12 @@ use Session;
 class SObjects
 {
 
+    public function __construct()
+    {
+        /** @scrutinizer ignore-call */
+        self::authenticate();
+    }
+
     /**
      * Bulk update SObjects in SalesForce
      *
@@ -18,10 +24,7 @@ class SObjects
      */
     public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
-        /** @scrutinizer ignore-call */
-        self::authenticate();
-
-		$payload = [
+        $payload = [
             'method' => 'patch',
             'body' => [
 				'allOrNone' => $allOrNone,
@@ -29,7 +32,7 @@ class SObjects
             ]
         ];
 
-		$response = Forrest::composite('sobjects', $payload);
+		$response = self::composite('sobjects', $payload);
 
 		return $response;
 	}
@@ -52,9 +55,6 @@ class SObjects
 
     public function describe($object, $full = false)
     {
-        /** @scrutinizer ignore-call */
-        self::authenticate();
-
         return $full ? $this->object($object)->describe() : Forrest::desribe($object);
     }
 
