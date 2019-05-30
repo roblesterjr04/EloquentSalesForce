@@ -52,7 +52,7 @@ class SObjects
     {
         try {
             return Forrest::$name(...$arguments);
-        } catch (Omniphx/Forrest/Exceptions/MissingTokenException $ex) {
+        } catch (Omniphx\Forrest\Exceptions\MissingTokenException $ex) {
             self::authenticate();
             return Forrest::$name(...$arguments);
         }
