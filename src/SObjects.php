@@ -50,8 +50,12 @@ class SObjects
 
     public function __call($name, $arguments)
     {
-        self::authenticate();
-        return Forrest::$name(...$arguments);
+        try {
+            return Forrest::$name(...$arguments);
+        } catch (Omniphx/Forrest/Exceptions/MissingTokenException $ex) {
+            self::authenticate();
+            return Forrest::$name(...$arguments);
+        }
     }
 
     public function describe($object, $full = false)
