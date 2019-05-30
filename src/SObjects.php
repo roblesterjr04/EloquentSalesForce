@@ -3,6 +3,7 @@
 namespace Lester\EloquentSalesForce;
 
 /** @scrutinizer ignore-call */use Forrest;
+use Omniphx\Forrest\Exceptions\MissingTokenException;
 use Cache;
 use Session;
 
@@ -52,7 +53,7 @@ class SObjects
     {
         try {
             return Forrest::$name(...$arguments);
-        } catch (Omniphx\Forrest\Exceptions\MissingTokenException $ex) {
+        } catch (MissingTokenException $ex) {
             self::authenticate();
             return Forrest::$name(...$arguments);
         }
