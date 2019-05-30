@@ -7,6 +7,7 @@ use Illuminate\Database\Schema\MySqlBuilder;
 use Illuminate\Database\Query\Processors\MySqlProcessor;
 use Illuminate\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
+use Omniphx\Forrest\Exceptions\MissingResourceException;
 use Lester\EloquentSalesForce\Facades\SObjects;
 use Closure;
 use Carbon\Carbon;
@@ -28,7 +29,12 @@ class SOQLConnection extends Connection
 
 	        $statement = $this->prepare($query, $bindings);
             /** @scrutinizer ignore-call */
-	        return SObjects::query($statement)['records'];
+            try {
+    	        return SObjects::query($statement)['records'];
+            } catch (MissingResourceException $ex) {
+                SObjects::authenticate();
+                return SObjects::query($statement)['records'];
+            }
 
         });
     }
