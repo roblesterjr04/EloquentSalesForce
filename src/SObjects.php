@@ -50,6 +50,7 @@ class SObjects
 
     public function __call($name, $arguments)
     {
+        self::authenticate();
         return Forrest::$name(...$arguments);
     }
 
