@@ -5,6 +5,7 @@ namespace Lester\EloquentSalesForce;
 /** @scrutinizer ignore-call */use Forrest;
 use Omniphx\Forrest\Exceptions\MissingTokenException;
 use Omniphx\Forrest\Exceptions\MissingResourceException;
+use Omniphx\Forrest\Exceptions\MissingVersionException;
 use Cache;
 use Session;
 
@@ -58,7 +59,12 @@ class SObjects
             self::authenticate();
             return Forrest::$name(...$arguments);
         } catch (MissingResourceException $ex) {
+            self::authenticate();
             Forrest::resources();
+            return Forrest::$name(...$arguments);
+        } catch (MissingVersionException $ex) {
+            self::authenticate();
+            Forrest::versions();
             return Forrest::$name(...$arguments);
         }
     }
