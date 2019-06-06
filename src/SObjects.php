@@ -14,8 +14,7 @@ class SObjects
 
     public function __construct()
     {
-        /** @scrutinizer ignore-call */
-        self::authenticate();
+
     }
 
     /**
@@ -53,6 +52,7 @@ class SObjects
 
     public function __call($name, $arguments)
     {
+        self::authenticate();
         try {
             return Forrest::$name(...$arguments);
         } catch (MissingTokenException $ex) {
@@ -71,12 +71,31 @@ class SObjects
 
     public function describe($object, $full = false)
     {
+        self::authenticate();
         return $full ? $this->object($object)->describe() : Forrest::desribe($object);
     }
 
     public function object($name, $attributes = [])
     {
         return new SalesForceObject($attributes, $name);
+    }
+
+    public function convert($str)
+    {
+        $retval = '';
+        foreach (str_split($str, 5) as $seq)
+            $retval .= substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345", bindec(strrev($this->is_uppercase($seq))), 1);
+
+        return $str.$retval;
+    }
+
+    private function is_uppercase($str)
+    {
+        $retval = '';
+        for ($i=0; $i<strlen($str); $i++)
+            $retval .= strrpos("AABCDEFGHIJKLMNOPQRSQUVWXYZ", substr($str,$i,1)) ? '1':'0';
+
+        return $retval;
     }
 
 }
