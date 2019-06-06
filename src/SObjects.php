@@ -82,6 +82,7 @@ class SObjects
 
     public function convert($str)
     {
+        if (strlen($str) <> 15) return $str;
         $retval = '';
         foreach (str_split($str, 5) as $seq)
             $retval .= substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345", bindec(strrev($this->is_uppercase($seq))), 1);
