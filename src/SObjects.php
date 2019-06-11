@@ -47,7 +47,9 @@ class SObjects
         $storage = ucwords(config('eloquent_sf.forrest.storage.type'));
         if (!$storage::has(config('eloquent_sf.forrest.storage.path').'token'))
             Forrest::authenticate();
-        return decrypt($storage::get(config('eloquent_sf.forrest.storage.path').'token'));
+        $tokens = (object)decrypt($storage::get(config('eloquent_sf.forrest.storage.path').'token'));
+        Session::put('eloquent_sf_instance_url', $tokens->instance_url);
+        return $tokens;
 	}
 
     public function __call($name, $arguments)
