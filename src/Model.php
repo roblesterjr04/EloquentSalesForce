@@ -231,6 +231,11 @@ abstract class Model extends EloquentModel
 		$this->attributes['attributes'] = $value;
 	}
 
+	public function getWebLinkAttribute()
+	{
+		return str_before(config('eloquent_sf.credentials.loginURL'), '/') . $this->ID;
+	}
+
 	public function __toString()
 	{
 		return Arr::get($this->attributes, 'Id');
