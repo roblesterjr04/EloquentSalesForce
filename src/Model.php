@@ -2,6 +2,7 @@
 
 namespace Lester\EloquentSalesForce;
 
+use Session;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
@@ -233,7 +234,7 @@ abstract class Model extends EloquentModel
 
 	public function getWebLinkAttribute()
 	{
-		return str_before(config('eloquent_sf.credentials.loginURL'), '/') . $this->ID;
+		return $instance = Session::get('eloquent_sf_instance_url') ? str_before($instance, '/') . $this->ID : null;
 	}
 
 	public function __toString()
