@@ -235,7 +235,7 @@ abstract class Model extends EloquentModel
 	public function getWebLinkAttribute()
 	{
 		$instance = Session::get('eloquent_sf_instance_url');
-		return $instance ? str_before($instance, '/') . $this->ID : null;
+		return $instance ? rtrim($instance, '/') . str_start($this->Id, '/') : null;
 	}
 
 	public function __toString()
