@@ -55,6 +55,9 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function whereBasic(Builder $query, $where)
 	{
+		// allow for "false" values to not be wrapped.
+		if (is_bool($where['value'])) return $this->whereBoolean($query, $where);
+
 		if (Str::contains(strtolower($where['operator']), 'not like')) {
 			return sprintf(
 				'(not %s like %s)',
@@ -99,7 +102,7 @@ class SOQLGrammar extends Grammar
 
 			$strQuery = "select $columns from {$table_p} ";
 			Arr::forget($join->wheres, 0);
-			
+
 			if ($join->wheres) $strQuery .= $this->compileWheres($join);
 
 			$strQuery = trim(", ($strQuery)");
@@ -164,4 +167,16 @@ class SOQLGrammar extends Grammar
     {
         return $this->wrap($where['column']).' <> null';
     }
+
+	/**
+	 * Define grammer for boolean where statements in SOQL
+	 * @param  Builder $query [description]
+	 * @param  [type]  $where [description]
+	 * @return [type]         [description]
+	 */
+	protected function whereBoolean(Builder $query, $where)
+	{
+		if ($where['value'] === true) return $where['column'] . $where['operator'] . 'TRUE';
+		else return $where['column'] . $where['operator'] . 'FALSE';
+	}
 }
