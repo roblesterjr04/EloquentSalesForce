@@ -1,4 +1,5 @@
 # Eloquent Sales Force
+## SalesForce Object to Laravel ORM for Laravel 5
 
 [![Laravel](https://img.shields.io/badge/Laravel-5.5^-orange.svg)](http://laravel.com)
 [![Build Status](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/build.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/build-status/master)
