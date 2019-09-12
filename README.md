@@ -163,6 +163,15 @@ To return the columns currently available on a model, use the `describe` method 
 $fields = Lead::describe();
 ```
 
+#### Picklists
+
+If you are using a field that is a picklist in SalesForce, you can capture the values of that picklist from this function on the model.
+
+```php
+$statusValues = $lead->getPicklistValues('Status');
+```
+
+
 ## Inserting and Updating
 
 #### Insert
@@ -341,6 +350,14 @@ $newLead = SObjects::object('Lead', ['Email'=>'test@test.com', 'FirstName' => 'T
 ```
 
 The class used for each object returned will be `Lester\EloquentSalesForce\SalesForceObject`.
+
+#### Pick list choices
+You can get the possible pick list values from a dropdown by using this method on the facade.
+
+```php
+$listValues = SObjects::getPicklistValues('Lead', 'Status');
+```
+
 
 ## Security
 
