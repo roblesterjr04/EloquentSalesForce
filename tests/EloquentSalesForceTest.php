@@ -117,7 +117,7 @@ class EloquentSalesForceTest extends TestCase
      */
     public function testWhereIn()
     {
-        $leads = TestLead::where('FirstName', ['Kathy', 'Betty'])->get();
+        $leads = TestLead::whereIn('FirstName', ['Kathy', 'Betty'])->get();
         $this->assertTrue($leads->count() >= 2);
     }
 
