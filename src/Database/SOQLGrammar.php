@@ -176,7 +176,7 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function whereBoolean(Builder $query, $where)
 	{
-		if ($where['value'] === true) return $where['column'] . $where['operator'] . 'TRUE';
-		else return $where['column'] . $where['operator'] . 'FALSE';
+		if ($where['value'] === true) return $this->wrap($where['column']) . $where['operator'] . 'TRUE';
+		else return $this->wrap($where['column']) . $where['operator'] . 'FALSE';
 	}
 }
