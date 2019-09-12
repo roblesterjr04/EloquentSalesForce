@@ -59,7 +59,7 @@ abstract class SOQLHasOneOrMany extends Relation
      */
     public function make(array $attributes = [])
     {
-        return tap($this->related->newInstance($attributes), function ($instance) {
+        return tap($this->related->newInstance($attributes), function($instance) {
             $this->setForeignAttributesForCreate($instance);
         });
     }
@@ -167,7 +167,7 @@ abstract class SOQLHasOneOrMany extends Relation
     {
         $foreign = $this->getForeignKeyName();
 
-        return $results->mapToDictionary(function ($result) use ($foreign) {
+        return $results->mapToDictionary(function($result) use ($foreign) {
             return [$result->{$foreign} => $result];
         })->all();
     }
@@ -233,7 +233,7 @@ abstract class SOQLHasOneOrMany extends Relation
      */
     public function updateOrCreate(array $attributes, array $values = [])
     {
-        return tap($this->firstOrNew($attributes), function ($instance) use ($values) {
+        return tap($this->firstOrNew($attributes), function($instance) use ($values) {
             $instance->fill($values);
 
             $instance->save();
@@ -276,7 +276,7 @@ abstract class SOQLHasOneOrMany extends Relation
      */
     public function create(array $attributes = [])
     {
-        return tap($this->related->newInstance($attributes), function ($instance) {
+        return tap($this->related->newInstance($attributes), function($instance) {
             $this->setForeignAttributesForCreate($instance);
 
             $instance->save();
@@ -319,7 +319,7 @@ abstract class SOQLHasOneOrMany extends Relation
      */
     public function update(array $attributes)
     {
-        if ($this->related->usesTimestamps() && ! is_null($this->relatedUpdatedAt())) {
+        if ($this->related->usesTimestamps() && !is_null($this->relatedUpdatedAt())) {
             $attributes[$this->relatedUpdatedAt()] = $this->related->freshTimestampString();
         }
 
@@ -353,12 +353,12 @@ abstract class SOQLHasOneOrMany extends Relation
      */
     public function getRelationExistenceQueryForSelfRelation(Builder $query, Builder $parentQuery, $columns = ['*'])
     {
-        $query->from($query->getModel()->getTable().' as '.$hash = $this->getRelationCountHash());
+        $query->from($query->getModel()->getTable() . ' as ' . $hash = $this->getRelationCountHash());
 
         $query->getModel()->setTable($hash);
 
         return $query->select($columns)->whereColumn(
-            $this->getQualifiedParentKeyName(), '=', $hash.'.'.$this->getForeignKeyName()
+            $this->getQualifiedParentKeyName(), '=', $hash . '.' . $this->getForeignKeyName()
         );
     }
 
@@ -369,7 +369,7 @@ abstract class SOQLHasOneOrMany extends Relation
      */
     public function getRelationCountHash()
     {
-        return 'laravel_reserved_'.static::$selfJoinCount++;
+        return 'laravel_reserved_' . static::$selfJoinCount++;
     }
 
     /**
