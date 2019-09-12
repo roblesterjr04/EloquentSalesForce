@@ -111,6 +111,16 @@ class EloquentSalesForceTest extends TestCase
         $this->assertCount(5, $leads);
     }
 
+    /*
+     * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
+     * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereIn
+     */
+    public function testWhereIn()
+    {
+        $leads = TestLead::where('FirstName', ['Kathy', 'Betty'])->get();
+        $this->assertTrue($leads->count() >= 2);
+    }
+
     /**
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereDate
