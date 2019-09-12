@@ -19,7 +19,7 @@ class SOQLConnection extends Connection
 	 */
 	public function select($query, $bindings = [], $useReadPdo = true)
 	{
-		return $this->run($query, $bindings, function ($query, $bindings) {
+		return $this->run($query, $bindings, function($query, $bindings) {
 			if ($this->pretending()) {
 				return [];
 			}
@@ -46,7 +46,7 @@ class SOQLConnection extends Connection
 	 */
 	public function cursor($query, $bindings = [], $useReadPdo = true)
 	{
-		$result = $this->run($query, $bindings, function ($query, $bindings) {
+		$result = $this->run($query, $bindings, function($query, $bindings) {
 			if ($this->pretending()) {
 				return [];
 			}

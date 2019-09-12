@@ -45,9 +45,9 @@ class SObjects
 	public function authenticate()
 	{
 		$storage = ucwords(config('eloquent_sf.forrest.storage.type'));
-		if (!$storage::has(config('eloquent_sf.forrest.storage.path').'token'))
+		if (!$storage::has(config('eloquent_sf.forrest.storage.path') . 'token'))
 			Forrest::authenticate();
-		$tokens = (object)decrypt($storage::get(config('eloquent_sf.forrest.storage.path').'token'));
+		$tokens = (object) decrypt($storage::get(config('eloquent_sf.forrest.storage.path') . 'token'));
 		Session::put('eloquent_sf_instance_url', $tokens->instance_url);
 		return $tokens;
 	}
@@ -104,12 +104,15 @@ class SObjects
 	 */
 	public function convert($str)
 	{
-		if (strlen($str) <> 15) return $str;
+		if (strlen($str) <> 15) {
+			return $str;
+		}
 		$retval = '';
-		foreach (str_split($str, 5) as $seq)
-			$retval .= substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345", bindec(strrev($this->is_uppercase($seq))), 1);
+		foreach (str_split($str, 5) as $seq) {
+					$retval .= substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345", bindec(strrev($this->is_uppercase($seq))), 1);
+		}
 
-		return $str.$retval;
+		return $str . $retval;
 	}
 
 	/**
@@ -121,8 +124,8 @@ class SObjects
 	private function is_uppercase($str)
 	{
 		$retval = '';
-		for ($i=0; $i<strlen($str); $i++)
-			$retval .= strrpos("AABCDEFGHIJKLMNOPQRSQUVWXYZ", substr($str,$i,1)) ? '1':'0';
+		for ($i = 0; $i < strlen($str); $i++)
+			$retval .= strrpos("AABCDEFGHIJKLMNOPQRSQUVWXYZ", substr($str, $i, 1)) ? '1' : '0';
 
 		return $retval;
 	}
@@ -139,8 +142,9 @@ class SObjects
 		Forrest::authenticate();
 		$desc = Forrest::sobjects($object . '/describe');
 
-		if (!isset($desc['fields']))
-			return collect([]);
+		if (!isset($desc['fields'])) {
+					return collect([]);
+		}
 
 		foreach ($desc['fields'] as $f) {
 			if ($f['name'] == $field) {
