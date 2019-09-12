@@ -101,6 +101,16 @@ class EloquentSalesForceTest extends TestCase
 	    $this->assertCount(5, $leads);
     }
 
+    /*
+     * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
+     * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereBoolean
+     */
+    public function testWhereBoolean()
+    {
+        $leads = TestLead::where('DoNotCall', false)->limit(5)->get();
+        $this->assertCount(5, $leads);
+    }
+
     /**
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
 	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereDate
