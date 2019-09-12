@@ -14,37 +14,69 @@ use Carbon\Carbon;
 
 class SOQLConnection extends Connection
 {
-
-	/**
-     * Run a select statement against the database.
-     *
-     * @param  string  $query
-     * @param  array  $bindings
-     * @param  bool  $useReadPdo
-     * @return array
+    /**
+     * {@inheritDoc}
      */
     public function select($query, $bindings = [], $useReadPdo = true)
     {
         return $this->run($query, $bindings, function ($query, $bindings) {
-
-	        $statement = $this->prepare($query, $bindings);
-            /** @scrutinizer ignore-call */
-            try {
-    	        return SObjects::query($statement)['records'];
-            } catch (MissingResourceException $ex) {
-                SObjects::authenticate();
-                return SObjects::query($statement)['records'];
+            if ($this->pretending()) {
+                return [];
             }
 
+            $statement = $this->prepare($query, $bindings);
+
+            /** @scrutinizer ignore-call */
+            $result = SObjects::query($statement);
+            $records = $result['records'];
+
+            while (isset($result['nextRecordsUrl'])) {
+                $result = SObjects::next($result['nextRecordsUrl']);
+                if (isset($result['records'])) {
+                    $records = \array_merge($records, $result['records']);
+                }
+            }
+
+            return $records;
         });
     }
 
-	protected function run($query, $bindings, Closure $callback)
-	{
-		$start = microtime(true);
+    /**
+     * {@inheritDoc}
+     */
+    public function cursor($query, $bindings = [], $useReadPdo = true)
+    {
+        $result = $this->run($query, $bindings, function ($query, $bindings) {
+            if ($this->pretending()) {
+                return [];
+            }
 
-		try {
-			$result = $this->runQueryCallback($query, $bindings, $callback);
+            $statement = $this->prepare($query, $bindings);
+
+            /** @scrutinizer ignore-call */
+            return SObjects::query($statement);
+        });
+
+        while (true) {
+            foreach ($result['records'] as $record) {
+                yield $record;
+            }
+            if (!isset($result['nextRecordsUrl'])) {
+                break;
+            }
+            $result = SObjects::next($result['nextRecordsUrl']);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function run($query, $bindings, Closure $callback)
+    {
+        $start = microtime(true);
+
+        try {
+            $result = $this->runQueryCallback($query, $bindings, $callback);
         } catch (QueryException $e) {
             $result = $this->handleQueryException(
                 $e, $query, $bindings, $callback
@@ -57,7 +89,7 @@ class SOQLConnection extends Connection
             $query, $bindings, $this->getElapsedTime($start)
         );
         return $result;
-	}
+    }
 
     private function prepare($query, $bindings)
     {
