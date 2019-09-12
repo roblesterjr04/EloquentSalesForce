@@ -101,4 +101,31 @@ class SObjects
         return $retval;
     }
 
+    /**
+     * Function provided by @seankndy to get picklist values
+     * 
+     * @param  [type] $object [description]
+     * @param  [type] $field  [description]
+     * @return [type]         [description]
+     */
+    public function getPicklistValues($object, $field)
+    {
+        Forrest::authenticate();
+        $desc = Forrest::sobjects($object . '/describe');
+
+        if (!isset($desc['fields']))
+            return [];
+
+        foreach ($desc['fields'] as $f) {
+            if ($f['name'] == $field) {
+                $values = [];
+                foreach ($f['picklistValues'] as $p) {
+                    $values[$p['value']] = $p['label'];
+                }
+                return $values;
+            }
+        }
+        return [];
+    }
+
 }
