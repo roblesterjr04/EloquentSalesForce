@@ -141,7 +141,9 @@ class SOQLBuilder extends Builder
 	{
 		$table = $this->model->getTable();
 
-		if (count($this->model->columns)) return $this->model->columns;
+		if (count($this->model->columns)) {
+			return $this->model->columns;
+		}
 
 		return $this->getSalesForceColumns(['*'], $table);
 	}

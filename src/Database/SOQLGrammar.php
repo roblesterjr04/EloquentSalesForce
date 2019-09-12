@@ -142,9 +142,9 @@ class SOQLGrammar extends Grammar
 		// we need to prepend "distinct" onto the column name so that the query takes
 		// it into account when it performs the aggregating operations on the data.
 		if ($query->distinct && $column !== '*') {
-			$column = 'distinct '.$column;
+			$column = 'distinct ' . $column;
 		}
-		return 'select '.$aggregate['function'].'('.$column.') aggregate';
+		return 'select ' . $aggregate['function'] . '(' . $column . ') aggregate';
 	}
 
 	/**
@@ -171,7 +171,7 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function whereNotNull(Builder $query, $where)
 	{
-		return $this->wrap($where['column']).' <> null';
+		return $this->wrap($where['column']) . ' <> null';
 	}
 
 	/**
