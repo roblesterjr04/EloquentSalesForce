@@ -180,6 +180,21 @@ class EloquentSalesForceTest extends TestCase
 
     }
 
+    /*
+     * @covers Lester\EloquentSalesForce\Model::getPicklistValues
+     * @covers Lester\EloquentSalesForce\SObjects::getPicklistValues
+     */
+    public function testGetPicklistValues()
+    {
+        $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+
+        $statuses = $lead->getPicklistValues('Status');
+
+        $this->assert($statuses->count());
+
+        $lead->delete();
+    }
+
     public function setUp()
 	{
 		parent::setUp();

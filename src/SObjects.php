@@ -103,7 +103,7 @@ class SObjects
 
     /**
      * Function provided by @seankndy to get picklist values
-     * 
+     *
      * @param  [type] $object [description]
      * @param  [type] $field  [description]
      * @return [type]         [description]
@@ -114,7 +114,7 @@ class SObjects
         $desc = Forrest::sobjects($object . '/describe');
 
         if (!isset($desc['fields']))
-            return [];
+            return collect([]);
 
         foreach ($desc['fields'] as $f) {
             if ($f['name'] == $field) {
@@ -122,10 +122,10 @@ class SObjects
                 foreach ($f['picklistValues'] as $p) {
                     $values[$p['value']] = $p['label'];
                 }
-                return $values;
+                return collect($values);
             }
         }
-        return [];
+        return collect([]);
     }
 
 }
