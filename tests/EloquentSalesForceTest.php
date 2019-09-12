@@ -186,6 +186,7 @@ class EloquentSalesForceTest extends TestCase
      */
     public function testGetPicklistValues()
     {
+        $email = strtolower(str_random(10) . '@test.com');
         $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 
         $statuses = $lead->getPicklistValues('Status');

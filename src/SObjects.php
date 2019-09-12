@@ -71,17 +71,37 @@ class SObjects
         }
     }
 
+    /**
+     * Describes a specific SalesForce Model/Object pair.
+     * 
+     * @param  [type]  $object [description]
+     * @param  boolean $full   [description]
+     * @return [type]          [description]
+     */
     public function describe($object, $full = false)
     {
         self::authenticate();
         return $full ? $this->object($object)->describe() : Forrest::desribe($object);
     }
 
+    /**
+     * Instantiates and returns an anonymous model keyed to a specified SalesForce object type.
+     *
+     * @param  [type] $name       [description]
+     * @param  array  $attributes [description]
+     * @return [type]             [description]
+     */
     public function object($name, $attributes = [])
     {
         return new SalesForceObject($attributes, $name);
     }
 
+    /**
+     * Converts a 15 character ID to 18 character ID.
+     *
+     * @param  [type] $str [description]
+     * @return [type]      [description]
+     */
     public function convert($str)
     {
         if (strlen($str) <> 15) return $str;
@@ -92,6 +112,12 @@ class SObjects
         return $str.$retval;
     }
 
+    /**
+     * Utility conversion function for the ID converter above.
+     *
+     * @param  [type]  $str [description]
+     * @return boolean      [description]
+     */
     private function is_uppercase($str)
     {
         $retval = '';
