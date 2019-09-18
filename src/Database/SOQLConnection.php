@@ -7,6 +7,7 @@ use Illuminate\Database\Schema\MySqlBuilder;
 use Illuminate\Database\Query\Processors\MySqlProcessor;
 use Illuminate\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
+use Illuminate\Support\Str;
 use Omniphx\Forrest\Exceptions\MissingResourceException;
 use Lester\EloquentSalesForce\Facades\SObjects;
 use Closure;
@@ -106,7 +107,7 @@ class SOQLConnection extends Connection
 			return "'$item'";
 		}, $bindings);
 
-		$query = str_replace_array('?', $bindings, $query);
+		$query = Str::replaceArray('?', $bindings, $query);
 		return $query;
 	}
 

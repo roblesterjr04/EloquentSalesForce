@@ -2,6 +2,7 @@
 
 namespace Lester\EloquentSalesForce;
 
+use Illuminate\Support\Arr;
 use Lester\EloquentSalesForce\Facades\SObjects as SfFacade;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -51,7 +52,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		if ($columns == ['*']) {
 			/** @scrutinizer ignore-call */
 			$layouts = SfFacade::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
-			$fields = array_pluck($layouts["fieldItems"], 'layoutComponents.0');
+			$fields = Arr::pluck($layouts["fieldItems"], 'layoutComponents.0');
 			$columns = ['Id'];
 			self::getDetailNames($fields, $columns);
 		}

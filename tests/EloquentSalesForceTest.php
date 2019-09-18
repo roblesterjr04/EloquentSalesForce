@@ -2,6 +2,7 @@
 
 namespace Lester\EloquentSalesForce\Tests;
 
+use Illuminate\Support\Str;
 use Lester\EloquentSalesForce\ServiceProvider;
 use Lester\EloquentSalesForce\TestLead;
 use Orchestra\Testbench\TestCase;
@@ -29,7 +30,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testObjectCreate()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead = TestLead::where('Email', $email)->first();
 
@@ -52,7 +53,7 @@ class EloquentSalesForceTest extends TestCase
     {
         $collection = collect([]);
         for ($i = 0; $i < 3; $i++) {
-            $email = strtolower(str_random(10) . '@test.com');
+            $email = strtolower(Str::random(10) . '@test.com');
             $collection->push(new TestLead(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]));
         }
         $results = TestLead::insert($collection);
@@ -82,7 +83,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testObjectUpdate()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead->update(['FirstName' => 'Robert']);
         $lead = TestLead::where('Email', $email)->first();
@@ -137,7 +138,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testObjectDelete()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead->delete();
 	    $lead = TestLead::where('Email', $email)->get();
@@ -153,7 +154,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testRelationships()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 
 	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
@@ -174,7 +175,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testJoins()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 
 	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
@@ -206,7 +207,7 @@ class EloquentSalesForceTest extends TestCase
      */
     public function testGetPicklistValues()
     {
-        $email = strtolower(str_random(10) . '@test.com');
+        $email = strtolower(Str::random(10) . '@test.com');
         $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 
         $statuses = $lead->getPicklistValues('Status');
@@ -217,7 +218,7 @@ class EloquentSalesForceTest extends TestCase
         $lead->delete();
     }
 
-    public function setUp()
+    public function setUp(): void
 	{
 		parent::setUp();
 
@@ -320,7 +321,7 @@ class EloquentSalesForceTest extends TestCase
 		return $app;
 	}
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         \Artisan::call('cache:clear');
 
