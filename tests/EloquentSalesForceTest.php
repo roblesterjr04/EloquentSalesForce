@@ -31,7 +31,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testObjectCreate()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead = TestLead::where('Email', $email)->first();
 
@@ -139,7 +139,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testObjectDelete()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead->delete();
 	    $lead = TestLead::where('Email', $email)->get();
@@ -224,7 +224,7 @@ class EloquentSalesForceTest extends TestCase
 		parent::setUp();
 
 
-		if (getenv('SCRUT_TEST')) {
+		//if (getenv('SCRUT_TEST')) {
 			config([
 				'forrest' => [
 					'authentication' => 'UserPassword',
@@ -293,7 +293,7 @@ class EloquentSalesForceTest extends TestCase
 					]
 				]
 			]);
-		}
+		//}
 
 		config([
 			'app.key' => 'base64:WRAf0EDpFqwpbS829xKy2MGEkcJxIEmMrwFIZbGxIqE=',
@@ -313,13 +313,15 @@ class EloquentSalesForceTest extends TestCase
 	{
 		if (getenv('SCRUT_TEST')) return parent::createApplication();
 
-		$app = require __DIR__.'/../../../bootstrap/app.php';
+        $env = file_get_contents(__DIR__.'/../.env');
 
-		$app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        $lines = explode("\n", $env);
 
-		$app->loadEnvironmentFrom('.env');
+        foreach ($lines as $line) {
+            if ($line) putenv(trim($line));
+        }
 
-		return $app;
+		return parent::createApplication();
 	}
 
     protected function tearDown(): void

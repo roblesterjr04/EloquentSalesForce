@@ -38,12 +38,12 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function wrapValue($value)
 	{
-		return $value === '*' ? $value : '`' . Str::replace('`', '``', $value) . '`';
+		return $value === '*' ? $value : '`' . str_replace('`', '``', $value) . '`';
 	}
 
 	protected function unWrapValue($value)
 	{
-		return Str::replace('`', '', $value);
+		return str_replace('`', '', $value);
 	}
 
 	/**
@@ -156,7 +156,7 @@ class SOQLGrammar extends Grammar
 	private function grammarPlural($string)
 	{
 		if (Str::endsWith($string, 'try')) {
-			return Str::replaceLast('try', 'tries', $string);
+			return str_replaceLast('try', 'tries', $string);
 		}
 
 		return Str::plural($string);

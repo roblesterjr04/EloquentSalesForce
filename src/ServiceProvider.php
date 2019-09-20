@@ -3,6 +3,7 @@
 namespace Lester\EloquentSalesForce;
 
 use Lester\EloquentSalesForce\Facades\SObjects as SfFacade;
+use Illuminate\Support\Arr;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

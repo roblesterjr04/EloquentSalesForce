@@ -11,6 +11,7 @@ use Omniphx\Forrest\Exceptions\MissingResourceException;
 use Lester\EloquentSalesForce\Facades\SObjects;
 use Closure;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class SOQLConnection extends Connection
 {
@@ -93,7 +94,7 @@ class SOQLConnection extends Connection
 
 	private function prepare($query, $bindings)
 	{
-		$query = Str::replace('`', '', $query);
+		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
 		try {
 			if (Carbon::parse($item) !== false &&
@@ -106,7 +107,7 @@ class SOQLConnection extends Connection
 			return "'$item'";
 		}, $bindings);
 
-		$query = Str::replace_array('?', $bindings, $query);
+		$query = Str::replaceArray('?', $bindings, $query);
 		return $query;
 	}
 
