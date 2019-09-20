@@ -217,7 +217,7 @@ class EloquentSalesForceTest extends TestCase
         $lead->delete();
     }
 
-    public function setUp()
+    public function setUp(): void
 	{
 		parent::setUp();
 
