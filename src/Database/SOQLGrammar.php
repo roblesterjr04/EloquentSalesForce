@@ -38,12 +38,12 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function wrapValue($value)
 	{
-		return $value === '*' ? $value : '`' . str_replace('`', '``', $value) . '`';
+		return $value === '*' ? $value : '`' . Str::replace('`', '``', $value) . '`';
 	}
 
 	protected function unWrapValue($value)
 	{
-		return str_replace('`', '', $value);
+		return Str::replace('`', '', $value);
 	}
 
 	/**

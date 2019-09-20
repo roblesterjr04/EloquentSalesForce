@@ -93,7 +93,7 @@ class SOQLConnection extends Connection
 
 	private function prepare($query, $bindings)
 	{
-		$query = str_replace('`', '', $query);
+		$query = Str::replace('`', '', $query);
 		$bindings = array_map(function($item) {
 		try {
 			if (Carbon::parse($item) !== false &&
@@ -106,7 +106,7 @@ class SOQLConnection extends Connection
 			return "'$item'";
 		}, $bindings);
 
-		$query = str_replace_array('?', $bindings, $query);
+		$query = Str::replace_array('?', $bindings, $query);
 		return $query;
 	}
 

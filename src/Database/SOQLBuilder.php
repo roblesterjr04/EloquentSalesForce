@@ -7,6 +7,8 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Lester\EloquentSalesForce\ServiceProvider;
 use Lester\EloquentSalesForce\Facades\SObjects;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class SOQLBuilder extends Builder
 {

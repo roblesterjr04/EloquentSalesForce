@@ -7,6 +7,8 @@ use Lester\EloquentSalesForce\TestLead;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
 use Lester\EloquentSalesForce\Facades\SObjects;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class EloquentSalesForceTest extends TestCase
 {
@@ -52,7 +54,7 @@ class EloquentSalesForceTest extends TestCase
     {
         $collection = collect([]);
         for ($i = 0; $i < 3; $i++) {
-            $email = strtolower(str_random(10) . '@test.com');
+            $email = strtolower(Str::random(10) . '@test.com');
             $collection->push(new TestLead(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]));
         }
         $results = TestLead::insert($collection);
@@ -82,7 +84,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testObjectUpdate()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 	    $lead->update(['FirstName' => 'Robert']);
         $lead = TestLead::where('Email', $email)->first();
@@ -153,7 +155,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testRelationships()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 
 	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
@@ -174,7 +176,7 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testJoins()
     {
-	    $email = strtolower(str_random(10) . '@test.com');
+	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 
 	    $task = $lead->tasks()->create(['Subject' => 'TestTask']);
@@ -206,7 +208,7 @@ class EloquentSalesForceTest extends TestCase
      */
     public function testGetPicklistValues()
     {
-        $email = strtolower(str_random(10) . '@test.com');
+        $email = strtolower(Str::random(10) . '@test.com');
         $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
 
         $statuses = $lead->getPicklistValues('Status');

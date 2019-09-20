@@ -73,7 +73,7 @@ class SObjects
 
 	/**
 	 * Describes a specific SalesForce Model/Object pair.
-	 * 
+	 *
 	 * @param  [type]  $object [description]
 	 * @param  boolean $full   [description]
 	 * @return [type]          [description]
@@ -108,7 +108,7 @@ class SObjects
 			return $str;
 		}
 		$retval = '';
-		foreach (str_split($str, 5) as $seq) {
+		foreach (Str::split($str, 5) as $seq) {
 					$retval .= substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345", bindec(strrev($this->is_uppercase($seq))), 1);
 		}
 
