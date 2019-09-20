@@ -320,7 +320,7 @@ class EloquentSalesForceTest extends TestCase
 		return $app;
 	}
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         \Artisan::call('cache:clear');
 
