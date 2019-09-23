@@ -211,7 +211,7 @@ abstract class Model extends EloquentModel
 	 */
 	public function getForeignKey()
 	{
-		return camel_case(class_basename($this) . '_' . $this->getKeyName());
+		return Str::camel(class_basename($this) . '_' . $this->getKeyName());
 	}
 
 	/**
