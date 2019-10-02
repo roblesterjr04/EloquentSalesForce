@@ -29,6 +29,8 @@ composer require rob-lester-jr04/eloquent-sales-force
 composer require rob-lester-jr04/eloquent-sales-force:1.*
 ```
 
+*Note: The earliest tested version is 5.5, no versions prior to 5.7 have been tested.*
+
 ### Register Service Provider
 
 **Note! This and next step are optional if you use laravel>=5.5 with package
