@@ -367,7 +367,13 @@ $listValues = SObjects::getPicklistValues('Lead', 'Status');
 ```
 ## Testing
 
-In root of the package, run `./vendor/bin/phpunit --bootstrap=./vendor/autoload.php`
+The tests in this package are meant for contributors and have been written to be executed independantly of a Laravel application. They will not work as part of the applications testing flow.
+
+Create a `.env` file that includes the SalesForce credentials for your test instance, or else the test will fail to execute.
+
+Dependencies are required, so execute `composer install`
+
+To execute, run `./vendor/bin/phpunit --bootstrap=./vendor/autoload.php`
 
 ## Security
 
