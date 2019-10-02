@@ -357,7 +357,9 @@ You can get the possible pick list values from a dropdown by using this method o
 ```php
 $listValues = SObjects::getPicklistValues('Lead', 'Status');
 ```
+## Testing
 
+In root of the package, run `./vendor/bin/phpunit --bootstrap=./vendor/autoload.php`
 
 ## Security
 

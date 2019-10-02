@@ -129,9 +129,7 @@ class SOQLBuilder extends Builder
 	 */
 	protected function getSalesForceColumns($columns, $table = null)
 	{
-		$table = $table ?: $this->model->getTable();
-
-		return ServiceProvider::objectFields($table, $columns);
+		return ServiceProvider::objectFields($table ?: $this->model->getTable(), $columns);
 	}
 
 	/**
@@ -141,12 +139,6 @@ class SOQLBuilder extends Builder
 	 */
 	public function describe()
 	{
-		$table = $this->model->getTable();
-
-		if (count($this->model->columns)) {
-			return $this->model->columns;
-		}
-
-		return $this->getSalesForceColumns(['*'], $table);
+		return count($this->model->columns) ? $this->model->columns : $this->getSalesForceColumns(['*'], $this->model->getTable());
 	}
 }

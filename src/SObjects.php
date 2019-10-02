@@ -26,17 +26,13 @@ class SObjects
 	 */
 	public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
-		$payload = [
+		return self::composite('sobjects', [
 			'method' => 'patch',
 			'body' => [
 				'allOrNone' => $allOrNone,
 				'records' => $collection->toArray()
 			]
-		];
-
-		$response = self::composite('sobjects', $payload);
-
-		return $response;
+		]);
 	}
 
 	/**

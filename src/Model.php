@@ -3,6 +3,7 @@
 namespace Lester\EloquentSalesForce;
 
 use Session;
+use Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
@@ -43,8 +44,7 @@ abstract class Model extends EloquentModel
 
 	public static function create(array $attributes)
 	{
-		$object = new static($attributes);
-		return $object->save();
+		return (new static($attributes))->save();
 	}
 
 	public function update(array $attributes = array(), array $options = array())
@@ -60,8 +60,10 @@ abstract class Model extends EloquentModel
 			SObjects::sobjects($this->table . '/' . $this->Id, [
 				'method' => 'delete'
 			]);
+			Log::info("{$this->table} object {$this->Id} deleted.");
 			return true;
 		} catch (\Exception $e) {
+			Log::warning("{$this->table} object {$this->Id} failed to delete.", (array)$e);
 			return false;
 		}
 	}
