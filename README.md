@@ -1,7 +1,7 @@
 # Eloquent Sales Force
-## SalesForce Object to Laravel ORM for Laravel 5
+## SalesForce Object to Laravel ORM for Laravel 6, 5
 
-[![Laravel](https://img.shields.io/badge/Laravel-5.5^-orange.svg)](http://laravel.com)
+[![Laravel](https://img.shields.io/badge/Laravel-6.0^-blue.svg)](http://laravel.com)
 [![Build Status](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/build.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/build-status/master)
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roblesterjr04/EloquentSalesForce/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rob-lester-jr04/EloquentSalesForce/?branch=master)
@@ -15,12 +15,18 @@
 
 Work with SalesForce APIs via the Eloquent Model.
 
-## Installation
+## Installation (Laravel 6)
 
 Install via composer
 
 ```bash
 composer require rob-lester-jr04/eloquent-sales-force
+```
+
+### Laravel 5 users
+
+```bash
+composer require rob-lester-jr04/eloquent-sales-force:1.*
 ```
 
 ### Register Service Provider
