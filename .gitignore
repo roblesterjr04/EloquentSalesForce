@@ -1,4 +1,6 @@
 /vendor
+/bootstrap
+/storage
 /.idea
 /node_modules
 /composer.lock

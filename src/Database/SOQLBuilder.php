@@ -23,6 +23,11 @@ class SOQLBuilder extends Builder
 		parent::__construct($query);
 	}
 
+	public function countDestinct($d)
+	{
+		return $d;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
