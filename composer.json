@@ -19,8 +19,8 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
-    "laravel/framework": "^6.1",
+    "php": ">=7.1",
+    "laravel/framework": "^6.0",
     "omniphx/forrest": "^2.0"
   },
   "require-dev": {

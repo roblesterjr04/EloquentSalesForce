@@ -27,7 +27,7 @@ class EloquentSalesForceTest extends TestCase
 
         $errors = [];
         $batch = SObjects::runBatch($errors);
-
+        
         $this->assertCount(2, $batch);
     }
 

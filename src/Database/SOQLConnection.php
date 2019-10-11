@@ -122,7 +122,7 @@ class SOQLConnection extends Connection
 	 *
 	 * @return bool
 	 */
-	private function isSalesForceId($str)
+	public function isSalesForceId($str)
 	{
 		return boolval(\preg_match('/^[0-9a-zA-Z]{15,18}$/', $str));
 	}
