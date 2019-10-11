@@ -51,6 +51,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	{
 		if ($columns == ['*']) {
 			/** @scrutinizer ignore-call */
+			SfFacade::authenticate();
 			$layouts = SfFacade::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
 			$fields = Arr::pluck($layouts["fieldItems"], 'layoutComponents.0');
 			$columns = ['Id'];

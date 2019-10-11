@@ -156,7 +156,7 @@ class SObjects
 		return collect([]);
 	}
 
-	public function addBatch($builder, &$errors = [])
+	public function addBatch($builder)
 	{
 		if ($this->batch->count() >= 25) {
 			throw new \Exception('You cannot create more than 25 batch queries.');
@@ -165,7 +165,7 @@ class SObjects
 		return $builder;
 	}
 
-	public function runBatch()
+	public function runBatch(&$errors = [])
 	{
 		$version = 'v' . collect(\SObjects::versions())->last()['version'];
 

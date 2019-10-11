@@ -30,7 +30,9 @@ class SOQLBuilder extends Builder
 
 	public function toSql()
 	{
-		return str_replace('`', '', parent::toSql());
+		$columns = implode(', ', $this->describe());
+		$query = str_replace('*', $columns, parent::toSql());
+		return str_replace('`', '', $query);
 	}
 
 	/**
