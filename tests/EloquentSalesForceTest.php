@@ -23,7 +23,7 @@ class EloquentSalesForceTest extends TestCase
     public function testBatchQuery()
     {
         TestLead::limit(5)->batch();
-        TestTask::select('Id')->limit(5)->batch();
+        TestTask::limit(5)->batch();
 
         $errors = [];
         $batch = SObjects::runBatch($errors);
