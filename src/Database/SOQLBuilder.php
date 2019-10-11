@@ -35,7 +35,7 @@ class SOQLBuilder extends Builder
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
 			try {
-				if (\Carbon\Carbon::parse($item) !== false && !$this->isSalesForceId($item)) {
+				if (\Carbon\Carbon::parse($item) !== false && !$this->query->connection->isSalesForceId($item)) {
 					return $item;
 				}
 			} catch (\Exception $e) {
