@@ -25,7 +25,6 @@
   },
   "require-dev": {
     "laravel/tinker": "^1.0",
-    "matthewbdaly/artisan-standalone": "^0.0.9",
     "orchestra/testbench": "^3.0",
     "phpunit/phpunit": "^7.0"
   },
@@ -46,7 +45,6 @@
     "test": "vendor/bin/phpunit --bootstrap=./vendor/autoload.php",
     "post-autoload-dump": [
         "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-        "@php vendor/bin/artisan package:discover --ansi"
     ]
   },
   "extra": {
