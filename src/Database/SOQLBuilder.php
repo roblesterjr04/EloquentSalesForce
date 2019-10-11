@@ -34,13 +34,16 @@ class SOQLBuilder extends Builder
 		$query = str_replace('*', $columns, parent::toSql());
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
-		try {
-			if (\Carbon\Carbon::parse($item) !== false &&
-				!$this->isSalesForceId($item)) {
+			try {
+				if (\Carbon\Carbon::parse($item) !== false && !$this->isSalesForceId($item)) {
 					return $item;
 				}
 			} catch (\Exception $e) {
-				return "'$item'";
+				if (is_int($item) || is_float($item)) {
+					return $item;
+				} else {
+					return "'$item'";
+				}
 			}
 			return "'$item'";
 		}, $this->getBindings());
