@@ -4,6 +4,7 @@ namespace Lester\EloquentSalesForce\Tests;
 
 use Lester\EloquentSalesForce\ServiceProvider;
 use Lester\EloquentSalesForce\TestLead;
+use Lester\EloquentSalesForce\TestTask;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
 use Lester\EloquentSalesForce\Facades\SObjects;
@@ -18,6 +19,16 @@ class EloquentSalesForceTest extends TestCase
     }
 
     private $lead;
+
+    public function testBatchQuery()
+    {
+        TestLead::select(['Id', 'FirstName'])->limit(5)->batch();
+        TestTask::select(['Id', 'Subject'])->limit(5)->batch();
+
+        $batch = SObjects::runBatch();
+
+        $this->assertCount(2, $batch);
+    }
 
 	/**
 	 * @covers Lester\EloquentSalesForce\TestLead

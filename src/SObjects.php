@@ -12,9 +12,11 @@ use Session;
 class SObjects
 {
 
+	private $batch;
+
 	public function __construct()
 	{
-
+		$this->batch = collect([]);
 	}
 
 	/**
@@ -152,6 +154,51 @@ class SObjects
 			}
 		}
 		return collect([]);
+	}
+
+	public function addBatch($builder, &$errors = [])
+	{
+		if ($this->batch->count() >= 25) {
+			throw new \Exception('You cannot create more than 25 batch queries.');
+		}
+		$this->batch->push($builder);
+		return $builder;
+	}
+
+	public function runBatch()
+	{
+		$version = 'v' . collect(\SObjects::versions())->last()['version'];
+
+		$results = \SObjects::composite('batch', [
+            'method' => 'post',
+            'body' => [
+                'batchRequests' => $this->batch->map(function($query) use ($version) {
+					return [
+						'method' => 'get',
+						'url' => $version . '/query?q=' . $query->toSql(),
+					];
+				})->toArray()
+            ]
+        ]);
+
+		$output = collect([]);
+		foreach ($results['results'] as $query) {
+			if ($query['statusCode'] != 200) {
+				$errors[] = $query;
+			} else {
+				$objects = collect($query['result']['records']);
+				$type = $objects->first()['attributes']['type'];
+				$objects = $objects->map(function($item) {
+					return new SalesForceObject($item);
+				});
+				$output->push((object)[
+					'type' => $type,
+					'objects' => $objects
+				]);
+			}
+		}
+
+		return $output;
 	}
 
 }

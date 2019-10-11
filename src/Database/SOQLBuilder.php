@@ -23,9 +23,14 @@ class SOQLBuilder extends Builder
 		parent::__construct($query);
 	}
 
-	public function countDestinct($d)
+	public function batch()
 	{
-		return $d;
+		return SObjects::addBatch($this);
+	}
+
+	public function toSql()
+	{
+		return str_replace('`', '', parent::toSql());
 	}
 
 	/**
