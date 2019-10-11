@@ -44,7 +44,7 @@
   "scripts": {
     "test": "vendor/bin/phpunit --bootstrap=./vendor/autoload.php",
     "post-autoload-dump": [
-        "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+        "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
     ]
   },
   "extra": {
