@@ -175,7 +175,7 @@ class SObjects
                 'batchRequests' => $this->batch->map(function($query) use ($version) {
 					return [
 						'method' => 'get',
-						'url' => $version . '/query?q=' . $query->toSql(),
+						'url' => $version . '/query?q=' . urlencode($query->toSql()),
 					];
 				})->toArray()
             ]
