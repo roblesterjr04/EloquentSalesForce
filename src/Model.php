@@ -88,7 +88,7 @@ abstract class Model extends EloquentModel
 		$method = $this->sfMethod();
 
 		$body = $this->writeableAttributes(['Id', 'attributes']);
-		
+
 		try {
 			/** @scrutinizer ignore-call */
 			$result = SObjects::sobjects($object, [
@@ -246,7 +246,7 @@ abstract class Model extends EloquentModel
 
 	public function getWebLinkAttribute()
 	{
-		$instance = Session::get('eloquent_sf_instance_url');
+		$instance = SObjects::instanceUrl();
 		return $instance ? rtrim($instance, '/') . Str::start($this->Id, '/') : null;
 	}
 

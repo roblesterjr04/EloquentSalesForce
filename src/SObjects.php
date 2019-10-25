@@ -55,6 +55,11 @@ class SObjects
 		return $tokens;
 	}
 
+	public function instanceUrl()
+	{
+		return Session::get('eloquent_sf_instance_url');
+	}
+
 	public function __call($name, $arguments)
 	{
 		self::authenticate();
