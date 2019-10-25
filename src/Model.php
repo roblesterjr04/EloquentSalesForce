@@ -15,6 +15,11 @@ use Lester\EloquentSalesForce\Facades\SObjects;
 abstract class Model extends EloquentModel
 {
 	protected $guarded = [];
+	protected $readonly = [];
+	private $always_readonly = [
+		'Id',
+		'attributes',
+	];
 
 	public $columns = [];
 
@@ -40,6 +45,11 @@ abstract class Model extends EloquentModel
 		$this->attributes['attributes'] = [
 			'type' => $this->table
 		];
+	}
+
+	private function readonlyFields()
+	{
+		return array_merge($this->always_readonly, $this->readonly);
 	}
 
 	public static function create(array $attributes)
@@ -77,7 +87,9 @@ abstract class Model extends EloquentModel
 
 		$body = $this->attributes;
 
-		unset($body['attributes'], $body['Id']);
+		foreach ($this->readonlyFields() as $key) {
+			unset($body[$key]);
+		}
 
 		try {
 			/** @scrutinizer ignore-call */

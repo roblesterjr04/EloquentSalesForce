@@ -12,7 +12,6 @@ use Lester\EloquentSalesForce\Facades\SObjects;
 use Closure;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Log;
 
 class SOQLConnection extends Connection
 {
@@ -31,12 +30,10 @@ class SOQLConnection extends Connection
 			/** @scrutinizer ignore-call */
 			$result = SObjects::query($statement);
 
-			$default = env('LOG_CHANNEL', 'stack');
-			$logs = env('SOQL_LOG', $default);
-
-			Log::channel($logs)->info('SOQL Query', [
+			SObjects::log('SOQL Query', [
 				'query' => $statement
 			]);
+
 			$records = $result['records'];
 
 			while (isset($result['nextRecordsUrl'])) {
