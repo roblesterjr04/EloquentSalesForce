@@ -171,6 +171,16 @@ To return the columns currently available on a model, use the `describe` method 
 $fields = Lead::describe();
 ```
 
+To specify fields on the model that are read-only and to force them to be excluded from any update/insert requests, define the `protected $readonly = []` array in the model
+
+```php
+...
+	
+	protected $readonly = [
+		'Name'
+	];
+```
+
 #### Picklists
 
 If you are using a field that is a picklist in SalesForce, you can capture the values of that picklist from this function on the model.
@@ -179,6 +189,30 @@ If you are using a field that is a picklist in SalesForce, you can capture the v
 $statusValues = $lead->getPicklistValues('Status');
 ```
 
+## Batch Queries (beta)
+
+SalesForce has API limits. We know this. It sucks. For us at least. So now in the package, you can batch several queries and make a single API call to execute them, and get the results back in an array.
+
+#### Usage
+
+At the end of most queries we commonly call `get()` to retrieve the results of our assembled query. We can queue up a batch call by calling `batch()` instead of `get()`. After queuing up the desired queries, you can call `SObjects::runBatch()` and it will return the results of the batched queries in an array.
+
+#### Example
+
+```php
+Lead::select(['Id', 'FirstName', 'Company'])->limit(100)->batch(); // instead of get.
+
+Contact::select(['Id', 'FirstName', 'Phone'])->limit(50)->batch();
+
+$results = SObjects::runBatch();
+
+$leads = $results[0]->objects;
+$contacts = $results[1]->objects;
+```
+
+#### TODO
+
+Still needed is a way to name a batch so you can access by key the results instead of accessing by array index. In the future there will likely be a batch object that extends the laravel collection.
 
 ## Inserting and Updating
 
