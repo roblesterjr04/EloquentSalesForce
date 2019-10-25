@@ -20,13 +20,12 @@
   ],
   "require": {
     "php": ">=7.1",
-    "laravel/framework": "^6.0",
+    "laravel/framework": ">=5.5",
     "omniphx/forrest": "^2.0"
   },
   "require-dev": {
-    "laravel/tinker": "^1.0",
-    "orchestra/testbench": "^4.0",
-    "phpunit/phpunit": "^8.0"
+    "orchestra/testbench": ">=3.0",
+    "phpunit/phpunit": ">=7.0"
   },
   "autoload": {
     "psr-4": {
