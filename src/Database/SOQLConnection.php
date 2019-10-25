@@ -30,7 +30,11 @@ class SOQLConnection extends Connection
 
 			/** @scrutinizer ignore-call */
 			$result = SObjects::query($statement);
-			Log::channel(env('SOQL_LOG', 'stack'))->info('SOQL Query', [
+
+			$default = env('LOG_CHANNEL', 'stack');
+			$logs = env('SOQL_LOG', $default);
+
+			Log::channel($logs)->info('SOQL Query', [
 				'query' => $statement
 			]);
 			$records = $result['records'];
