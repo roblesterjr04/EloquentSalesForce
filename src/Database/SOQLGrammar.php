@@ -156,7 +156,7 @@ class SOQLGrammar extends Grammar
 	private function grammarPlural($string)
 	{
 		if (Str::endsWith($string, 'try')) {
-			return str_replaceLast('try', 'tries', $string);
+			return Str::replaceLast('try', 'tries', $string);
 		}
 
 		return Str::plural($string);
