@@ -29,6 +29,7 @@ class SOQLBatch extends Collection
 			throw new \Exception('You cannot create more than 25 batch queries.');
 		}
 		$this->put($tag ?: class_basename($builder->getModel()), (object)[
+            'class' => $builder->getModel(),
 			'builder' => $builder,
 			'results' => null,
 		]);
@@ -53,32 +54,16 @@ class SOQLBatch extends Collection
             ]
         ]);
 
-		$output = collect([]);
-        $counter = 0;
-		foreach ($results['results'] as $query) {
-			if ($query['statusCode'] != 200) {
-				$errors[] = $query;
-			} else {
-				$objects = collect($query['result']['records']);
-				$type = $objects->first()['attributes']['type'];
-				$objects = $objects->map(function($item) {
-					return new SalesForceObject($item);
-				});
-				$output->push((object)[
-					'type' => $type,
-					'objects' => $objects
-				]);
-			}
-            $counter++;
-		}
-
         $index = 0;
         foreach ($this as $key => $batch) {
             $batch_result = $results['results'][$index];
             if ($batch_result['statusCode'] != 200) {
                 $batch->results = (object)$batch_result;
             } else {
-                $batch->results = collect($batch_result['result']['records']);
+                $batch->results = collect($batch_result['result']['records'])->map(function($item) {
+                    $model = $batch->class;
+                    return new $model($item);
+                });
             }
             $this->put($key, $batch);
             $index++;
