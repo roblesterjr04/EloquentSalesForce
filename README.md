@@ -232,11 +232,7 @@ $testCompanyLeads = $batch->results('test_company');
 
 ### Using the Batch Collection object
 
-The batch collection object can be used independantly of the facade if you'd like to create a batch over time and then execute later. When using the `batch()` method on the query builder, the assembled query builder is added to a collection on the facade. You can either run that batch collection by using the method `SObjects::runBatch()` or you can access the collection by returning `SObjects::getBatch()`. If you have the object stored in a variable, you can run it with `->run()` or you can add more query builders to it with `->batch`
-
-### TODO
-
-Still needed is a way to name a batch so you can access by key the results instead of accessing by array index. In the future there will likely be a batch object that extends the laravel collection.
+The batch collection object can be used independently of the facade if you'd like to create a batch over time and then execute later. When using the `batch()` method on the query builder, the assembled query builder is added to a collection on the facade. You can either run that batch collection by using the method `SObjects::runBatch()` or you can access the collection by returning `SObjects::getBatch()`. If you have the object stored in a variable, you can run it with `->run()` or you can add more query builders to it with `->batch`
 
 ## Inserting and Updating
 
