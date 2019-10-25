@@ -171,6 +171,8 @@ To return the columns currently available on a model, use the `describe` method 
 $fields = Lead::describe();
 ```
 
+#### ReadOnly Fields
+
 To specify fields on the model that are read-only and to force them to be excluded from any update/insert requests, define the `protected $readonly = []` array in the model
 
 ```php
