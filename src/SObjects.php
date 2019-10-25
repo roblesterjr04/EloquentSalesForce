@@ -8,6 +8,7 @@ use Omniphx\Forrest\Exceptions\MissingResourceException;
 use Omniphx\Forrest\Exceptions\MissingVersionException;
 use Cache;
 use Session;
+use Log;
 
 class SObjects
 {
@@ -30,10 +31,14 @@ class SObjects
 	{
 		return self::composite('sobjects', [
 			'method' => 'patch',
-			'body' => [
+			'body' => tap([
 				'allOrNone' => $allOrNone,
-				'records' => $collection->toArray()
-			]
+				'records' => $collection->map(function($object) {
+					return $object->writeableAttributes();
+				})
+			], function($payload) {
+				$this->log('SOQL Bulk Update', $payload);
+			})
 		]);
 	}
 
@@ -48,6 +53,11 @@ class SObjects
 		$tokens = (object) decrypt($storage::get(config('eloquent_sf.forrest.storage.path') . 'token'));
 		Session::put('eloquent_sf_instance_url', $tokens->instance_url);
 		return $tokens;
+	}
+
+	public function instanceUrl()
+	{
+		return Session::get('eloquent_sf_instance_url');
 	}
 
 	public function __call($name, $arguments)
@@ -172,12 +182,14 @@ class SObjects
 		$results = \SObjects::composite('batch', [
             'method' => 'post',
             'body' => [
-                'batchRequests' => $this->batch->map(function($query) use ($version) {
+                'batchRequests' => tap($this->batch->map(function($query) use ($version) {
 					return [
 						'method' => 'get',
 						'url' => $version . '/query?q=' . urlencode($query->toSql()),
 					];
-				})->toArray()
+				})->toArray(), function($payload) {
+					$this->log('SOQL Batch Query', $payload);
+				})
             ]
         ]);
 
@@ -199,6 +211,14 @@ class SObjects
 		}
 
 		return $output;
+	}
+
+	public function log($message, $details = [], $level = 'info')
+	{
+		$default = env('LOG_CHANNEL', 'stack');
+		$logs = env('SOQL_LOG', $default);
+
+		Log::channel($logs)->$level($message, $details);
 	}
 
 }

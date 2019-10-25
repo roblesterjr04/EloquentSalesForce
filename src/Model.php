@@ -15,6 +15,11 @@ use Lester\EloquentSalesForce\Facades\SObjects;
 abstract class Model extends EloquentModel
 {
 	protected $guarded = [];
+	protected $readonly = [];
+	private $always_readonly = [
+		'Id',
+		'attributes',
+	];
 
 	public $columns = [];
 
@@ -42,6 +47,12 @@ abstract class Model extends EloquentModel
 		];
 	}
 
+	public function writeableAttributes($exclude = [])
+	{
+		$fields = array_merge($this->readonly, $exclude);
+		return Arr::except($this->attributes, $fields);
+	}
+
 	public static function create(array $attributes)
 	{
 		return (new static($attributes))->save();
@@ -49,6 +60,7 @@ abstract class Model extends EloquentModel
 
 	public function update(array $attributes = array(), array $options = array())
 	{
+
 		$this->attributes = array_merge(Arr::only($this->attributes, ['Id']), $attributes);
 		return $this->save($options);
 	}
@@ -75,9 +87,7 @@ abstract class Model extends EloquentModel
 		$object = $this->sfObject();
 		$method = $this->sfMethod();
 
-		$body = $this->attributes;
-
-		unset($body['attributes'], $body['Id']);
+		$body = $this->writeableAttributes(['Id', 'attributes']);
 
 		try {
 			/** @scrutinizer ignore-call */
@@ -236,7 +246,7 @@ abstract class Model extends EloquentModel
 
 	public function getWebLinkAttribute()
 	{
-		$instance = Session::get('eloquent_sf_instance_url');
+		$instance = SObjects::instanceUrl();
 		return $instance ? rtrim($instance, '/') . Str::start($this->Id, '/') : null;
 	}
 
