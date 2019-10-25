@@ -29,6 +29,11 @@ class SOQLConnection extends Connection
 
 			/** @scrutinizer ignore-call */
 			$result = SObjects::query($statement);
+
+			SObjects::log('SOQL Query', [
+				'query' => $statement
+			]);
+
 			$records = $result['records'];
 
 			while (isset($result['nextRecordsUrl'])) {

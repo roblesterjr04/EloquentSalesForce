@@ -22,12 +22,12 @@ class EloquentSalesForceTest extends TestCase
 
     public function testBatchQuery()
     {
-        TestLead::limit(5)->where('FirstName', '!=', 'test')->batch();
+        TestLead::limit(5)->where('FirstName', '!=', 'test')->orWhere('FirstName', 'not like', 'test%')->batch();
         TestTask::limit(5)->where('Subject', '!=', 'test')->batch();
 
         $errors = [];
         $batch = SObjects::runBatch($errors);
-        
+
         $this->assertCount(2, $batch);
     }
 
@@ -143,6 +143,12 @@ class EloquentSalesForceTest extends TestCase
     {
 	    $leads = TestLead::where('CreatedDate', '>=', '2010-10-01T12:00:00.000+00:00')->limit(5)->get();
 	    $this->assertCount(5, $leads);
+    }
+
+    public function testOrWhere()
+    {
+        $leads = TestLead::where('FirstName', 'not like', 'xxxxxxxxxxxxx')->orWhere('Owner.UserRole.Name', 'like', 'yyyyyyyyyy%')->limit(5)->get();
+        $this->assertCount(5, $leads);
     }
 
     /*
