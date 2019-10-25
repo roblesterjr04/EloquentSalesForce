@@ -47,9 +47,10 @@ abstract class Model extends EloquentModel
 		];
 	}
 
-	private function readonlyFields()
+	public function writeableAttributes($exclude = [])
 	{
-		return array_merge($this->always_readonly, $this->readonly);
+		$fields = array_merge($this->readonly, $exclude);
+		return Arr::except($this->attributes, $fields);
 	}
 
 	public static function create(array $attributes)
@@ -59,6 +60,7 @@ abstract class Model extends EloquentModel
 
 	public function update(array $attributes = array(), array $options = array())
 	{
+
 		$this->attributes = array_merge(Arr::only($this->attributes, ['Id']), $attributes);
 		return $this->save($options);
 	}
@@ -85,12 +87,8 @@ abstract class Model extends EloquentModel
 		$object = $this->sfObject();
 		$method = $this->sfMethod();
 
-		$body = $this->attributes;
-
-		foreach ($this->readonlyFields() as $key) {
-			unset($body[$key]);
-		}
-
+		$body = $this->writeableAttributes(['Id', 'attributes']);
+		
 		try {
 			/** @scrutinizer ignore-call */
 			$result = SObjects::sobjects($object, [

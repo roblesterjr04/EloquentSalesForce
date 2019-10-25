@@ -33,7 +33,9 @@ class SObjects
 			'method' => 'patch',
 			'body' => tap([
 				'allOrNone' => $allOrNone,
-				'records' => $collection->toArray()
+				'records' => $collection->map(function($object) {
+					return $object->writeableAttributes();
+				})
 			], function($payload) {
 				$this->log('SOQL Bulk Update', $payload);
 			})
