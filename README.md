@@ -171,6 +171,8 @@ To return the columns currently available on a model, use the `describe` method 
 $fields = Lead::describe();
 ```
 
+#### ReadOnly Fields
+
 To specify fields on the model that are read-only and to force them to be excluded from any update/insert requests, define the `protected $readonly = []` array in the model
 
 ```php
@@ -210,9 +212,27 @@ $leads = $results[0]->objects;
 $contacts = $results[1]->objects;
 ```
 
-#### TODO
+### Tagging the batch
 
-Still needed is a way to name a batch so you can access by key the results instead of accessing by array index. In the future there will likely be a batch object that extends the laravel collection.
+By default, each batch query is tagged with the name of the model that is being queried. For example if you have a model class called `Prospects` (even if it maps to the SF Lead object), the tag of the batch will be `Prospects`. If you try and batch 3 queries on the same object without specifying a custom tag for each batch, only the last batch will actually be run. So we recommend tagging the batch when you queue it if you're batching multiple queries on the same object.
+
+#### Example
+
+```php
+Lead::select(['Id', 'FirstName', 'Company'])->limit(100)->batch();
+
+Lead::select(['Id', 'FirstName', 'Company'])->limit(30)->where('Company', 'Test')->batch('test_company');
+
+$batch = SObjects::runBatch();
+
+$firstCentLeads = $batch->results('Lead');
+$testCompanyLeads = $batch->results('test_company');
+
+```
+
+### Using the Batch Collection object
+
+The batch collection object can be used independently of the facade if you'd like to create a batch over time and then execute later. When using the `batch()` method on the query builder, the assembled query builder is added to a collection on the facade. You can either run that batch collection by using the method `SObjects::runBatch()` or you can access the collection by returning `SObjects::getBatch()`. If you have the object stored in a variable, you can run it with `->run()` or you can add more query builders to it with `->batch`
 
 ## Inserting and Updating
 

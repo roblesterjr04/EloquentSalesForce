@@ -23,10 +23,16 @@ class EloquentSalesForceTest extends TestCase
     public function testBatchQuery()
     {
         TestLead::limit(5)->where('FirstName', '!=', 'test')->orWhere('FirstName', 'not like', 'test%')->batch();
-        TestTask::limit(5)->where('Subject', '!=', 'test')->batch();
+        TestTask::limit(3)->where('Subject', '!=', 'test')->batch('tasks');
 
         $errors = [];
         $batch = SObjects::runBatch($errors);
+
+        $leads = $batch->results('TestLead');
+        $tasks = $batch->results('tasks');
+
+        $this->assertCount(5, $leads);
+        $this->assertCount(3, $tasks);
 
         $this->assertCount(2, $batch);
     }
