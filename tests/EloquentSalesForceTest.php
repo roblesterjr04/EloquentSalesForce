@@ -26,6 +26,12 @@ class EloquentSalesForceTest extends TestCase
      * @covers Lester\EloquentSalesForce\Database\SOQLBatch::get
      * @covers Lester\EloquentSalesForce\Database\SOQLBatch::class
      * @covers Lester\EloquentSalesForce\Database\SOQLBatch::builder
+     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::emptyItem
+     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::run
+     * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::toSql
+     * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::batch
+     * @covers Lester\EloquentSalesForce\SObjects::getBatch
+     * @covers Lester\EloquentSalesForce\SObjects::runBatch
      */
     public function testBatchQuery()
     {
@@ -254,6 +260,28 @@ class EloquentSalesForceTest extends TestCase
         $this->assertTrue($statuses !== null);
 
         $lead->delete();
+    }
+
+    /**
+     * @covers Lester\EloquentSalesForce\SObjects::object
+     * @covers Lester\EloquentSalesForce\SObjects::convert
+     * @covers Lester\EloquentSalesForce\SObjects::is_uppercase
+     * @covers Lester\EloquentSalesForce\SObjects::describe
+     */
+    public function testFacadeFuncs()
+    {
+        SObjects::authenticate();
+        $query = \Forrest::query('select Id from Lead limit 1');
+
+        $object = SObjects::object($query['records'][0]);
+        $this->assertInstanceOf('Lester\EloquentSalesForce\SalesForceObject', $object);
+
+        $testLeadFields = SObjects::describe('Lead');
+        $this->assertNotNull($testLeadFields);
+
+        $convertedId = SObjects::convert('5003000000D8cuI');
+        $this->assertEquals('5003000000D8cuIAAR', $convertedId);
+
     }
 
     public function setUp(): void

@@ -7,6 +7,7 @@ use Omniphx\Forrest\Exceptions\MissingTokenException;
 use Omniphx\Forrest\Exceptions\MissingResourceException;
 use Omniphx\Forrest\Exceptions\MissingVersionException;
 use Lester\EloquentSalesForce\Database\SOQLBatch;
+use Illuminate\Support\Str;
 use Cache;
 use Session;
 use Log;
@@ -90,7 +91,7 @@ class SObjects
 	public function describe($object, $full = false)
 	{
 		self::authenticate();
-		return $full ? $this->object($object)->describe() : Forrest::desribe($object);
+		return $full ? $this->object($object)->describe() : Forrest::describe($object);
 	}
 
 	/**
@@ -100,9 +101,9 @@ class SObjects
 	 * @param  array  $attributes [description]
 	 * @return [type]             [description]
 	 */
-	public function object($name, $attributes = [])
+	public function object($attributes = [])
 	{
-		return new SalesForceObject($attributes, $name);
+		return new SalesForceObject($attributes);
 	}
 
 	/**
@@ -117,7 +118,7 @@ class SObjects
 			return $str;
 		}
 		$retval = '';
-		foreach (Str::split($str, 5) as $seq) {
+		foreach (str_split($str, 5) as $seq) {
 					$retval .= substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345", bindec(strrev($this->is_uppercase($seq))), 1);
 		}
 
