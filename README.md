@@ -394,13 +394,12 @@ The `authenticate()` method in the facade will return the token information that
 Sometimes you want to grab a record from SalesForce casually without having to pre-generate a model for it. Now you can do that easily with the `object` method on the facade. Example:
 
 ```php
-$lead = SObjects::object('Lead')->find('01t1J00000BVyNBQA1'); // Get a single record by ID
+$queryResult = SObjects::query("Select Id, FirstName from Lead where Email like 'test@%'");
 
-$accounts = SObjects::object('Account')->get(); // Returns all of the specified object. `all` won't work here.
+$leads = collect($queryResult['records'])->map(function($record) {
+    return SObjects::object($record);
+});
 
-$contact = SObjects::object('Contact')->where('Name', 'like', 'Barns %')->get(); // Get all contacts where name starts with Barns.
-
-$newLead = SObjects::object('Lead', ['Email'=>'test@test.com', 'FirstName' => 'Test', 'LastName' => 'Name', 'Company' => 'Test Company'])->save(); // Save a new lead;
 ```
 
 The class used for each object returned will be `Lester\EloquentSalesForce\SalesForceObject`.
