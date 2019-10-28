@@ -423,7 +423,7 @@ Create a `.env` file that includes the SalesForce credentials for your test inst
 
 Dependencies are required, so execute `composer install`
 
-To execute, run `./vendor/bin/phpunit --bootstrap=./vendor/autoload.php`
+To execute, run `composer test`
 
 ## Security
 
