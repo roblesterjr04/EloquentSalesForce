@@ -206,10 +206,10 @@ Lead::select(['Id', 'FirstName', 'Company'])->limit(100)->batch(); // instead of
 
 Contact::select(['Id', 'FirstName', 'Phone'])->limit(50)->batch();
 
-$results = SObjects::runBatch();
+$batch = SObjects::runBatch();
 
-$leads = $results[0]->objects;
-$contacts = $results[1]->objects;
+$leads = $batch->results('Lead');
+$contacts = $batch->results('Contact');
 ```
 
 ### Tagging the batch
@@ -233,6 +233,15 @@ $testCompanyLeads = $batch->results('test_company');
 ### Using the Batch Collection object
 
 The batch collection object can be used independently of the facade if you'd like to create a batch over time and then execute later. When using the `batch()` method on the query builder, the assembled query builder is added to a collection on the facade. You can either run that batch collection by using the method `SObjects::runBatch()` or you can access the collection by returning `SObjects::getBatch()`. If you have the object stored in a variable, you can run it with `->run()` or you can add more query builders to it with `->batch`
+
+```php
+$batchCollection = new SOQLBatch();
+
+$batchCollection->batch(Lead::where('FirstName', 'like', 'Test%'));
+
+$batchCollection->run();
+
+```
 
 ## Inserting and Updating
 
