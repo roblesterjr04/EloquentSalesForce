@@ -15,7 +15,7 @@
 
 Work with SalesForce APIs via the Eloquent Model.
 
-## Installation (Laravel 6)
+## Installation
 
 Install via composer
 
@@ -23,24 +23,7 @@ Install via composer
 composer require rob-lester-jr04/eloquent-sales-force
 ```
 
-### Laravel 5 users
-
-```bash
-composer require rob-lester-jr04/eloquent-sales-force:1.*
-```
-
-*Note: The earliest tested version is 5.5, no versions prior to 5.7 have been tested.*
-
-### Register Service Provider
-
-**Note! This and next step are optional if you use laravel>=5.5 with package
-auto discovery feature.**
-
-Add service provider to `config/app.php` in `providers` section
-
-```php
-Lester\EloquentSalesForce\ServiceProvider::class,
-```
+*Note: This package is only supported Laravel 5.6 and newer.
 
 ### Publish Configuration File
 
@@ -177,7 +160,7 @@ To specify fields on the model that are read-only and to force them to be exclud
 
 ```php
 ...
-	
+
 	protected $readonly = [
 		'Name'
 	];
@@ -428,6 +411,10 @@ You can get the possible pick list values from a dropdown by using this method o
 ```php
 $listValues = SObjects::getPicklistValues('Lead', 'Status');
 ```
+
+#### Logging
+You can set a different log channel for the SOQL actions by specifying `SOQL_LOG=` in your `.env` file.
+
 ## Testing
 
 The tests in this package are meant for contributors and have been written to be executed independantly of a Laravel application. They will not work as part of the applications testing flow.
