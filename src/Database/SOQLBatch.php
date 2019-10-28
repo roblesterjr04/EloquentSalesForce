@@ -19,8 +19,31 @@ class SOQLBatch extends Collection
 
     public function results($key)
     {
-        if ($this->has($key)) return $this->get($key)->results;
-        return collect([]);
+        return $this->get($key);
+    }
+
+    public function builder($key)
+    {
+        return parent::get($key, $this->emptyItem())->builder;
+    }
+
+    public function class($key)
+    {
+        return parent::get($key, $this->emptyItem())->class;
+    }
+
+    public function get($key, $default = null)
+    {
+        return parent::get($key, $this->emptyItem())->results;
+    }
+
+    private function emptyItem()
+    {
+        return (object)[
+            'class' => null,
+			'builder' => null,
+			'results' => collect([]),
+        ];
     }
 
     public function batch(Builder $builder, $tag = null)
@@ -31,7 +54,7 @@ class SOQLBatch extends Collection
 		$this->put($tag ?: class_basename($builder->getModel()), (object)[
             'class' => $builder->getModel(),
 			'builder' => $builder,
-			'results' => null,
+			'results' => collect([]),
 		]);
 		return $builder;
     }

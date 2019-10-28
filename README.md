@@ -208,8 +208,8 @@ Lead::select(['Id', 'FirstName', 'Company'])->limit(30)->where('Company', 'Test'
 
 $batch = SObjects::runBatch();
 
-$firstCentLeads = $batch->results('Lead');
-$testCompanyLeads = $batch->results('test_company');
+$firstCentLeads = $batch->get('Lead');
+$testCompanyLeads = $batch->get('test_company');
 
 ```
 

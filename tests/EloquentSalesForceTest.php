@@ -20,6 +20,13 @@ class EloquentSalesForceTest extends TestCase
 
     private $lead;
 
+    /**
+     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::batch
+     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::results
+     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::get
+     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::class
+     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::builder
+     */
     public function testBatchQuery()
     {
         TestLead::limit(5)->where('FirstName', '!=', 'test')->orWhere('FirstName', 'not like', 'test%')->batch();
@@ -29,7 +36,13 @@ class EloquentSalesForceTest extends TestCase
         $batch = SObjects::runBatch($errors);
 
         $leads = $batch->results('TestLead');
-        $tasks = $batch->results('tasks');
+        $tasks = $batch->get('tasks');
+
+        $leadsClass = $batch->class('TestLead');
+        $tasksBuilder = $batch->builder('tasks');
+
+        $this->assertInstanceOf('Lester\EloquentSalesForce\TestLead', $leadsClass);
+        $this->assertInstanceOf('Lester\EloquentSalesForce\Database\SOQLBuilder', $tasksBuilder);
 
         $this->assertCount(5, $leads);
         $this->assertCount(3, $tasks);
