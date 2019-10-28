@@ -23,9 +23,9 @@ class SOQLBuilder extends Builder
 		parent::__construct($query);
 	}
 
-	public function batch()
+	public function batch($tag = null)
 	{
-		return SObjects::addBatch($this);
+		return SObjects::getBatch()->batch($this, $tag);
 	}
 
 	public function toSql()

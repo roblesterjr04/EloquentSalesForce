@@ -6,6 +6,7 @@ namespace Lester\EloquentSalesForce;
 use Omniphx\Forrest\Exceptions\MissingTokenException;
 use Omniphx\Forrest\Exceptions\MissingResourceException;
 use Omniphx\Forrest\Exceptions\MissingVersionException;
+use Lester\EloquentSalesForce\Database\SOQLBatch;
 use Cache;
 use Session;
 use Log;
@@ -17,7 +18,7 @@ class SObjects
 
 	public function __construct()
 	{
-		$this->batch = collect([]);
+		$this->batch = new SOQLBatch([]);
 	}
 
 	/**
@@ -166,51 +167,14 @@ class SObjects
 		return collect([]);
 	}
 
-	public function addBatch($builder)
+	public function getBatch()
 	{
-		if ($this->batch->count() >= 25) {
-			throw new \Exception('You cannot create more than 25 batch queries.');
-		}
-		$this->batch->push($builder);
-		return $builder;
+		return $this->batch;
 	}
 
 	public function runBatch(&$errors = [])
 	{
-		$version = 'v' . collect(\SObjects::versions())->last()['version'];
-
-		$results = \SObjects::composite('batch', [
-            'method' => 'post',
-            'body' => [
-                'batchRequests' => tap($this->batch->map(function($query) use ($version) {
-					return [
-						'method' => 'get',
-						'url' => $version . '/query?q=' . urlencode($query->toSql()),
-					];
-				})->toArray(), function($payload) {
-					$this->log('SOQL Batch Query', $payload);
-				})
-            ]
-        ]);
-
-		$output = collect([]);
-		foreach ($results['results'] as $query) {
-			if ($query['statusCode'] != 200) {
-				$errors[] = $query;
-			} else {
-				$objects = collect($query['result']['records']);
-				$type = $objects->first()['attributes']['type'];
-				$objects = $objects->map(function($item) {
-					return new SalesForceObject($item);
-				});
-				$output->push((object)[
-					'type' => $type,
-					'objects' => $objects
-				]);
-			}
-		}
-
-		return $output;
+		return $this->batch->run();
 	}
 
 	public function log($message, $details = [], $level = 'info')
