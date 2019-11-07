@@ -54,6 +54,14 @@ class EloquentSalesForceTest extends TestCase
         $this->assertCount(3, $tasks);
 
         $this->assertCount(2, $batch);
+
+        for ($i = 0; $i < 30; $i++) {
+            TestLead::limit($i + 1)->where('FirstName', '!=', 'test')->batch('test_' . $i);
+        }
+        $batch = SObjects::runBatch();
+
+        $this->assertCount(10, $batch->results('test_9'));
+        $this->assertCount(30, $batch);
     }
 
 	/**

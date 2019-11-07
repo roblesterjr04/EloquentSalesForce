@@ -48,10 +48,7 @@ class SOQLBatch extends Collection
 
     public function batch(Builder $builder, $tag = null)
     {
-        if ($this->count() >= 25) {
-			throw new \Exception('You cannot create more than 25 batch queries.');
-		}
-		$this->put($tag ?: class_basename($builder->getModel()), (object)[
+        $this->put($tag ?: class_basename($builder->getModel()), (object)[
             'class' => $builder->getModel(),
 			'builder' => $builder,
 			'results' => collect([]),
@@ -65,33 +62,35 @@ class SOQLBatch extends Collection
 
         $version = 'v' . collect(\SObjects::versions())->last()['version'];
 
-		$results = \SObjects::composite('batch', [
-            'method' => 'post',
-            'body' => [
-                'batchRequests' => tap($this->map(function($query) use ($version) {
-					return [
-						'method' => 'get',
-						'url' => $version . '/query?q=' . urlencode($query->builder->toSql()),
-					];
-				})->values()->toArray(), function($payload) {
-					\SObjects::log('SOQL Batch Query', $payload);
-				})
-            ]
-        ]);
+        foreach ($this->chunk(25) as $chunk) {
+            $results = \SObjects::composite('batch', [
+                'method' => 'post',
+                'body' => [
+                    'batchRequests' => tap($chunk->map(function($query) use ($version) {
+                        return [
+                            'method' => 'get',
+                            'url' => $version . '/query?q=' . urlencode($query->builder->toSql()),
+                        ];
+                    })->values()->toArray(), function($payload) {
+    					\SObjects::log('SOQL Batch Query', $payload);
+    				})
+                ]
+            ]);
 
-        $index = 0;
-        foreach ($this as $key => $batch) {
-            $batch_result = $results['results'][$index];
-            if ($batch_result['statusCode'] != 200) {
-                $batch->results = (object)$batch_result;
-            } else {
-                $batch->results = collect($batch_result['result']['records'])->map(function($item) use ($batch) {
-                    $model = $batch->class;
-                    return new $model($item);
-                });
+            $index = 0;
+            foreach ($chunk as $key => $batch) {
+                $batch_result = $results['results'][$index];
+                if ($batch_result['statusCode'] != 200) {
+                    $batch->results = (object)$batch_result;
+                } else {
+                    $batch->results = collect($batch_result['result']['records'])->map(function($item) use ($batch) {
+                        $model = $batch->class;
+                        return new $model($item);
+                    });
+                }
+                $this->put($key, $batch);
+                $index++;
             }
-            $this->put($key, $batch);
-            $index++;
         }
 
         return $this;
