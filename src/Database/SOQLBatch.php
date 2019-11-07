@@ -61,6 +61,8 @@ class SOQLBatch extends Collection
 
     public function run()
     {
+        if ($this->isEmpty()) return $this;
+
         $version = 'v' . collect(\SObjects::versions())->last()['version'];
 
 		$results = \SObjects::composite('batch', [

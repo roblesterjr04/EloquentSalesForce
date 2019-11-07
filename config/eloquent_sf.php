@@ -5,6 +5,8 @@ return [
 	// Set the layout used for default columns returned on select.
 	'layout'			=> 'describe/compactLayouts/primary',
 
+	'logging'			=> env('SOQL_LOG', 'single'),
+
 	// Override any Forrest settings here. The Forrest package config file is ignored, but all Forrest settings are supported here.
 	'forrest' => [
 		/*

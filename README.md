@@ -417,7 +417,7 @@ You can set a different log channel for the SOQL actions by specifying `SOQL_LOG
 
 ## Testing
 
-The tests in this package are meant for contributors and have been written to be executed independantly of a Laravel application. They will not work as part of the applications testing flow.
+The tests in this package are meant for contributors and have been written to be executed independently of a Laravel application. They will not work as part of the applications testing flow.
 
 Create a `.env` file that includes the SalesForce credentials for your test instance, or else the test will fail to execute.
 

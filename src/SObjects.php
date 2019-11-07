@@ -66,15 +66,19 @@ class SObjects
 	{
 		self::authenticate();
 		try {
+			throw new MissingTokenException('..');
 			return Forrest::$name(...$arguments);
 		} catch (MissingTokenException $ex) {
+			$this->log("MissingTokenException, trying again...", $ex->getTrace(), 'error');
 			self::authenticate();
 			return Forrest::$name(...$arguments);
 		} catch (MissingResourceException $ex) {
+			$this->log("MissingResourceException, trying again...", $ex->getTrace(), 'error');
 			self::authenticate();
 			Forrest::resources();
 			return Forrest::$name(...$arguments);
 		} catch (MissingVersionException $ex) {
+			$this->log("MissingVersionException, trying again...", $ex->getTrace(), 'error');
 			self::authenticate();
 			Forrest::versions();
 			return Forrest::$name(...$arguments);
@@ -175,13 +179,14 @@ class SObjects
 
 	public function runBatch(&$errors = [])
 	{
-		return $this->batch->run();
+		return tap($this->batch->run(), function() {
+			$this->batch = new SOQLBatch([]);
+		});
 	}
 
 	public function log($message, $details = [], $level = 'info')
 	{
-		$default = env('LOG_CHANNEL', 'stack');
-		$logs = env('SOQL_LOG', $default);
+		$logs = config('eloquent_sf.logging', config('logging.default'));
 
 		Log::channel($logs)->$level($message, $details);
 	}

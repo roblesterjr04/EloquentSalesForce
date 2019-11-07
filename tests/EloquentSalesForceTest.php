@@ -291,6 +291,16 @@ class EloquentSalesForceTest extends TestCase
 
 		//if (getenv('SCRUT_TEST')) {
 			config([
+                'logging' => [
+                    'default' => 'single',
+                    'channels' => [
+                        'single' => [
+                            'driver' => 'single',
+                            'path' => storage_path('logs/laravel.log'),
+                            'level' => 'error',
+                        ],
+                    ]
+                ],
 				'forrest' => [
 					'authentication' => 'UserPassword',
 					/*
