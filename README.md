@@ -177,7 +177,7 @@ $statusValues = $lead->getPicklistValues('Status');
 
 ## Batch Queries (beta)
 
-SalesForce has API limits. We know this. It sucks. For us at least. So now in the package, you can batch several queries and make a single API call to execute them, and get the results back in an array.
+SalesForce has API limits. We know this. It sucks. For us at least. So now in the package, you can batch several queries and make a single API call to execute them, and get the results back in a handy collection object.
 
 #### Usage
 
