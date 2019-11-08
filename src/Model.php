@@ -72,10 +72,10 @@ abstract class Model extends EloquentModel
 			SObjects::sobjects($this->table . '/' . $this->Id, [
 				'method' => 'delete'
 			]);
-			Log::info("{$this->table} object {$this->Id} deleted.");
+			SObjects::log("{$this->table} object {$this->Id} deleted.");
 			return true;
 		} catch (\Exception $e) {
-			Log::warning("{$this->table} object {$this->Id} failed to delete.", (array)$e);
+			SObjects::log("{$this->table} object {$this->Id} failed to delete.", (array)$e, 'warning');
 			return false;
 		}
 	}
@@ -95,6 +95,7 @@ abstract class Model extends EloquentModel
 				'method' => $method,
 				'body' => $body
 			]);
+			SObjects::log("SOQL $method $object", $body);
 
 			if (isset($result['success'])) {
 				try {

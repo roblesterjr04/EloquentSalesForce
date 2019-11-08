@@ -131,20 +131,25 @@ class SOQLBuilder extends Builder
 		];
 
 		/** @scrutinizer ignore-call */
-		$response = SObjects::composite('tree/' . $table, $payload);
+		try {
+			$response = SObjects::composite('tree/' . $table, $payload);
+			SObjects::log("SOQL Bulk Insert", $payload);
 
-		$response = collect($response['results']);
-		$model = $this->model;
-		$response = $response->map(function($item) use ($model) {
-			unset($item['referenceId']);
-			foreach ($item as $key => $value) {
-				$item[ucwords($key)] = $value;
-				unset($item[$key]);
-			}
-			return new $model($item);
-		});
+			$response = collect($response['results']);
+			$model = $this->model;
+			$response = $response->map(function($item) use ($model) {
+				unset($item['referenceId']);
+				foreach ($item as $key => $value) {
+					$item[ucwords($key)] = $value;
+					unset($item[$key]);
+				}
+				return new $model($item);
+			});
 
-		return $response;
+			return $response;
+		} catch (\Exception $e) {
+			throw $e;
+		}
 	}
 
 	/**
