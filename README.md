@@ -192,8 +192,8 @@ Contact::select(['Id', 'FirstName', 'Phone'])->limit(50)->batch();
 
 $batch = SObjects::runBatch();
 
-$leads = $batch->results('Lead');
-$contacts = $batch->results('Contact');
+$leads = $batch->results('Lead'); // get() also works here...
+$contacts = $batch->results('Contact'); // ... and here.
 ```
 
 ### Tagging the batch
