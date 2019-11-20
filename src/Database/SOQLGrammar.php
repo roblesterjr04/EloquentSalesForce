@@ -174,6 +174,11 @@ class SOQLGrammar extends Grammar
 		return $this->wrap($where['column']) . ' <> null';
 	}
 
+	protected function whereNull(Builder $query, $where)
+	{
+		return $this->wrap($where['column']) . ' = null';
+	}
+
 	/**
 	 * Define grammer for boolean where statements in SOQL
 	 * @param  Builder $query [description]
