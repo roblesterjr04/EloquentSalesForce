@@ -123,30 +123,36 @@ class SOQLBuilder extends Builder
 			return $object;
 		});
 
-		$payload = [
-			'method' => 'post',
-			'body' => [
-				'records' => $collection->toArray()
-			]
-		];
+
 
 		/** @scrutinizer ignore-call */
 		try {
-			$response = SObjects::composite('tree/' . $table, $payload);
-			SObjects::log("SOQL Bulk Insert", $payload);
+			$responseCollection = collect([]);
+			foreach ($collection->chunk(200) as $collectionBatch) {
+				$payload = [
+					'method' => 'post',
+					'body' => [
+						'records' => $collectionBatch->toArray()
+					]
+				];
 
-			$response = collect($response['results']);
-			$model = $this->model;
-			$response = $response->map(function($item) use ($model) {
-				unset($item['referenceId']);
-				foreach ($item as $key => $value) {
-					$item[ucwords($key)] = $value;
-					unset($item[$key]);
-				}
-				return new $model($item);
-			});
+				$response = SObjects::composite('tree/' . $table, $payload);
+				SObjects::log("SOQL Bulk Insert", $payload);
 
-			return $response;
+				$response = collect($response['results']);
+				$model = $this->model;
+				$response = $response->map(function($item) use ($model) {
+					unset($item['referenceId']);
+					foreach ($item as $key => $value) {
+						$item[ucwords($key)] = $value;
+						unset($item[$key]);
+					}
+					return new $model($item);
+				});
+				$responseCollection = $responseCollection->merge($response);
+			}
+
+			return $responseCollection;
 		} catch (\Exception $e) {
 			throw $e;
 		}
