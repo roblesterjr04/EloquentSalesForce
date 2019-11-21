@@ -27,21 +27,22 @@ class SObjects
 	 *
 	 * @param  \Illuminate\Support\Collection $collection [collection of Lester\EloquentSalesForce\Model]
 	 * @param  boolean                     $allOrNone  [Should update fail entirely if one object fails to update?]
-	 * @return array                                  [Response from SalesForce]
 	 */
 	public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
-		return self::composite('sobjects', [
-			'method' => 'patch',
-			'body' => tap([
-				'allOrNone' => $allOrNone,
-				'records' => $collection->map(function($object) {
-					return $object->writeableAttributes();
+		foreach ($collection->chunk(200) as $collectionBatch) {
+			self::composite('sobjects', [
+				'method' => 'patch',
+				'body' => tap([
+					'allOrNone' => $allOrNone,
+					'records' => $collectionBatch->map(function($object) {
+						return $object->writeableAttributes();
+					})
+				], function($payload) {
+					$this->log('SOQL Bulk Update', $payload);
 				})
-			], function($payload) {
-				$this->log('SOQL Bulk Update', $payload);
-			})
-		]);
+			]);
+		}
 	}
 
 	/**
