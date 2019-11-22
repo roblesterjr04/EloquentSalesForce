@@ -104,6 +104,9 @@ class EloquentSalesForceTest extends TestCase
         }
         $results = TestLead::insert($collection);
 
+        $ids = $results->pluck('Id');
+        $results = TestLead::whereIn('Id', $ids)->get();
+
         $results = $results->map(function($lead) {
             $lead->Company = 'Test 2';
             return $lead;

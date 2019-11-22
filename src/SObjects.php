@@ -37,7 +37,7 @@ class SObjects
 					'allOrNone' => $allOrNone,
 					'records' => $collectionBatch->map(function($object) {
 						return $object->writeableAttributes();
-					})
+					})->values()
 				], function($payload) {
 					$this->log('SOQL Bulk Update', $payload);
 				})
@@ -67,7 +67,6 @@ class SObjects
 	{
 		self::authenticate();
 		try {
-			throw new MissingTokenException('..');
 			return Forrest::$name(...$arguments);
 		} catch (MissingTokenException $ex) {
 			$this->log("MissingTokenException, trying again...", $ex->getTrace(), 'error');
