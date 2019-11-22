@@ -98,7 +98,7 @@ class EloquentSalesForceTest extends TestCase
     public function testObjectMass()
     {
         $collection = collect([]);
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 210; $i++) {
             $email = strtolower(Str::random(10) . '@test.com');
             $collection->push(new TestLead(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]));
         }
@@ -112,7 +112,7 @@ class EloquentSalesForceTest extends TestCase
             return $lead;
         });
 
-        $this->assertCount(3, $results);
+        $this->assertCount(210, $results);
 
         SObjects::update($results);
 
