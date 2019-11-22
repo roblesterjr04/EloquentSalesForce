@@ -46,9 +46,23 @@ class SOQLBatch extends Collection
         ];
     }
 
+    public function push($builder)
+    {
+        return tap($this, function($collection) use ($builder) {
+            $collection->batch($builder);
+        });
+    }
+
+    public function put($builder, $tag)
+    {
+        return tap($this, function($collection) use ($builder, $tag) {
+            $collection->batch($builder, $tag);
+        });
+    }
+
     public function batch(Builder $builder, $tag = null)
     {
-        $this->put($tag ?: class_basename($builder->getModel()), (object)[
+        parent::put($tag ?: class_basename($builder->getModel()), (object)[
             'class' => $builder->getModel(),
 			'builder' => $builder,
 			'results' => collect([]),

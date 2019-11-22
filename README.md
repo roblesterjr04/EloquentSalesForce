@@ -419,7 +419,17 @@ You can set a different log channel for the SOQL actions by specifying `SOQL_LOG
 
 The tests in this package are meant for contributors and have been written to be executed independently of a Laravel application. They will not work as part of the applications testing flow.
 
-Create a `.env` file that includes the SalesForce credentials for your test instance, or else the test will fail to execute.
+Create a `.env` file that includes the SalesForce credentials for your test instance, or else the test will fail to execute. The `.env` field should include these properties:
+
+```txt
+USERNAME=
+PASSWORD=
+CONSUMER_KEY=
+CONSUMER_SECRET=
+LOGIN_URL=https://login.salesforce.com
+CACHE_DRIVER=array
+LOG_CHANNEL=file
+```
 
 Dependencies are required, so execute `composer install`
 
