@@ -132,7 +132,7 @@ class SOQLBuilder extends Builder
 				$payload = [
 					'method' => 'post',
 					'body' => [
-						'records' => $collectionBatch->toArray()
+						'records' => $collectionBatch->values()
 					]
 				];
 
