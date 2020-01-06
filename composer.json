@@ -1,6 +1,6 @@
 {
   "name": "rob-lester-jr04/eloquent-sales-force",
-  "description": "An eloquent model data source for sales force",
+  "description": "An eloquent model data source for Salesforce",
   "license": "MIT",
   "keywords": [
     "eloquent",
@@ -9,7 +9,8 @@
     "salesforce",
     "model",
     "laravel",
-    "forrest"
+    "forrest",
+    "soql"
   ],
   "type": "library",
   "authors": [
