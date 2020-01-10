@@ -60,6 +60,11 @@ class SOQLGrammar extends Grammar
 			return $this->whereBoolean($query, $where);
 		}
 
+        // allow for literal string values
+        if ($this->checkStringLiteral($where['value'])) {
+            return $this->whereLiteral($query, $where);
+        }
+
 		if (Str::contains(strtolower($where['operator']), 'not like')) {
 			return sprintf(
 				'(not %s like %s)',
@@ -193,4 +198,66 @@ class SOQLGrammar extends Grammar
 			return $this->wrap($where['column']) . $where['operator'] . 'FALSE';
 		}
 	}
+
+    /**
+     * @param Builder $query The query builder
+     * @param array $where The where array
+     * @return string
+     */
+    protected function whereLiteral(Builder $query, $where) {
+        return "{$this->wrap($where['column'])} {$where['operator']} {$where['value']}";
+    }
+
+    /**
+     * Check if the $string is a SOSQL String Literal
+     * List taken from: https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_dateformats.htm
+     * @param $string
+     * @return bool
+     */
+    protected function checkStringLiteral($string) {
+        // some literals use : in them, removing before checking
+        if (Str::contains($string, ":")) {
+            $string = explode(':', $string)[0];
+        }
+        // check against the array of literals
+        return in_array($string, [
+            "YESTERDAY",
+            "TODAY",
+            "TOMORROW",
+            "LAST_WEEK",
+            "THIS_WEEK",
+            "NEXT_WEEK",
+            "LAST_MONTH",
+            "THIS_MONTH",
+            "NEXT_MONTH",
+            "LAST_90_DAYS",
+            "NEXT_90_DAYS",
+            "LAST_N_DAYS",
+            "NEXT_N_DAYS",
+            "NEXT_N_WEEKS",
+            "LAST_N_WEEKS",
+            "NEXT_N_MONTHS",
+            "LAST_N_MONTHS",
+            "THIS_QUARTER",
+            "LAST_QUARTER",
+            "NEXT_QUARTER",
+            "NEXT_N_QUARTERS",
+            "LAST_N_QUARTERS",
+            "THIS_YEAR",
+            "LAST_YEAR",
+            "NEXT_YEAR",
+            "NEXT_N_YEARS",
+            "LAST_N_YEARS",
+            "THIS_FISCAL_QUARTER",
+            "LAST_FISCAL_QUARTER",
+            "NEXT_FISCAL_QUARTER",
+            "NEXT_N_FISCAL_​QUARTERS",
+            "LAST_N_FISCAL_​QUARTERS",
+            "THIS_FISCAL_YEAR",
+            "LAST_FISCAL_YEAR",
+            "NEXT_FISCAL_YEAR",
+            "NEXT_N_FISCAL_​YEARS",
+            "LAST_N_FISCAL_​YEARS",
+        ]);
+    }
 }
