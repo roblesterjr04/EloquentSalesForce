@@ -46,7 +46,7 @@ class SOQLBatch extends Collection
         ];
     }
 
-    public function push($builder)
+    public function push(...$builder)
     {
         return tap($this, function($collection) use ($builder) {
             $collection->batch($builder);
