@@ -61,13 +61,13 @@ In your `config/database.php` file, add the following driver to the connections 
 'soql' => [
     'driver' => 'soql',
     'database' => null,
-    'consumerKey'    => env('CONSUMER_KEY'),
-    'consumerSecret' => env('CONSUMER_SECRET'),
-    'loginURL'       => env('LOGIN_URL'),
+    'consumerKey'    => env('SF_CONSUMER_KEY'),
+    'consumerSecret' => env('SF_CONSUMER_SECRET'),
+    'loginURL'       => env('SF_LOGIN_URL'),
     // Only required for UserPassword authentication:
-    'username'       => env('USERNAME'),
+    'username'       => env('SF_USERNAME'),
     // Security token might need to be ammended to password unless IP Address is whitelisted
-    'password'       => env('PASSWORD')
+    'password'       => env('SF_PASSWORD')
 ],
 ```
 
