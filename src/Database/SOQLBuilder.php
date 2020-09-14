@@ -34,17 +34,6 @@ class SOQLBuilder extends Builder
 		$query = str_replace('*', $columns, parent::toSql());
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
-			try {
-				if (\Carbon\Carbon::parse($item) !== false && !$this->query->connection->isSalesForceId($item)) {
-					return $item;
-				}
-			} catch (\Exception $e) {
-				if (is_int($item) || is_float($item)) {
-					return $item;
-				} else {
-					return "'$item'";
-				}
-			}
 			return "'$item'";
 		}, $this->getBindings());
 		$prepared = Str::replaceArray('?', $bindings, $query);
