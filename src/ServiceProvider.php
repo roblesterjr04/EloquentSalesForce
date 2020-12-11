@@ -4,6 +4,7 @@ namespace Lester\EloquentSalesForce;
 
 use Lester\EloquentSalesForce\Facades\SObjects as SfFacade;
 use Illuminate\Support\Arr;
+use Lester\EloquentSalesForce\Console\MakeModelCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -15,6 +16,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		$this->publishes([
 			self::CONFIG_PATH => config_path('eloquent_sf.php'),
 		], 'config');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MakeModelCommand::class,
+            ]);
+        }
 	}
 
 	public function register()
