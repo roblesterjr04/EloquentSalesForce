@@ -102,7 +102,7 @@ class SOQLConnection extends Connection
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
 			try {
-				if (\Carbon\Carbon::parse($item) !== false && !$this->isSalesForceId($item)) {
+				if (!$this->isSalesForceId($item) && strtotime($item) !== false) {
 					return $item;
 				}
 			} catch (\Exception $e) {
