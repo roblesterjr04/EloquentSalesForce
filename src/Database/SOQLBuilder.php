@@ -114,6 +114,7 @@ class SOQLBuilder extends Builder
 	public function insert(\Illuminate\Support\Collection $collection)
 	{
 		$table = $this->model->getTable();
+        $chunkSize = config('eloquent_sf.batch.insert.size', 200) <= 200 ? config('eloquent_sf.batch.insert.size', 200) : 200;
 
 		$counter = 1;
 		$collection = $collection->map(function($object, $index) {
@@ -128,7 +129,7 @@ class SOQLBuilder extends Builder
 		/** @scrutinizer ignore-call */
 		try {
 			$responseCollection = collect([]);
-			foreach ($collection->chunk(200) as $collectionBatch) {
+			foreach ($collection->chunk($chunkSize) as $collectionBatch) {
 				$payload = [
 					'method' => 'post',
 					'body' => [

@@ -7,6 +7,15 @@ return [
 
 	'logging'			=> env('SOQL_LOG', 'single'),
 
+    'batch'             => [
+        'select' => [
+            'size' => 25
+        ],
+        'insert' => [
+            'size' => 200
+        ]
+    ],
+
 	// Override any Forrest settings here. The Forrest package config file is ignored, but all Forrest settings are supported here.
 	'forrest' => [
 		/*
