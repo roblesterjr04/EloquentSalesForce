@@ -100,20 +100,7 @@ class SOQLConnection extends Connection
 	private function prepare($query, $bindings)
 	{
 		$query = str_replace('`', '', $query);
-		$bindings = array_map(function($item) {
-			try {
-				if (!$this->isSalesForceId($item) && strtotime($item) !== false) {
-					return $item;
-				}
-			} catch (\Exception $e) {
-				if (is_int($item) || is_float($item)) {
-					return $item;
-				} else {
-					return "'$item'";
-				}
-			}
-			return "'$item'";
-		}, $bindings);
+		$bindings = array_map(fn ($item) => (is_int($item) || is_float($item)) ? $item : "'$item'", $bindings);
 
 		$query = Str::replaceArray('?', $bindings, $query);
 		return $query;
