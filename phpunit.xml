@@ -18,6 +18,9 @@
       <directory suffix=".php">src</directory>
     </whitelist>
   </filter>
+  <logging>
+
+  </logging>
   <php>
 	   <env name="LOGIN_URL" value="https://login.salesforce.com"/>
      <env name="CACHE_DRIVER" value="file" />
