@@ -172,10 +172,14 @@ class EloquentSalesForceTest extends TestCase
             new TestLead([
                 'Email' => 'test1@test.com',
                 'FirstName' => 'Kathy',
+                'LastName' => 'Test',
+                'Company' => 'TestCo',
             ]),
             new TestLead([
                 'Email' => 'test2@test.com',
                 'FirstName' => 'Betty',
+                'LastName' => 'Test',
+                'Company' => 'TestCo',
             ]),
         ]));
 
