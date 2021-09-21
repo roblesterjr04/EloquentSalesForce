@@ -413,7 +413,7 @@ class EloquentSalesForceTest extends TestCase
 	 * @return \Illuminate\Foundation\Application
 	 */
 
-	public function createApplication()
+	/*public function createApplication()
 	{
 		if (getenv('SCRUT_TEST')) return parent::createApplication();
 
@@ -426,7 +426,7 @@ class EloquentSalesForceTest extends TestCase
         }
 
 		return parent::createApplication();
-	}
+	}*/
 
     protected function tearDown(): void
     {
