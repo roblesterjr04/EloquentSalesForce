@@ -16,6 +16,10 @@
 
 Work with SalesForce APIs via the Eloquent Model.
 
+## NOTE FOR BUILD
+
+Tests do not use mockery, they are connecting to SFDC in real time - sometimes the credentials expire and then the build will fail when pull requests are evaluated. I will be implementing mockery at some point, but for now, do not be too concerned about a `failed` build status.
+
 ## Installation
 
 Install via composer
