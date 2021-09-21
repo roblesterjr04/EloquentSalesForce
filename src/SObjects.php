@@ -139,7 +139,7 @@ class SObjects
 	{
 		$retval = '';
 		for ($i = 0; $i < strlen($str); $i++)
-			$retval .= strrpos("AABCDEFGHIJKLMNOPQRSQUVWXYZ", substr($str, $i, 1)) ? '1' : '0';
+			$retval .= strrpos("ABCDEFGHIJKLMNOPQRSQUVWXYZ", substr($str, $i, 1)) ? '1' : '0';
 
 		return $retval;
 	}

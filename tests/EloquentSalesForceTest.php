@@ -273,6 +273,24 @@ class EloquentSalesForceTest extends TestCase
         $lead->delete();
     }
 
+    public function testMassDelete()
+    {
+        $email = strtolower(Str::random(10) . '@test.com');
+        $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+
+        TestLead::select('Id')->delete();
+
+        $this->assertCount(0, TestLead::all());
+
+    }
+
+    public function testTruncate()
+    {
+        TestLead::truncate();
+
+        $this->assertCount(0, TestLead::all());
+    }
+
     /**
      * @covers Lester\EloquentSalesForce\SObjects::object
      * @covers Lester\EloquentSalesForce\SObjects::convert
@@ -332,11 +350,11 @@ class EloquentSalesForceTest extends TestCase
 				     * Compression can be set to 'gzip' or 'deflate'
 				     */
 				    'defaults'       => [
-				        'method'          => 'get',
-				        'format'          => 'json',
-				        'compression'     => false,
-				        'compressionType' => 'gzip',
-				    ],
+                        'method'          => 'get',
+                        'format'          => 'json',
+                        'compression'     => false,
+                        'compressionType' => 'gzip',
+                    ],
 
 				    /*
 				     * Where do you want to store access tokens fetched from Salesforce

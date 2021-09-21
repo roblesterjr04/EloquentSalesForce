@@ -181,4 +181,25 @@ class SOQLBuilder extends Builder
 	{
 		return count($this->model->columns) ? $this->model->columns : $this->getSalesForceColumns(['*'], $this->model->getTable());
 	}
+
+    public function delete($allOrNone = false)
+    {
+        $models = collect($this->getModels());
+        foreach ($models->chunk(200) as $chunk) {
+            SObjects::composite('sobjects', [
+                'method' => 'delete',
+                'query' => [
+                    'allOrNone' => $allOrNone,
+                    'ids' => implode(',',$chunk->pluck('Id')->values()->toArray()),
+                ]
+            ]);
+        }
+
+    }
+
+    public function truncate()
+    {
+        return $this->delete();
+    }
+
 }
