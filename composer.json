@@ -21,7 +21,7 @@
   ],
   "require": {
     "php": "^7.0 || ^8.0",
-    "laravel/framework": "^5.6 || ^6.0 || ^7.0 || ^8.0",
+    "laravel/framework": "^5.6 || ^6.0 || ^7.0 || ^8.40",
     "omniphx/forrest": "^2.0",
     "guzzlehttp/guzzle": "^6.0 || ^7.0"
   },
