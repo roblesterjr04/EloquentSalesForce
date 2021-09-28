@@ -30,7 +30,9 @@ class SObjects
 	 */
 	public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
-		foreach ($collection->chunk(200) as $collectionBatch) {
+        $chunkSize = config('eloquent_sf.batch.insert.size', 200) <= 200 ? config('eloquent_sf.batch.insert.size', 200) : 200;
+
+		foreach ($collection->chunk($chunkSize) as $collectionBatch) {
 			self::composite('sobjects', [
 				'method' => 'patch',
 				'body' => tap([

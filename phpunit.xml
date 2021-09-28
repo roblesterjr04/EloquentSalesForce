@@ -11,5 +11,6 @@
   <php>
 	   <env name="LOGIN_URL" value="https://login.salesforce.com"/>
      <env name="CACHE_DRIVER" value="file" />
+     <env name="APP_KEY" value="base64:WRAf0EDpFqwpbS829xKy2MGEkcJxIEmMrwFIZbGxIqE=" />
   </php>
 </phpunit>

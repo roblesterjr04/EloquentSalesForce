@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Lester\EloquentSalesForce\Facades\SObjects;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use \Mockery;
 
 class EloquentSalesForceTest extends TestCase
 {
@@ -170,13 +171,13 @@ class EloquentSalesForceTest extends TestCase
 
         TestLead::insert(collect([
             new TestLead([
-                'Email' => 'test1@test.com',
+                'Email' => strtolower(Str::random(10) . '@test.com'),
                 'FirstName' => 'Kathy',
                 'LastName' => 'Test',
                 'Company' => 'TestCo',
             ]),
             new TestLead([
-                'Email' => 'test2@test.com',
+                'Email' => strtolower(Str::random(10) . '@test.com'),
                 'FirstName' => 'Betty',
                 'LastName' => 'Test',
                 'Company' => 'TestCo',
@@ -429,9 +430,9 @@ class EloquentSalesForceTest extends TestCase
 	 * @return \Illuminate\Foundation\Application
 	 */
 
-	/*public function createApplication()
+	public function createApplication()
 	{
-		if (getenv('SCRUT_TEST')) return parent::createApplication();
+		if (getenv('GIT_TEST')) return parent::createApplication();
 
         $env = file_get_contents(__DIR__.'/../.env');
 
@@ -442,11 +443,12 @@ class EloquentSalesForceTest extends TestCase
         }
 
 		return parent::createApplication();
-	}*/
+	}
 
     protected function tearDown(): void
     {
         \Artisan::call('cache:clear');
+        Mockery::close();
 
         parent::tearDown();
     }
