@@ -25,7 +25,7 @@ Install via composer
 composer require rob-lester-jr04/eloquent-sales-force
 ```
 
-*Note: This package is only supported Laravel 5.6 and newer.
+*Note: This package is only supported Laravel 5.6 and < 7
 
 ### Publish Configuration File
 
