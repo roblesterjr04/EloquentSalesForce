@@ -429,6 +429,9 @@ class EloquentSalesForceTest extends TestCase
 			'cache.default' => 'file',
 		]);
 
+        TestLead::truncate();
+        TestTask::truncate();
+
 	}
 
 	/**
