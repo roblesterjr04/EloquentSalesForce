@@ -26,7 +26,6 @@
     "guzzlehttp/guzzle": "^6.0 || ^7.0"
   },
   "require-dev": {
-    "mockery/mockery": "^1.4",
     "orchestra/testbench": ">=3.5",
     "phpunit/phpunit": ">=6.0"
   },

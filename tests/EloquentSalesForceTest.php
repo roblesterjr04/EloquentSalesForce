@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Config;
 use Lester\EloquentSalesForce\Facades\SObjects;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
-use \Mockery;
 
 class EloquentSalesForceTest extends TestCase
 {
@@ -456,7 +455,6 @@ class EloquentSalesForceTest extends TestCase
     protected function tearDown(): void
     {
         \Artisan::call('cache:clear');
-        Mockery::close();
 
         TestLead::truncate();
 
