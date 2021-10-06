@@ -10,8 +10,8 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: ['7.2', '7.3', '7.4', '8.0']
-        laravel: [7.*, 8.*]
+        php: ['8.0']
+        laravel: [8.*]
         dependency-version: [prefer-stable]
         exclude:
           - laravel: 8.*
