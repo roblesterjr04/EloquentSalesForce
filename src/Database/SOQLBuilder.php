@@ -33,20 +33,7 @@ class SOQLBuilder extends Builder
 		$columns = implode(', ', $this->describe());
 		$query = str_replace('*', $columns, parent::toSql());
 		$query = str_replace('`', '', $query);
-		$bindings = array_map(function($item) {
-			try {
-				if (strtotime($item) !== false && !$this->query->connection->isSalesForceId($item)) {
-					return $item;
-				}
-			} catch (\Exception $e) {
-				if (is_int($item) || is_float($item)) {
-					return $item;
-				} else {
-					return "'$item'";
-				}
-			}
-			return "'$item'";
-		}, $this->getBindings());
+		$bindings = array_map(fn ($item) => (is_int($item) || is_float($item)) ? $item : "'$item'", $this->getBindings());
 		$prepared = Str::replaceArray('?', $bindings, $query);
 		return $prepared;
 	}
