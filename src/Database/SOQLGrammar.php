@@ -8,6 +8,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JsonExpression;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Lester\EloquentSalesForce\ServiceProvider;
+use SObjects;
 
 class SOQLGrammar extends Grammar
 {
@@ -38,7 +39,7 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function wrapValue($value)
 	{
-		return $value === '*' ? $value : '`' . str_replace('`', '``', $value) . '`';
+        return $value;
 	}
 
 	protected function unWrapValue($value)
@@ -65,7 +66,7 @@ class SOQLGrammar extends Grammar
             return $this->whereLiteral($query, $where);
         }
 
-		if (Str::contains(strtolower($where['operator']), 'not like')) {
+        if (Str::contains(strtolower($where['operator']), 'not like')) {
 			return sprintf(
 				'(not %s like %s)',
 				$this->wrap($where['column']),
@@ -75,19 +76,34 @@ class SOQLGrammar extends Grammar
 		return parent::whereBasic($query, $where);
 	}
 
+    /**
+     * Get the appropriate query parameter place-holder for a value.
+     *
+     * @param  mixed   $value
+     * @return string
+     */
+    public function parameter($value)
+    {
+        if (!SObjects::isSalesForceId($value) && strtotime($value) !== false) {
+            return '?';
+        }
+        if (SObjects::isSalesForceId($value) || is_string($value)) {
+            return "'?'";
+        }
+        return $this->isExpression($value) ? $this->getValue($value) : '?';
+    }
+
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function whereIn(Builder $query, $where)
 	{
-		if (empty($where['values'])) {
-			// the below statement is invalid in SOQL
-			// return '0 = 1';
-			// since virtually every object in SalesForce has Id column then
-			// compare that field to null which should always be false.
-			return 'Id = null';
-		}
-		return parent::whereIn($query, $where);
+        if (! empty($where['values'])) {
+            //dd($this->wrap($where['column']).' in ('.$this->parameterize($where['values']).')');
+            return $this->wrap($where['column']).' in ('.$this->parameterize($where['values']).')';
+        }
+
+        return 'Id = null';
 	}
 
 	/**

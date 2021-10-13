@@ -99,23 +99,24 @@ class SOQLConnection extends Connection
 
 	private function prepare($query, $bindings)
 	{
-		$query = str_replace('`', '', $query);
-		$bindings = array_map(fn ($item) => (is_int($item) || is_float($item)) ? $item : "'$item'", $bindings);
+		//$query = str_replace('`', '', $query);
+        /*$bindingCollection = collect($bindings)->map(function($item) {
+            try {
+                if (!$this->isSalesForceId($item) && strtotime($item) !== false) {
+                    return $item;
+                }
+            } catch (\Exception $e) {
+                if (is_int($item) || is_float($item)) {
+                    return $item;
+                } else {
+                    return "'$item'";
+                }
+            }
+            return "'$item'";
+        });*/
 
-		$query = Str::replaceArray('?', $bindings, $query);
+        $query = Str::replaceArray('?', $bindings, $query);
 		return $query;
 	}
 
-	/**
-	 * Based on characters and length of $str, determine if it appears to be a
-	 * SalesForce ID.
-	 *
-	 * @param string $str String to test
-	 *
-	 * @return bool
-	 */
-	public function isSalesForceId($str)
-	{
-		return boolval(\preg_match('/^[0-9a-zA-Z]{15,18}$/', $str));
-	}
 }

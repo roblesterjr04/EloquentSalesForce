@@ -193,4 +193,17 @@ class SObjects
 		Log::channel($logs)->$level($message, $details);
 	}
 
+    /**
+     * Based on characters and length of $str, determine if it appears to be a
+     * SalesForce ID.
+     *
+     * @param string $str String to test
+     *
+     * @return bool
+     */
+    public function isSalesForceId($str)
+    {
+        return boolval(\preg_match('/^[0-9a-zA-Z]{15,18}$/', $str));
+    }
+
 }
