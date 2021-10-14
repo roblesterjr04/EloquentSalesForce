@@ -151,6 +151,11 @@ class EloquentSalesForceTest extends TestCase
 
 	    $leads = TestLead::where('FirstName', 'not like', 'xxxxxxxxxxxxx')->get();
 	    $this->assertTrue($leads->count() > 0);
+
+        $int = 123;
+        $lead = TestLead::where('Email', (string)$int)->first();
+
+        $this->assertNull($lead);
     }
 
     /*

@@ -36,7 +36,7 @@ class SOQLBuilder extends Builder
 		/*$bindings = array_map(function($item) {
             return (is_int($item) || is_float($item)) ? $item : "'$item'";
         }, $this->getBindings());*/
-		$prepared = Str::replaceArray('?', $bindings, $query);
+		$prepared = Str::replaceArray('?', $this->getBindings(), $query);
 		return $prepared;
 	}
 

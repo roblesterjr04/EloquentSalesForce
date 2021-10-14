@@ -56,6 +56,7 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function whereBasic(Builder $query, $where)
 	{
+
 		// allow for "false" values to not be wrapped.
 		if (is_bool($where['value'])) {
 			return $this->whereBoolean($query, $where);
@@ -73,8 +74,21 @@ class SOQLGrammar extends Grammar
 				$this->parameter($where['value'])
 			);
 		}
-		return parent::whereBasic($query, $where);
+
+        return parent::whereBasic($query, $where);
 	}
+
+    /**
+     * Compile the "limit" portions of the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  int  $limit
+     * @return string
+     */
+    protected function compileLimit(Builder $query, $limit)
+    {
+        return 'limit '.(int) $limit;
+    }
 
     /**
      * Get the appropriate query parameter place-holder for a value.
@@ -84,12 +98,14 @@ class SOQLGrammar extends Grammar
      */
     public function parameter($value)
     {
-        if (!SObjects::isSalesForceId($value) && strtotime($value) !== false) {
+
+        if (!SObjects::isSalesForceId($value) && strtotime($value) !== false && !is_numeric($value)) {
             return '?';
         }
         if (SObjects::isSalesForceId($value) || is_string($value)) {
             return "'?'";
         }
+
         return $this->isExpression($value) ? $this->getValue($value) : '?';
     }
 
