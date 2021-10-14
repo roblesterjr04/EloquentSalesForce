@@ -22,7 +22,7 @@
   "require": {
     "php": "^7.0 || ^8.0",
     "omniphx/forrest": "^2.0",
-    "laravel/framework": "^7.0 || ^8.40",
+    "laravel/framework": "^7.0 || ^8.40.0",
     "guzzlehttp/guzzle": "^6.0 || ^7.0"
   },
   "require-dev": {
