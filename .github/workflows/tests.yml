@@ -13,10 +13,11 @@ jobs:
       GIT_TEST: true
     runs-on: ${{ matrix.os }}
     strategy:
+      max-parallel: 1
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: ['8.0']
+        php: ['7.2','7.4','8.0']
         laravel: [7.*,8.*]
         dependency-version: [prefer-stable]
         exclude:
