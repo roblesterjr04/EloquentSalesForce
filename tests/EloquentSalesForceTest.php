@@ -78,17 +78,19 @@ class EloquentSalesForceTest extends TestCase
     {
 	    $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
-	    $lead = TestLead::where('Email', $email)->first();
+
+        $lead = TestLead::where('Email', $email)->first();
 
         $this->assertEquals($lead->Email, $email);
 
-        try {
-        	$lead->update(['Name' => 'test']);
-        } catch (\Exception $e) {
+        TestLead::truncate();
 
-        }
+        $lead = TestLead::firstOrCreate(
+            ['Email' => $email],
+            ['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test']
+        );
 
-        $lead->delete();
+        $this->assertTrue($lead->wasRecentlyCreated);
     }
 
     /**
@@ -132,9 +134,11 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testObjectUpdate()
     {
-	    $email = strtolower(Str::random(10) . '@test.com');
+        $email = strtolower(Str::random(10) . '@test.com');
 	    $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
-	    $lead->update(['FirstName' => 'Robert']);
+
+        $lead->update(['FirstName' => 'Robert']);
+
         $lead = TestLead::where('Email', $email)->first();
 
         $this->assertEquals($lead->FirstName, 'Robert');
@@ -434,8 +438,8 @@ class EloquentSalesForceTest extends TestCase
 			'cache.default' => 'file',
 		]);
 
-        TestLead::truncate();
-        TestTask::truncate();
+        //TestLead::truncate();
+        //TestTask::truncate();
 
 	}
 
@@ -464,7 +468,7 @@ class EloquentSalesForceTest extends TestCase
     {
         \Artisan::call('cache:clear');
 
-        TestLead::truncate();
+        //TestLead::truncate();
 
         parent::tearDown();
     }

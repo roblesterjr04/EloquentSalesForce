@@ -20,10 +20,7 @@ class SOQLConnection extends Connection
 	 */
 	public function select($query, $bindings = [], $useReadPdo = true)
 	{
-		return $this->run($query, $bindings, function($query, $bindings) {
-			if ($this->pretending()) {
-				return [];
-			}
+		return $this->run($query, $bindings, function($query, $bindings) use ($useReadPdo) {
 
 			$statement = $this->prepare($query, $bindings);
 
@@ -79,6 +76,10 @@ class SOQLConnection extends Connection
 	 */
 	protected function run($query, $bindings, Closure $callback)
 	{
+        foreach ($this->beforeExecutingCallbacks as $beforeExecutingCallback) {
+            $beforeExecutingCallback($query, $bindings, $this);
+        }
+
 		$start = microtime(true);
 
 		try {

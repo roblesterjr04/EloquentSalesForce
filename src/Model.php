@@ -16,10 +16,31 @@ abstract class Model extends EloquentModel
 {
 	protected $guarded = [];
 	protected $readonly = [];
+
+    public $timestamps = false;
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'CreatedDate';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'LastModifiedDate';
+
 	private $always_readonly = [
 		'Id',
 		'attributes',
 	];
+
+    public $incrementing = false;
+
+    public $wasRecentlyCreated = false;
 
 	public $columns = [];
 
@@ -53,17 +74,17 @@ abstract class Model extends EloquentModel
 	    return Arr::except($this->attributes, $fields);
 	}
 
-	public static function create(array $attributes)
+	/*public static function create(array $attributes)
 	{
 		return (new static($attributes))->save();
-	}
+	}*/
 
-	public function update(array $attributes = array(), array $options = array())
+	/*public function update(array $attributes = array(), array $options = array())
 	{
 
 		$this->attributes = array_merge(Arr::only($this->attributes, ['Id']), $attributes);
 		return $this->save($options);
-	}
+	}*/
 
 	public function delete()
 	{
@@ -80,37 +101,93 @@ abstract class Model extends EloquentModel
 		}
 	}
 
-	public function save(array $options = array())
-	{
-		/** @scrutinizer ignore-call */
-		SObjects::authenticate();
-		$object = $this->sfObject();
-		$method = $this->sfMethod();
+    /**
+     * Perform a model insert operation.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return bool
+     */
+    protected function performInsert($query)
+    {
+        if ($this->fireModelEvent('creating') === false) {
+            return false;
+        }
 
-		$body = $this->writeableAttributes(['Id', 'attributes']);
+        // If the model has an incrementing key, we can use the "insertGetId" method on
+        // the query builder, which will give us back the final inserted ID for this
+        // table from the database. Not all tables have to be incrementing though.
+        $attributes = $this->getAttributesForInsert();
 
-		try {
-			/** @scrutinizer ignore-call */
-			$result = SObjects::sobjects($object, [
-				'method' => $method,
-				'body' => $body
-			]);
-			SObjects::log("SOQL $method $object", $body);
+        if (empty($attributes)) {
+            return $this;
+        }
 
-			if (isset($result['success'])) {
-				try {
-					return $this->find($result['id']);
-				} catch (\Exception $e) {
-					if (isset($result['id'])) {
-						$this->Id = $result['id'];
-					}
-				}
-			}
-			return $this;
-		} catch (\Exception $e) {
-			throw $e;
-		}
-	}
+        SObjects::authenticate();
+        $object = $this->sfObject();
+
+        $result = SObjects::sobjects($object, [
+            'method' => 'post',
+            'body' => $attributes
+        ]);
+
+        if (isset($result['success'])) {
+            if (isset($result['id'])) {
+                $this->Id = $result['id'];
+            }
+            //return $this;
+        } else {
+            return false;
+        }
+
+        // We will go ahead and set the exists property to true, so that it is set when
+        // the created event is fired, just in case the developer tries to update it
+        // during the event. This will allow them to do so and run an update here.
+        $this->exists = true;
+
+        $this->wasRecentlyCreated = true;
+
+        $this->fireModelEvent('created', false);
+
+        return $this;
+    }
+
+    /**
+     * Perform a model update operation.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return bool
+     */
+    protected function performUpdate($query)
+    {
+        // If the updating event returns false, we will cancel the update operation so
+        // developers can hook Validation systems into their models and cancel this
+        // operation if the model does not pass validation. Otherwise, we update.
+        if ($this->fireModelEvent('updating') === false) {
+            return false;
+        }
+
+        // Once we have run the update operation, we will fire the "updated" event for
+        // this model instance. This will allow developers to hook into these after
+        // models are updated, giving them a chance to do any special processing.
+        $dirty = $this->getDirty();
+
+        if (count($dirty) > 0) {
+
+            SObjects::authenticate();
+            $object = $this->sfObject();
+
+            $result = SObjects::sobjects($object, [
+                'method' => 'patch',
+                'body' => $dirty
+            ]);
+
+            $this->syncChanges();
+
+            $this->fireModelEvent('updated', false);
+        }
+
+        return true;
+    }
 
 	private function sfObject()
 	{

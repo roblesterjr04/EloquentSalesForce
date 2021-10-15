@@ -9,6 +9,7 @@ use Lester\EloquentSalesForce\ServiceProvider;
 use Lester\EloquentSalesForce\Facades\SObjects;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use PDO;
 
 class SOQLBuilder extends Builder
 {
@@ -17,6 +18,10 @@ class SOQLBuilder extends Builder
 	 */
 	public function __construct(QueryBuilder $query)
 	{
+        //$pdo = new PDO('sqlite::memory:');
+        //$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        //$pdo = new \Illuminate\Database\PDO\Connection($pdo);
+
 		$query->connection = new SOQLConnection(null);
 		$query->grammar = new SOQLGrammar();
 
@@ -115,7 +120,6 @@ class SOQLBuilder extends Builder
 
 
 
-		/** @scrutinizer ignore-call */
 		try {
 			$responseCollection = collect([]);
 			foreach ($collection->chunk($chunkSize) as $collectionBatch) {

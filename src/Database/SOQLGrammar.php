@@ -98,7 +98,6 @@ class SOQLGrammar extends Grammar
      */
     public function parameter($value)
     {
-
         if (!SObjects::isSalesForceId($value) && strtotime($value) !== false && !is_numeric($value)) {
             return '?';
         }
