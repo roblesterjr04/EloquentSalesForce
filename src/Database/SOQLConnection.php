@@ -15,6 +15,11 @@ use Illuminate\Support\Str;
 
 class SOQLConnection extends Connection
 {
+
+    public function __construct()
+    {
+
+    }
 	/**
 	 * {@inheritDoc}
 	 */
@@ -76,8 +81,10 @@ class SOQLConnection extends Connection
 	 */
 	protected function run($query, $bindings, Closure $callback)
 	{
-        foreach ($this->beforeExecutingCallbacks as $beforeExecutingCallback) {
-            $beforeExecutingCallback($query, $bindings, $this);
+        if (isset($this->beforeExecutingCallbacks)) {
+            foreach ($this->beforeExecutingCallbacks as $beforeExecutingCallback) {
+                $beforeExecutingCallback($query, $bindings, $this);
+            }
         }
 
 		$start = microtime(true);
