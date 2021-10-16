@@ -79,6 +79,7 @@ class SOQLBatch extends Collection
         if ($this->isEmpty()) return $this;
         $chunkSize = config('eloquent_sf.batch.select.size', 25);
         if ($chunkSize > 25) {
+            throw new \Exception('Salesforce will only allow select batchs of 25 queries.');
             \SObjects::log('Salesforce will only allow select batchs of 25 queries.', [], 'warn');
         }
 

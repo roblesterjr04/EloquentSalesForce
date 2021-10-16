@@ -2,10 +2,9 @@
 
 namespace {{ namespace }};
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Lester\EloquentSalesForce\Model;
 
 class {{ class }} extends Model
 {
-	use HasFactory;
+  // Epic SFDC action is about to happen here.
 }

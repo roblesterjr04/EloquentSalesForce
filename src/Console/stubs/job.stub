@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+
+use SObjects;
+use Lester\EloquentSalesForce\Job;
+
+class {{ class }} extends Job
+{
+	use HasFactory;
+}
