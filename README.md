@@ -1,10 +1,7 @@
 # Eloquent Sales Force
-## SalesForce Object to Laravel ORM for Laravel 6, 5
+## SalesForce Object to Laravel ORM for Laravel 7+8
 
-[![Laravel](https://img.shields.io/badge/Laravel-6.0^-blue.svg)](http://laravel.com)
-[![Laravel](https://img.shields.io/badge/Laravel-5.6^-orange.svg)](http://laravel.com)
 [![Actions Status](https://github.com/roblesterjr04/EloquentSalesForce/workflows/Tests/badge.svg)](https://github.com/roblesterjr04/EloquentSalesForce/actions)
-
 [![Latest Stable Version](https://img.shields.io/packagist/v/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
 [![Packagist](https://img.shields.io/packagist/dm/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
 [![Packagist](https://img.shields.io/packagist/l/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
@@ -25,7 +22,7 @@ Install via composer
 composer require rob-lester-jr04/eloquent-sales-force
 ```
 
-*Note: This package is only supported Laravel 7.0 and newer.
+*Note: This package is only tested and supported Laravel 7.0 and up.
 
 ### Publish Configuration File
 
