@@ -142,7 +142,23 @@ class EloquentSalesForceTest extends TestCase
         $lead = TestLead::where('Email', $email)->first();
 
         $this->assertEquals($lead->FirstName, 'Robert');
+
+        $lead = TestLead::updateOrCreate(
+            ['Email' => $email],
+            ['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test']
+        );
+
+        $this->assertEquals($lead->FirstName, 'Rob');
+        $this->assertFalse($lead->wasRecentlyCreated);
+
         $lead->delete();
+
+        $lead = TestLead::updateOrCreate(
+            ['Email' => $email],
+            ['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test']
+        );
+
+        $this->assertTrue($lead->wasRecentlyCreated);
     }
 
     /**
