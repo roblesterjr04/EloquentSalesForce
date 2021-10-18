@@ -10,9 +10,11 @@
 
 Work with SalesForce APIs via the Eloquent Model.
 
-## NOTE FOR BUILD
+### Help wanted!
 
-Tests do not use mockery, they are connecting to SFDC in real time - sometimes the credentials expire and then the build will fail when pull requests are evaluated. I will be implementing mockery at some point, but for now, do not be too concerned about a `failed` build status.
+I want to build out a way to interact with SFDC jobs much like we do in the Laravel queue, to dispatch and get job status. I'd love some contributor help! Click the image to go to the thread.
+
+<a href="https://github.com/roblesterjr04/EloquentSalesForce/issues/73"><img src="https://us.123rf.com/450wm/chris77ho/chris77ho1811/chris77ho181100075/115626421-red-grungy-rubber-stamp-print-with-words-help-wanted-vector-illustration.jpg?ver=6" alt="drawing" width="200"/></a>
 
 ## Installation
 
@@ -23,14 +25,6 @@ composer require rob-lester-jr04/eloquent-sales-force
 ```
 
 *Note: This package is only tested and supported Laravel 7.0 and up.
-
-### Publish Configuration File
-
-**Note that this is optional and in most cases, the configuration here is not needed.
-
-```bash
-php artisan vendor:publish --provider="Lester\EloquentSalesForce\ServiceProvider" --tag="config"
-```
 
 ## Usage
 
@@ -126,7 +120,7 @@ $lead->FirstName = 'Robert';
 $lead->save();
 ```
 
-#### Observers
+### Observers
 
 The latest version updates allow the use of observers now! Here is an example setting a static observer in the model using the `booted()` method.
 
@@ -141,7 +135,7 @@ public static function booted()
 }
 ```
 
-#### SoftDeletes
+### SoftDeletes
 
 SalesForce already handles soft-deleting - What the package now does is expose the traditional soft-delete methods that Eloquent has to query upon trashed elements.
 
@@ -158,7 +152,7 @@ Lead::onlyTrashed()->get();
 
 ```
 
-#### Columns
+### Columns
 
 By default, the selected columns for the record will be the compact layout defined in the SalesForce instance. This is usually enough. If you need to pull specific columns, you have some options.
 
@@ -202,18 +196,27 @@ To specify fields on the model that are read-only and to force them to be exclud
 If you are using a field that is a picklist in SalesForce, you can capture the values of that picklist from this function on the model.
 
 ```php
+
 $statusValues = $lead->getPicklistValues('Status');
+
+// This is just a shortcut to the below...
 ```
 
-## Batch Queries (beta)
+```php
+// Provide a salesforce object name, IE Lead
+
+$statusValue = SObjects::getPicklistValues('Lead', 'Status');
+```
+
+## Batch Queries 
 
 SalesForce has API limits. We know this. It sucks. For us at least. So now in the package, you can batch several queries and make a single API call to execute them, and get the results back in a handy collection object.
 
-#### Usage
+### Usage
 
 At the end of most queries we commonly call `get()` to retrieve the results of our assembled query. We can queue up a batch call by calling `batch()` instead of `get()`. After queuing up the desired queries, you can call `SObjects::runBatch()` and it will return the results of the batched queries in an array.
 
-#### Example
+### Example
 
 ```php
 Lead::select(['Id', 'FirstName', 'Company'])->limit(100)->batch(); // instead of get.
@@ -259,7 +262,7 @@ $batchCollection->run();
 
 ## Inserting and Updating
 
-#### Insert
+### Insert
 
 ```php
 $lead = new Lead();
@@ -275,7 +278,7 @@ OR:
 $lead = Lead::create(['FirstName' => 'Foo', 'LastName' => 'Bar', 'Company' => 'Test Company']);
 ```
 
-#### Bulk Insert
+### Bulk Insert
 
 ```php
 $leads = collect([
@@ -286,7 +289,7 @@ $leads = collect([
 Lead::insert($leads);
 ```
 
-#### Update
+### Update
 
 ```php
 $lead = Lead::first();
@@ -300,7 +303,8 @@ OR:
 $lead->update(['LastName' => 'Lester']);
 ```
 
-#### Bulk Update
+### Bulk Update
+
 The bulk update method is model agnostic - meaning that this capability, within salesforce, accepts a mix of object types in the collection that gets sent. So this method therefore exists in the new SObjects facade.
 
 ```php
@@ -320,15 +324,36 @@ SalesForce will execute each update individually and will not fail the batch if 
 SObjects::update($accounts, true); // All or none.
 ```
 
+### Delete
+
+Exactly as you'd expect.
+
+```php
+$lead = Lead::first();
+
+$lead->delete();
+```
+
+### Bulk Delete
+
+Run it on a query if you need to...
+
+```php
+Lead::where('Email', 'like', '%@test.com')->delete();
+
+// Lets go nuclear!!!!
+Lead::truncate();
+```
+
 ## Columns, Where, Ordering
-#### Columns/Properties
+### Columns/Properties
 By default, the object is loaded with the columns found in the primary compactLayout. If you'd like additional columns, you would use the `select` method on the model. For example:
 
 ```php
 $leads = Lead::select('Id', 'Name', 'Email', 'Custom_Field__c')->limit(10)->get();
 ```
 
-#### Where / Order By
+### Where / Order By
 The `where` and `orderBy` methods work as usual as well.
 
 ```php
@@ -337,15 +362,6 @@ $contacts = Contact::where('Email', 'test@test.com')->first();
 $contacts = Contact::where('Name', 'like', 'Donuts%')->get();
 
 $contacts = Contact::limit(20)->orderBy('Name')->get();
-```
-
-#### Delete
-Exactly as you'd expect.
-
-```php
-$lead = Lead::first();
-
-$lead->delete();
 ```
 
 ## Relationships
