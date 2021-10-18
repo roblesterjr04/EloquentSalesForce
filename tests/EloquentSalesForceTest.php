@@ -82,6 +82,7 @@ class EloquentSalesForceTest extends TestCase
         $lead = TestLead::where('Email', $email)->first();
 
         $this->assertEquals($lead->Email, $email);
+        $this->assertEquals($lead->Phone, '1231231234');
 
         TestLead::truncate();
 

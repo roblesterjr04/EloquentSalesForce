@@ -126,6 +126,21 @@ $lead->FirstName = 'Robert';
 $lead->save();
 ```
 
+#### Observers
+
+The latest version updates allow the use of observers now! Here is an example setting a static observer in the model using the `booted()` method.
+
+```php
+/* Lead Model */
+public static function booted()
+{
+    // Example setting the phone number when creating the model.
+    static::creating(function ($lead) {
+        $lead->Phone = '1231231234';
+    });
+}
+```
+
 #### Columns
 
 By default, the selected columns for the record will be the compact layout defined in the SalesForce instance. This is usually enough. If you need to pull specific columns, you have some options.
