@@ -13,7 +13,7 @@ use PDO;
 
 class SOQLBuilder extends Builder
 {
-	/**
+    /**
 	 * {@inheritDoc}
 	 */
 	public function __construct(QueryBuilder $query)
@@ -22,7 +22,7 @@ class SOQLBuilder extends Builder
         //$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
         //$pdo = new \Illuminate\Database\PDO\Connection($pdo);
 
-		$query->connection = new SOQLConnection(null);
+		$query->connection = new SOQLConnection();
 		$query->grammar = new SOQLGrammar();
 
 		parent::__construct($query);
@@ -51,8 +51,8 @@ class SOQLBuilder extends Builder
 	public function getModels($columns = ['*'])
 	{
 		if (count($this->model->columns) &&
-			in_array('*', /** @scrutinizer ignore-type */ $columns)) {
-			$cols = $this->model->columns;
+			in_array('*', $columns)) {
+			$cols = array_merge($this->model->columns, ['IsDeleted']);
 		} else {
 			$cols = $this->getSalesForceColumns($columns);
 		}
@@ -193,6 +193,18 @@ class SOQLBuilder extends Builder
     public function truncate()
     {
         return $this->delete();
+    }
+
+    public function withTrashed()
+    {
+        $this->query->connection = new SOQLConnection(true);
+        return $this;
+    }
+
+    public function onlyTrashed()
+    {
+        $this->query->connection = new SOQLConnection(true);
+        return $this->where('IsDeleted', true);
     }
 
 }

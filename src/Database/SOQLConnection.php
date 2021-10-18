@@ -16,9 +16,11 @@ use Illuminate\Support\Str;
 class SOQLConnection extends Connection
 {
 
-    public function __construct()
-    {
+    private $all = false;
 
+    public function __construct($all = false)
+    {
+        $this->all = $all;
     }
 	/**
 	 * {@inheritDoc}
@@ -30,7 +32,7 @@ class SOQLConnection extends Connection
 			$statement = $this->prepare($query, $bindings);
 
 			/** @scrutinizer ignore-call */
-			$result = SObjects::query($statement);
+			$result = $this->all ? SObjects::queryAll($statement) : SObjects::query($statement);
 
 			SObjects::log('SOQL Query', [
 				'query' => $statement

@@ -363,6 +363,45 @@ class EloquentSalesForceTest extends TestCase
 
     }
 
+    public function testSoftDeletes()
+    {
+        $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
+
+        $allLeads = TestLead::get();
+        $this->assertCount(1, $allLeads);
+
+        $this->assertFalse($lead->trashed());
+
+        $lead->delete();
+
+        $allLeads = TestLead::get();
+        $this->assertCount(0, $allLeads);
+
+        $allLeads = TestLead::withTrashed()->get();
+            //dd($allLeads);
+        $this->assertTrue($allLeads->count() > 0);
+
+        $deleted = TestLead::withTrashed()->where('IsDeleted', TRUE)->first();
+
+        $this->assertTrue($deleted->trashed());
+
+        $this->expectException(\Exception::class);
+        $deleted->restore();
+
+    }
+
+    public function testReplicate()
+    {
+        $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
+
+        $leadTwo = $lead->replicate()->fill([
+            'Email' => 'test2@test.com'
+        ])->save();
+
+        $this->assertTrue($leadTwo->wasRecentlyCreated);
+
+    }
+
     public function setUp(): void
 	{
 		parent::setUp();
@@ -455,8 +494,8 @@ class EloquentSalesForceTest extends TestCase
 			'cache.default' => 'file',
 		]);
 
-        //TestLead::truncate();
-        //TestTask::truncate();
+        TestLead::truncate();
+        TestTask::truncate();
 
 	}
 
@@ -489,4 +528,5 @@ class EloquentSalesForceTest extends TestCase
 
         parent::tearDown();
     }
+
 }

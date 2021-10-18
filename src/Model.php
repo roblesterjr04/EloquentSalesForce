@@ -101,6 +101,11 @@ abstract class Model extends EloquentModel
 		}
 	}
 
+    public function forceDelete()
+    {
+        return $this->delete();
+    }
+
     /**
      * Perform a model insert operation.
      *
@@ -342,5 +347,15 @@ abstract class Model extends EloquentModel
 	{
 		return SObjects::getPicklistValues($this->table, $field);
 	}
+
+    public function trashed()
+    {
+        return $this->IsDeleted ?? false;
+    }
+
+    public function restore()
+    {
+        throw new \Exception('The SalesForce Rest API does not natively support UNDELETE');
+    }
 
 }
