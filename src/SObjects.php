@@ -33,12 +33,12 @@ class SObjects
         $chunkSize = config('eloquent_sf.batch.insert.size', 200) <= 200 ? config('eloquent_sf.batch.insert.size', 200) : 200;
 
 		foreach ($collection->chunk($chunkSize) as $collectionBatch) {
-			self::composite('sobjects', [
+			$results = self::composite('sobjects', [
 				'method' => 'patch',
 				'body' => tap([
 					'allOrNone' => $allOrNone,
 					'records' => $collectionBatch->map(function($object) {
-						return $object->writeableAttributes();
+						return $object->writeableAttributes(['IsDeleted']);
 					})->values()
 				], function($payload) {
 					$this->log('SOQL Bulk Update', $payload);
