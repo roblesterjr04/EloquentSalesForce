@@ -141,6 +141,23 @@ public static function booted()
 }
 ```
 
+#### SoftDeletes
+
+SalesForce already handles soft-deleting - What the package now does is expose the traditional soft-delete methods that Eloquent has to query upon trashed elements.
+
+```php
+
+/* Finding deleted items */
+Lead::withTrashed()->where('Email', 'email@test.com')->get();
+
+/* Checking if an item is deleted */
+$lead->trashed()
+
+/* Quering only deleted items */
+Lead::onlyTrashed()->get();
+
+```
+
 #### Columns
 
 By default, the selected columns for the record will be the compact layout defined in the SalesForce instance. This is usually enough. If you need to pull specific columns, you have some options.
