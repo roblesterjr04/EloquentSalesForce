@@ -4,6 +4,7 @@
     bootstrap="vendor/autoload.php"
     stopOnFailure="true"
     convertWarningsToExceptions="false"
+    cacheResult="false"
     colors="true">
   <testsuites>
     <testsuite name="Package">
