@@ -8,8 +8,10 @@ use Lester\EloquentSalesForce\TestTask;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
 use Lester\EloquentSalesForce\Facades\SObjects;
+use Lester\EloquentSalesForce\Database\SOQLBatch;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use PHPUnit\Framework\Error\Notice;
 
 class EloquentSalesForceTest extends TestCase
 {
@@ -110,18 +112,29 @@ class EloquentSalesForceTest extends TestCase
         $ids = $results->pluck('Id');
         $results = TestLead::whereIn('Id', $ids)->get();
 
-        $results = $results->map(function($lead) {
+        $this->assertCount(10, $results);
+
+        $results = $results->slice(0, 3)->map(function($lead) {
             $lead->Company = 'Test 2';
             return $lead;
         });
-
-        $this->assertCount(10, $results);
 
         SObjects::update($results);
 
         $lead = TestLead::find($results->first()->Id);
 
         $this->assertEquals($lead->Company, 'Test 2');
+
+        $batch = new SOQLBatch();
+
+        $batch->query(TestLead::where('Company', 'Test'));
+        $this->expectException(\Exception::class);
+        $batch->push(TestLead::where('Company', 'Test 2'));
+
+        $results = $batch->run();
+
+        $this->assertCount(7, $results->get('TestLead_0'));
+        $this->assertCount(3, $results->get('TestLead_1'));
 
         TestLead::truncate();
 
