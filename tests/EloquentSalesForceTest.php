@@ -4,6 +4,7 @@ namespace Lester\EloquentSalesForce\Tests;
 
 use Lester\EloquentSalesForce\ServiceProvider;
 use Lester\EloquentSalesForce\TestLead;
+use Lester\EloquentSalesForce\TestModel;
 use Lester\EloquentSalesForce\TestTask;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
@@ -12,9 +13,12 @@ use Lester\EloquentSalesForce\Database\SOQLBatch;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use PHPUnit\Framework\Error\Notice;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class EloquentSalesForceTest extends TestCase
 {
+
     protected function getPackageProviders($app)
     {
         return [ServiceProvider::class];
@@ -22,60 +26,37 @@ class EloquentSalesForceTest extends TestCase
 
     private $lead;
 
-    /**
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::batch
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::results
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::get
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::class
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::builder
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::emptyItem
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::run
-     * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::toSql
-     * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::batch
-     * @covers Lester\EloquentSalesForce\SObjects::getBatch
-     * @covers Lester\EloquentSalesForce\SObjects::runBatch
-     */
-    /*public function testBatchQuery()
+    public function testSyncsModelsToSalesforce()
     {
-        TestLead::limit(5)->where('FirstName', '!=', 'test')->orWhere('FirstName', 'not like', 'test%')->batch();
-        TestTask::limit(3)->where('Subject', '!=', 'test')->batch('tasks');
+        Schema::create('test_models', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();
+            $table->string('salesforce')->nullable();
+            $table->string('firstName');
+            $table->string('lastName');
+            $table->string('company');
+            $table->timestamps();
+        });
 
-        $errors = [];
-        $batch = SObjects::runBatch($errors);
+        $test = TestModel::create([
+            'email' => 'test@test.com',
+            'firstName' => 'Rob',
+            'lastName' => 'Test',
+            'company' => 'Test Company',
+        ]);
 
-        $leads = $batch->results('TestLead');
-        $tasks = $batch->get('tasks');
+        $this->assertCount(1, TestModel::get());
+        $this->assertCount(1, TestLead::where('Email', 'test@test.com')->get());
 
-        $leadsClass = $batch->class('TestLead');
-        $tasksBuilder = $batch->builder('tasks');
+        $test->update([
+            'email' => 'test2@test.com'
+        ]);
 
-        $this->assertInstanceOf('Lester\EloquentSalesForce\TestLead', $leadsClass);
-        $this->assertInstanceOf('Lester\EloquentSalesForce\Database\SOQLBuilder', $tasksBuilder);
+        $this->assertEquals('test2@test.com', $test->fresh()->email);
+        $this->assertEquals('test2@test.com', TestLead::where('Email', 'test2@test.com')->first()->Email);
 
-        $this->assertCount(5, $leads);
-        $this->assertCount(3, $tasks);
+    }
 
-        $this->assertCount(2, $batch);
-
-        for ($i = 0; $i < 30; $i++) {
-            TestLead::limit($i + 1)->where('FirstName', '!=', 'test')->batch('test_' . $i);
-        }
-        $batch = SObjects::runBatch();
-
-        $this->assertCount(10, $batch->results('test_9'));
-        $this->assertCount(30, $batch);
-    }*/
-
-	/**
-	 * @covers Lester\EloquentSalesForce\TestLead
-	 * @covers Lester\EloquentSalesForce\Model
-	 * @covers Lester\EloquentSalesForce\Model::create
-	 * @covers Lester\EloquentSalesForce\Model::save
-	 * @covers Lester\EloquentSalesForce\Database\SOQLBuilder
-	 * @covers Lester\EloquentSalesForce\Database\SOQLConnection
-	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
-	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereBasic
-	 */
     public function testObjectCreate()
     {
 	    $email = strtolower(Str::random(10) . '@test.com');
@@ -506,6 +487,8 @@ class EloquentSalesForceTest extends TestCase
 			'cache.stores.file.path' => __DIR__ . '/cache',
 			'cache.default' => 'file',
 		]);
+
+
 
         TestLead::truncate();
         TestTask::truncate();
