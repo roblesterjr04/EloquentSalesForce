@@ -5,6 +5,7 @@ namespace Lester\EloquentSalesForce\Tests;
 use Lester\EloquentSalesForce\ServiceProvider;
 use Lester\EloquentSalesForce\TestLead;
 use Lester\EloquentSalesForce\TestTask;
+use Lester\EloquentSalesForce\TestUser;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
 use Lester\EloquentSalesForce\Facades\SObjects;
@@ -22,60 +23,6 @@ class EloquentSalesForceTest extends TestCase
 
     private $lead;
 
-    /**
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::batch
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::results
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::get
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::class
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::builder
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::emptyItem
-     * @covers Lester\EloquentSalesForce\Database\SOQLBatch::run
-     * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::toSql
-     * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::batch
-     * @covers Lester\EloquentSalesForce\SObjects::getBatch
-     * @covers Lester\EloquentSalesForce\SObjects::runBatch
-     */
-    /*public function testBatchQuery()
-    {
-        TestLead::limit(5)->where('FirstName', '!=', 'test')->orWhere('FirstName', 'not like', 'test%')->batch();
-        TestTask::limit(3)->where('Subject', '!=', 'test')->batch('tasks');
-
-        $errors = [];
-        $batch = SObjects::runBatch($errors);
-
-        $leads = $batch->results('TestLead');
-        $tasks = $batch->get('tasks');
-
-        $leadsClass = $batch->class('TestLead');
-        $tasksBuilder = $batch->builder('tasks');
-
-        $this->assertInstanceOf('Lester\EloquentSalesForce\TestLead', $leadsClass);
-        $this->assertInstanceOf('Lester\EloquentSalesForce\Database\SOQLBuilder', $tasksBuilder);
-
-        $this->assertCount(5, $leads);
-        $this->assertCount(3, $tasks);
-
-        $this->assertCount(2, $batch);
-
-        for ($i = 0; $i < 30; $i++) {
-            TestLead::limit($i + 1)->where('FirstName', '!=', 'test')->batch('test_' . $i);
-        }
-        $batch = SObjects::runBatch();
-
-        $this->assertCount(10, $batch->results('test_9'));
-        $this->assertCount(30, $batch);
-    }*/
-
-	/**
-	 * @covers Lester\EloquentSalesForce\TestLead
-	 * @covers Lester\EloquentSalesForce\Model
-	 * @covers Lester\EloquentSalesForce\Model::create
-	 * @covers Lester\EloquentSalesForce\Model::save
-	 * @covers Lester\EloquentSalesForce\Database\SOQLBuilder
-	 * @covers Lester\EloquentSalesForce\Database\SOQLConnection
-	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar
-	 * @covers Lester\EloquentSalesForce\Database\SOQLGrammar::whereBasic
-	 */
     public function testObjectCreate()
     {
 	    $email = strtolower(Str::random(10) . '@test.com');
@@ -190,6 +137,9 @@ class EloquentSalesForceTest extends TestCase
         $lead = TestLead::where('Email', (string)$int)->first();
 
         $this->assertNull($lead);
+
+        $user = TestUser::first();
+        $this->assertNotNull($user);
     }
 
     /*
