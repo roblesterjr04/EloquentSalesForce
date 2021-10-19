@@ -16,6 +16,10 @@ return [
         ]
     ],
 
+    'noSoftDeletesOn' => [
+        'User',
+    ],
+
 	// Override any Forrest settings here. The Forrest package config file is ignored, but all Forrest settings are supported here.
 	'forrest' => [
 		/*
