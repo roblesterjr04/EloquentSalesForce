@@ -6,7 +6,17 @@ class SalesForceObject extends Model
 {
     public function __construct(Array $attributes)
     {
-        $this->table = $attributes['attributes']['type'];
-        parent::__construct($attributes);
+        if (!isset($attributes['attributes'])) {
+            parent::__construct($attributes);
+        } else {
+            $this->setTable($attributes['attributes']['type']);
+            parent::__construct($attributes);
+        }
+    }
+
+    public function setTable($tableName)
+    {
+        $this->table = $tableName;
+        return $this;
     }
 }

@@ -4,6 +4,7 @@ namespace Lester\EloquentSalesForce\Tests;
 
 use Lester\EloquentSalesForce\ServiceProvider;
 use Lester\EloquentSalesForce\TestLead;
+use Lester\EloquentSalesForce\TestModel;
 use Lester\EloquentSalesForce\TestTask;
 use Lester\EloquentSalesForce\TestUser;
 use Orchestra\Testbench\TestCase;
@@ -13,15 +14,49 @@ use Lester\EloquentSalesForce\Database\SOQLBatch;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use PHPUnit\Framework\Error\Notice;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class EloquentSalesForceTest extends TestCase
 {
+
     protected function getPackageProviders($app)
     {
         return [ServiceProvider::class];
     }
 
     private $lead;
+
+    public function testSyncsModelsToSalesforce()
+    {
+        Schema::create('test_models', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();
+            $table->string('salesforce')->nullable();
+            $table->string('firstName');
+            $table->string('lastName');
+            $table->string('company');
+            $table->timestamps();
+        });
+
+        $test = TestModel::create([
+            'email' => 'test@test.com',
+            'firstName' => 'Rob',
+            'lastName' => 'Test',
+            'company' => 'Test Company',
+        ]);
+
+        $this->assertCount(1, TestModel::get());
+        $this->assertCount(1, TestLead::where('Email', 'test@test.com')->get());
+
+        $test->update([
+            'email' => 'test2@test.com'
+        ]);
+
+        $this->assertEquals('test2@test.com', $test->fresh()->email);
+        $this->assertEquals('test2@test.com', TestLead::where('Email', 'test2@test.com')->first()->Email);
+
+    }
 
     public function testObjectCreate()
     {
@@ -456,6 +491,8 @@ class EloquentSalesForceTest extends TestCase
 			'cache.stores.file.path' => __DIR__ . '/cache',
 			'cache.default' => 'file',
 		]);
+
+
 
         TestLead::truncate();
         TestTask::truncate();
