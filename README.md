@@ -208,6 +208,44 @@ $statusValues = $lead->getPicklistValues('Status');
 $statusValue = SObjects::getPicklistValues('Lead', 'Status');
 ```
 
+## Eloquent Model Syncronizing (NEW!)
+
+A new trait has been created to make it simple to keep a local DB model in sync with a salesforce object.
+
+Use this if you want to keep a local table, or just some fields, in sync with an SF object. Instead of working directly with SF objects, you can manage a local table as you may be more familiar with, and just keep some data in sync with SalesForce. 
+
+```php
+<?php
+
+namespace Lester\EloquentSalesForce;
+
+use Illuminate\Database\Eloquent\Model;
+use Lester\EloquentSalesForce\Traits\SyncsWithSalesforce;
+
+class SalesLead extends Model
+{
+    use SyncsWithSalesforce;
+
+    protected $salesForceObject = 'Lead'; // Required unless your classname matches the SF object name.
+
+    protected $fillable = [ // Typical field def for local db model
+        'email',
+        'firstName',
+        'lastName',
+        'company',
+        'source',
+        'type',
+    ];
+
+    protected $salesForceFieldMap = [ // Mapping of the local fields to SF fields
+        'email' => 'Email',
+        'firstName' => 'FirstName',
+        'lastName' => 'LastName',
+        'company' => 'Company',
+    ];
+}
+```
+
 ## Batch Queries 
 
 SalesForce has API limits. We know this. It sucks. For us at least. So now in the package, you can batch several queries and make a single API call to execute them, and get the results back in a handy collection object.
