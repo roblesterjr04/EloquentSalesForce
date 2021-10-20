@@ -21,7 +21,7 @@ trait SyncsWithSalesforce
         });
     }
 
-    private function syncWithSalesforce()
+    public function syncWithSalesforce()
     {
         $sfModel = new SalesForceObject([
             'attributes' => [
