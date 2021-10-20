@@ -19,4 +19,5 @@ class SalesForceObject extends Model
         $this->table = $tableName;
         return $this;
     }
+
 }

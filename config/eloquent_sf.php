@@ -20,6 +20,8 @@ return [
         'User',
     ],
 
+    'syncTwoWay' => false, // Indicate if you want SF changes to feed back to your local database. Otherwise it is a one-way sync. local->salesforce
+
 	// Override any Forrest settings here. The Forrest package config file is ignored, but all Forrest settings are supported here.
 	'forrest' => [
 		/*

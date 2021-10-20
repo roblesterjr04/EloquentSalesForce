@@ -52,7 +52,8 @@ class SOQLBuilder extends Builder
 	{
 		if (count($this->model->columns) &&
 			in_array('*', $columns)) {
-			$cols = array_merge($this->model->columns, ['IsDeleted']);
+			$cols = $this->model->columns + ['CreatedDate', 'LastModifiedDate'];
+            if (!in_array($this->model->getTable(), config('eloquent_sf.noSoftDeletesOn', ['User']))) $cols += ['IsDeleted'];
 		} else {
 			$cols = $this->getSalesForceColumns($columns);
 		}

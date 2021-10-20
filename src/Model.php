@@ -358,4 +358,9 @@ abstract class Model extends EloquentModel
         throw new \Exception('The SalesForce Rest API does not natively support UNDELETE');
     }
 
+    public function getExistsAttribute()
+    {
+        return $this->Id !== null;
+    }
+
 }

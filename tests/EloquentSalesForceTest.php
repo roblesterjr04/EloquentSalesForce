@@ -53,8 +53,26 @@ class EloquentSalesForceTest extends TestCase
             'email' => 'test2@test.com'
         ]);
 
+        $object = TestLead::where('Email', 'test2@test.com')->first();
+
         $this->assertEquals('test2@test.com', $test->fresh()->email);
-        $this->assertEquals('test2@test.com', TestLead::where('Email', 'test2@test.com')->first()->Email);
+        $this->assertEquals('test2@test.com', $object->Email);
+
+        config([
+            'eloquent_sf.syncTwoWay' => true
+        ]);
+
+        sleep(2);
+
+        $object->update([
+            'Email' => 'test3@test.com'
+        ]);
+
+        $test->syncWithSalesforce();
+
+        $test->refresh();
+
+        $this->assertEquals('test3@test.com', $test->email);
 
     }
 
@@ -111,6 +129,7 @@ class EloquentSalesForceTest extends TestCase
         $batch = new SOQLBatch();
 
         $batch->query(TestLead::where('Company', 'Test'));
+
         $this->expectException(\Exception::class);
         $batch->push(TestLead::where('Company', 'Test 2'));
 

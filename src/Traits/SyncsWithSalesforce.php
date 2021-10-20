@@ -23,18 +23,37 @@ trait SyncsWithSalesforce
 
     public function syncWithSalesforce()
     {
+        if ($object = $this->syncTwoWay()) {
+            $this->syncSalesforceToLocal($object);
+        }
+        $this->syncLocalToSalesforce();
+    }
+
+    public function syncLocalToSalesforce()
+    {
         $sfModel = new SalesForceObject([
             'attributes' => [
                 'type' => $this->getSalesforceObjectName()
             ]
         ]);
-        $sfModel->updateOrCreate(
+        $sfModel = $sfModel->updateOrCreate(
             [
                 'Id' => $this->{$this->getSalesforceIdField()},
             ],
             $this->getSalesforceSyncedValues()
         );
+        $this->{$this->getSalesforceIdField()} = $sfModel->Id;
         return $this;
+    }
+
+    public function syncSalesforceToLocal($object)
+    {
+        foreach ($this->getSalesforceMapping() as $modelKey => $sfKey) {
+            $this->{$modelKey} = $object->{$sfKey};
+        }
+        $this->withoutEvents(function() {
+            $this->save();
+        });
     }
 
     public function getSalesforceObjectName()
@@ -60,4 +79,29 @@ trait SyncsWithSalesforce
     {
         return $this->salesForceIdField ?? 'salesforce';
     }
+
+    public function getSalesforceDates()
+    {
+        return $this->salesForceDates ?? [
+            'created_at' => 'CreatedDate',
+            'updated_at' => 'LastModifiedDate',
+        ];
+    }
+
+    public function syncTwoWay()
+    {
+        if (config('eloquent_sf.syncTwoWay') && ($id = $this->{$this->getSalesforceIdField()}) !== null) {
+            $sfModel = new SalesForceObject([
+                'Id' => $id,
+                'attributes' => [
+                    'type' => $this->getSalesforceObjectName()
+                ]
+            ] + $this->getSalesforceSyncedValues());
+            $sfModel->exists = true;
+            $sfModel->refresh();
+            return (strtotime($sfModel->LastModifiedDate) > $this->updated_at->timestamp) ? $sfModel : false;
+        }
+        return false;
+    }
+
 }

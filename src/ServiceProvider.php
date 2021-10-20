@@ -61,7 +61,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			SfFacade::authenticate();
 			$layouts = SfFacade::sobjects($table . '/' . config('eloquent_sf.layout') . '/');
 			$fields = Arr::pluck($layouts["fieldItems"], 'layoutComponents.0');
-			$columns = ['Id'];
+			$columns = ['Id', 'CreatedDate', 'LastModifiedDate'];
             if (!in_array($table, config('eloquent_sf.noSoftDeletesOn', ['User']))) $columns[] = 'IsDeleted';
 			self::getDetailNames($fields, $columns);
 		}

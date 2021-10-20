@@ -38,7 +38,7 @@ class SObjects
 				'body' => tap([
 					'allOrNone' => $allOrNone,
 					'records' => $collectionBatch->map(function($object) {
-						return $object->writeableAttributes(['IsDeleted']);
+						return $object->writeableAttributes(['IsDeleted', 'CreatedDate', 'LastModifiedDate']);
 					})->values()
 				], function($payload) {
 					$this->log('SOQL Bulk Update', $payload);
