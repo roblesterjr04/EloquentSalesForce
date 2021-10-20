@@ -6,6 +6,9 @@ class SalesForceObject extends Model
 {
     public function __construct(Array $attributes)
     {
+        if (isset($attributes['Id'])) {
+            $this->exists = true;
+        }
         if (!isset($attributes['attributes'])) {
             parent::__construct($attributes);
         } else {

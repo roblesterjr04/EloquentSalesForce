@@ -9,6 +9,7 @@ use Lester\EloquentSalesForce\SalesForceObject;
 
 trait SyncsWithSalesforce
 {
+    private $tempSyncObject = null;
 
     public static function booted()
     {
@@ -24,9 +25,25 @@ trait SyncsWithSalesforce
     public function syncWithSalesforce()
     {
         if ($object = $this->syncTwoWay()) {
+            if ($this->isDirty()) {
+                $whatToDo = config('eloquent_sf.syncPriority', 'salesforce');
+                $differences = $this->syncDifferences($object);
+                switch($whatToDo) {
+                    case 'exception':
+                        throw new \Exception('Sync Conflict');
+                        break;
+                    case 'silent':
+                        return $this;
+                        break;
+                    case 'salesforce':
+                        $this->fill($object->only($differences));
+                        break;
+                }
+
+            }
             $this->syncSalesforceToLocal($object);
         }
-        $this->syncLocalToSalesforce();
+        return $this->syncLocalToSalesforce();
     }
 
     public function syncLocalToSalesforce()
@@ -43,6 +60,7 @@ trait SyncsWithSalesforce
             $this->getSalesforceSyncedValues()
         );
         $this->{$this->getSalesforceIdField()} = $sfModel->Id;
+
         return $this;
     }
 
@@ -54,6 +72,7 @@ trait SyncsWithSalesforce
         $this->withoutEvents(function() {
             $this->save();
         });
+        return $this;
     }
 
     public function getSalesforceObjectName()
@@ -88,20 +107,40 @@ trait SyncsWithSalesforce
         ];
     }
 
-    public function syncTwoWay()
+    private function syncTempObject()
     {
-        if (config('eloquent_sf.syncTwoWay') && ($id = $this->{$this->getSalesforceIdField()}) !== null) {
+        if ($this->tempSyncObject === null) {
+
             $sfModel = new SalesForceObject([
-                'Id' => $id,
+                'Id' => $this->{$this->getSalesforceIdField()},
                 'attributes' => [
                     'type' => $this->getSalesforceObjectName()
                 ]
             ] + $this->getSalesforceSyncedValues());
-            $sfModel->exists = true;
-            $sfModel->refresh();
-            return (strtotime($sfModel->LastModifiedDate) > $this->updated_at->timestamp) ? $sfModel : false;
+
+            $this->tempSyncObject = $sfModel->refresh();
+        }
+
+        return $this->tempSyncObject;
+    }
+
+    public function syncTwoWay()
+    {
+        if (config('eloquent_sf.syncTwoWay') && ($id = $this->{$this->getSalesforceIdField()}) !== null) {
+            $sfModel = $this->syncTempObject();
+            return $this->syncSalesforceIsNewer($sfModel) ? $sfModel : false;
         }
         return false;
+    }
+
+    public function syncDifferences($object)
+    {
+        return array_keys(array_diff($this->getSalesforceSyncedValues(), $object->only(array_values($this->getSalesforceMapping()))));
+    }
+
+    public function syncSalesforceIsNewer($object)
+    {
+        return strtotime($object->LastModifiedDate) > $this->updated_at->timestamp;
     }
 
 }

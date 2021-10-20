@@ -62,6 +62,10 @@ abstract class Model extends EloquentModel
 	{
 		parent::__construct($attributes);
 
+        if (isset($attributes['Id'])) {
+            $this->exists = true;
+        }
+
 		$this->table = $table ?: $this->table ?: class_basename($this);
 		$this->attributes['attributes'] = [
 			'type' => $this->table

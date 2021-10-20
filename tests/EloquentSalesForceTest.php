@@ -59,7 +59,8 @@ class EloquentSalesForceTest extends TestCase
         $this->assertEquals('test2@test.com', $object->Email);
 
         config([
-            'eloquent_sf.syncTwoWay' => true
+            'eloquent_sf.syncTwoWay' => true,
+            'eloquent_sf.syncPriority' => 'local',
         ]);
 
         sleep(2);
@@ -73,6 +74,27 @@ class EloquentSalesForceTest extends TestCase
         $test->refresh();
 
         $this->assertEquals('test3@test.com', $test->email);
+
+        $test4 = TestModel::create([
+            'email' => 'test4@test.com',
+            'firstName' => 'Rob',
+            'lastName' => 'Test',
+            'company' => 'Test Company',
+        ]);
+
+        $this->assertNotNull(TestLead::where('Email', 'test4@test.com')->first());
+
+        $object = TestLead::where('Email', 'test4@test.com')->first();
+
+        $object->update([
+            'Email' => 'test5@test.com'
+        ]);
+
+        $test4->email = 'test6@test.com';
+
+        $test4->syncWithSalesforce();
+
+        $this->assertEquals($test4->email, $object->refresh()->Email);
 
     }
 

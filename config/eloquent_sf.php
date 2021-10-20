@@ -21,6 +21,7 @@ return [
     ],
 
     'syncTwoWay' => false, // Indicate if you want SF changes to feed back to your local database. Otherwise it is a one-way sync. local->salesforce
+    'syncPriority' => 'salesforce', // If there is a conflict, noteablly a dirty local model when an inbound sync is occuring, ElSF will prefer this setting: 'salesforce' or 'local' or 'exception' or 'silent'
 
 	// Override any Forrest settings here. The Forrest package config file is ignored, but all Forrest settings are supported here.
 	'forrest' => [
