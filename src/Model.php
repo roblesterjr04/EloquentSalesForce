@@ -347,11 +347,6 @@ abstract class Model extends EloquentModel
 		return (new static([]))->columns;
 	}
 
-	public function getPicklistValues($field)
-	{
-		return SObjects::getPicklistValues($this->table, $field);
-	}
-
     public function trashed()
     {
         return $this->IsDeleted ?? false;

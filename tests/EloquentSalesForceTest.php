@@ -405,10 +405,14 @@ class EloquentSalesForceTest extends TestCase
 
         $statuses = $lead->getPicklistValues('Status');
 
+        $this->assertNotNull($statuses);
         $this->assertTrue($statuses->count() > 0);
-        $this->assertTrue($statuses !== null);
 
-        $lead->delete();
+        $statuses = TestLead::getPicklistValues('Status');
+
+        $this->assertNotNull($statuses);
+        $this->assertTrue($statuses->count() > 0);
+
     }
 
     public function testMassDelete()

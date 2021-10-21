@@ -208,4 +208,10 @@ class SOQLBuilder extends Builder
         return $this->where('IsDeleted', true);
     }
 
+    public function getPicklistValues($field)
+    {
+        $table = $this->model->getTable();
+        return SObjects::getPicklistValues($table, $field);
+    }
+
 }
