@@ -126,8 +126,8 @@ OR:
 
 ```php
 $lead = Lead::create([
-	'FirstName' => 'Foo', 
-	'LastName' => 'Bar', 
+	'FirstName' => 'Foo',
+	'LastName' => 'Bar',
 	'Company' => 'Test Company'
 ]);
 ```
@@ -308,7 +308,7 @@ $statusValue = SObjects::getPicklistValues('Lead', 'Status');
 
 A new trait has been created to make it simple to keep a local DB model in sync with a salesforce object.
 
-Use this if you want to keep a local table, or just some fields, in sync with an SF object. Instead of working directly with SF objects, you can manage a local table as you may be more familiar with, and just keep some data in sync with SalesForce. 
+Use this if you want to keep a local table, or just some fields, in sync with an SF object. Instead of working directly with SF objects, you can manage a local table as you may be more familiar with, and just keep some data in sync with SalesForce.
 
 ```php
 <?php
@@ -363,7 +363,7 @@ class TouchPoint extends Model
 
 # Bulk Operations
 
-## Batch Queries 
+## Batch Queries
 
 SalesForce has API limits. We know this. It sucks. For us at least. So now in the package, you can batch several queries and make a single API call to execute them, and get the results back in a handy collection object.
 
@@ -376,20 +376,20 @@ Contact::select(['Id', 'FirstName', 'Phone'])->limit(50)->batch();
 
 $batch = SObjects::runBatch();
 
-$leads = $batch->results('Lead'); // get() also works here...
-$contacts = $batch->results('Contact'); // ... and here.
+$leads = $batch->results('Lead_0'); // get() also works here...
+$contacts = $batch->results('Contact_1'); // ... and here.
 ```
 
-By default, each batch query is tagged with the name of the model that is being queried. For example if you have a model class called `Prospects` (even if it maps to the SF Lead object), the tag of the batch will be `Prospects`. If you try and batch 3 queries on the same object without specifying a custom tag for each batch, only the last batch will actually be run. So we recommend tagging the batch when you queue it if you're batching multiple queries on the same object.
+By default, each batch query is tagged with the name of the model that is being queried with the array index appended after an underscore. For example if you batch a query for the model class called `Prospects` (even if it maps to the SF Lead object), and its the first batched query, the tag of the batch will be `Prospects_0`. To reduce confusion, we recommend tagging the batch when you queue it if you're batching multiple queries on the same object.
 
 ```php
-Lead::select(['Id', 'FirstName', 'Company'])->limit(100)->batch();
+Lead::select(['Id', 'FirstName', 'Company'])->limit(100)->batch(); // Will be tagged as Lead_0
 
 Lead::select(['Id', 'FirstName', 'Company'])->limit(30)->where('Company', 'Test')->batch('test_company');
 
 $batch = SObjects::runBatch();
 
-$firstCentLeads = $batch->get('Lead');
+$firstCentLeads = $batch->get('Lead_0');
 $testCompanyLeads = $batch->get('test_company');
 
 ```
