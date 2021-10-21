@@ -98,6 +98,48 @@ class EloquentSalesForceTest extends TestCase
 
     }
 
+    public function testSyncCommand()
+    {
+        config([
+            'eloquent_sf.syncTwoWay' => true,
+            'eloquent_sf.syncPriority' => 'local',
+            'eloquent_sf.syncTwoWayModels' => [
+                'Lester\EloquentSalesForce\TestModel',
+            ],
+        ]);
+
+        Schema::create('test_models', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();
+            $table->string('salesforce')->nullable();
+            $table->string('firstName');
+            $table->string('lastName');
+            $table->string('company');
+            $table->timestamps();
+        });
+
+        $test = TestModel::create([
+            'email' => 'test@test.com',
+            'firstName' => 'Rob',
+            'lastName' => 'Test',
+            'company' => 'Test Company',
+        ]);
+
+        $object = TestLead::find($test->refresh()->salesforce)->first();
+
+        $this->assertNotNull($object);
+
+        sleep(2);
+
+        $object->update([
+            'Email' => 'test2@test.com'
+        ]);
+
+        \Artisan::call('db:sync');
+
+        $this->assertEquals($object->Email, $test->refresh()->email);
+    }
+
     public function testObjectCreate()
     {
 	    $email = strtolower(Str::random(10) . '@test.com');

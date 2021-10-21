@@ -5,6 +5,7 @@ namespace Lester\EloquentSalesForce;
 use Lester\EloquentSalesForce\Facades\SObjects as SfFacade;
 use Illuminate\Support\Arr;
 use Lester\EloquentSalesForce\Console\MakeModelCommand;
+use Lester\EloquentSalesForce\Console\SyncFromSalesforce;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -20,8 +21,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 MakeModelCommand::class,
+                SyncFromSalesforce::class,
             ]);
+        } else {
+            $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         }
+
 	}
 
 	public function register()
