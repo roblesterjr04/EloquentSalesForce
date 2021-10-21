@@ -68,6 +68,8 @@ You can find the config file in: `config/eloquent_sf.php`. Any of the same setti
 
 Create a model for the object you want to use, example: `artisan make:model Lead`
 
+You can also use the new artisan command: `artisan make:salesforce Lead`
+
 Open the model file, it will look like this:
 
 ```php
