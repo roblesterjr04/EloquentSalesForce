@@ -23,10 +23,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 MakeModelCommand::class,
                 SyncFromSalesforce::class,
             ]);
-        } else {
-            $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         }
 
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
 	}
 
 	public function register()

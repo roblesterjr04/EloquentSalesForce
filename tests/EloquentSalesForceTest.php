@@ -138,6 +138,10 @@ class EloquentSalesForceTest extends TestCase
         \Artisan::call('db:sync');
 
         $this->assertEquals($object->Email, $test->refresh()->email);
+
+        $response = $this->post('api/syncObject/' . $object->Id);
+
+        $response->assertStatus(200);
     }
 
     public function testObjectCreate()

@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('syncObject/{sfid}', function (Request $request, $sfid) {
+Route::post('/api/syncObject/{sfid}', function (Request $request, $sfid) {
     foreach(config('eloquent_sf.syncTwoWayModels', []) as $class) {
         $collection = $class::where((new $class)->getSalesforceIdField(), $sfid)->get();
         foreach ($collection as $model) {
