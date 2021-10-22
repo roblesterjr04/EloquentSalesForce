@@ -1,4 +1,4 @@
-<p align="center"><img src="/docs/_media/banner.png" alt="Logo ElSF"></p>
+<p align="center"><img src="/docs/_media/banner-gray.png" alt="Logo ElSF"></p>
 
 ## Introduction
 
