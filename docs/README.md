@@ -66,13 +66,11 @@ You can find the config file in: `config/eloquent_sf.php`. Any of the same setti
 
 ## Model Setup
 
-Create a model for the object you want to use, example: 
+Create a model for the object you want to use, example:
 
 ```bash
 artisan make:model Lead
 ```
-
-You can also use the new artisan command: `artisan make:salesforce Lead`
 
 Open the model file, it will look like this:
 
@@ -103,6 +101,14 @@ class Lead extends Model
 	//
 }
 ```
+
+You can also use the new artisan command:
+
+```bash
+artisan make:salesforce Lead
+```
+
+This will generate the model as you see above without any changes necessary
 
 # The Basics
 
@@ -477,6 +483,14 @@ $leads = collect($queryResult['records'])->map(function($record) {
 ```
 
 The class used for each object returned will be `Lester\EloquentSalesForce\SalesForceObject`.
+
+You can also query directly against the object like so:
+
+```php
+
+$leads = SalesForceObject::select('Email', 'Id')->from('Lead')->get();
+
+```
 
 ## Pick list choices
 You can get the possible pick list values from a dropdown by using this method on the facade.

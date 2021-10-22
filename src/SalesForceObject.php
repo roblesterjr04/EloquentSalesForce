@@ -4,7 +4,7 @@ namespace Lester\EloquentSalesForce;
 
 class SalesForceObject extends Model
 {
-    public function __construct(Array $attributes)
+    public function __construct(Array $attributes = [])
     {
         if (isset($attributes['Id'])) {
             $this->exists = true;
@@ -19,8 +19,10 @@ class SalesForceObject extends Model
 
     public function setTable($tableName)
     {
-        $this->table = $tableName;
-        return $this;
+        $this->attributes['attributes'] = [
+            'type' => $tableName,
+        ];
+        return parent::setTable($tableName);
     }
 
 }

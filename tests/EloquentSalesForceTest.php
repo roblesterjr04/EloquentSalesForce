@@ -3,6 +3,7 @@
 namespace Lester\EloquentSalesForce\Tests;
 
 use Lester\EloquentSalesForce\ServiceProvider;
+use Lester\EloquentSalesForce\SalesForceObject;
 use Lester\EloquentSalesForce\TestLead;
 use Lester\EloquentSalesForce\TestModel;
 use Lester\EloquentSalesForce\TestTask;
@@ -26,6 +27,18 @@ class EloquentSalesForceTest extends TestCase
     }
 
     private $lead;
+
+    public function testSimpleObject()
+    {
+        $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
+
+        $test = SalesForceObject::select('Id')
+            ->from('Lead')
+            ->where('Email', 'test@test.com')
+            ->first();
+
+        $this->assertEquals($lead->Id, $test->Id);
+    }
 
     public function testSyncsModelsToSalesforce()
     {

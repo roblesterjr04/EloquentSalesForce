@@ -35,7 +35,7 @@ class SOQLBuilder extends Builder
 
 	public function toSql()
 	{
-		$columns = implode(', ', $this->describe());
+        $columns = implode(', ', $this->describe());
 		$query = str_replace('*', $columns, parent::toSql());
 		$query = str_replace('`', '', $query);
 		/*$bindings = array_map(function($item) {
@@ -212,6 +212,13 @@ class SOQLBuilder extends Builder
     {
         $table = $this->model->getTable();
         return SObjects::getPicklistValues($table, $field);
+    }
+
+    public function from($table)
+    {
+        $this->model->setTable($table);
+        $this->query->from($table);
+        return $this;
     }
 
 }
