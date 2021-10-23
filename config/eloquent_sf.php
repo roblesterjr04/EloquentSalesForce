@@ -31,7 +31,7 @@ return [
 		/*
 	     * Options include WebServer or UserPassword
 	     */
-		'authentication'	=> 'UserPassword',
+		'authentication'	=> env('SF_AUTH_METHOD', 'UserPassword'),
 
 		/*
 	     * Enter your credentials
@@ -39,6 +39,14 @@ return [
 	     * Likewise, callbackURI is only necessary for WebServer flow.
 	     */
 		'credentials' => config('database.connections.soql'),
+
+        'parameters' => [
+            'display'   => 'popup',
+            'immediate' => false,
+            'state'     => '',
+            'scope'     => 'full',
+            'prompt'    => 'select_account',
+        ],
 
 		/*
 		 * Default settings for resource requests.

@@ -26,8 +26,10 @@
     "omniphx/forrest": "^2.0"
   },
   "require-dev": {
+    "laravel/dusk": "^6.19",
     "orchestra/testbench": ">=3.5",
-    "phpunit/phpunit": ">=6.0"
+    "phpunit/phpunit": ">=6.0",
+    "vlucas/phpdotenv": "^5.3"
   },
   "autoload": {
     "psr-4": {

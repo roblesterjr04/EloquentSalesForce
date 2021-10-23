@@ -1,4 +1,4 @@
-# Eloquent for SalesForce
+# ElSF - Eloquent for SalesForce
 
 [![Actions Status](https://github.com/roblesterjr04/EloquentSalesForce/workflows/Tests/badge.svg)](https://github.com/roblesterjr04/EloquentSalesForce/actions)
 [![Latest Stable Version](https://img.shields.io/packagist/v/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
@@ -7,7 +7,7 @@
 
 ## Overview
 
-This package allows you to with SalesForce APIs via the Eloquent Model.
+Eloquent SalesForce, now known as ElSF /else-if/, is a package that allows you to interact with SalesForce objects in the same way you would interact with an Eloquent model in your local application. Simplifying the process of writing applications that leverage SalesForce APIs and data.
 
 # Getting Started
 

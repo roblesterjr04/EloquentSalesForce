@@ -17,6 +17,8 @@ use Illuminate\Support\Arr;
 use PHPUnit\Framework\Error\Notice;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Forrest;
+use GuzzleHttp\Client;
 
 class EloquentSalesForceTest extends TestCase
 {
@@ -27,6 +29,38 @@ class EloquentSalesForceTest extends TestCase
     }
 
     private $lead;
+
+    public function testWebAuthentication()
+    {
+        config([
+            'eloquent_sf.forrest.authentication' => 'WebServer',
+            'eloquent_sf.forrest.credentials' => [
+                'driver' => 'soql',
+                'database' => null,
+                'consumerKey'    => getenv('WF_CONSUMER_KEY'),
+                'consumerSecret' => getenv('WF_CONSUMER_SECRET'),
+                'callbackURI'    => url('/login/salesforce/callback'),
+                'loginURL'       => getenv('LOGIN_URL'),
+            ],
+            'eloquent_sf.forrest.parameters' => [
+                'display'   => 'page',
+                'immediate' => false,
+                'state'     => '',
+                'scope'     => 'full',
+                'prompt'    => 'select_account',
+            ],
+        ]);
+
+        config([
+            'forrest' => config('eloquent_sf.forrest'),
+        ]);
+
+        \Artisan::call('cache:clear');
+
+        $response = $this->get('/login/salesforce');
+
+        $response->assertOk();
+    }
 
     public function testSimpleObject()
     {

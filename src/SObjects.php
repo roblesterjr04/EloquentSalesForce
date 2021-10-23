@@ -53,8 +53,10 @@ class SObjects
 	public function authenticate()
 	{
 		$storage = ucwords(config('eloquent_sf.forrest.storage.type'));
-		if (!$storage::has(config('eloquent_sf.forrest.storage.path') . 'token'))
-			Forrest::authenticate();
+		if (!$storage::has(config('eloquent_sf.forrest.storage.path') . 'token')) {
+			if (config('eloquent_sf.forrest.authentication') == 'WebServer') return Forrest::authenticate();
+            else Forrest::authenticate();
+        }
 		$tokens = (object) decrypt($storage::get(config('eloquent_sf.forrest.storage.path') . 'token'));
 		Session::put('eloquent_sf_instance_url', $tokens->instance_url);
 		return $tokens;
@@ -64,6 +66,11 @@ class SObjects
 	{
 		return Session::get('eloquent_sf_instance_url');
 	}
+
+    public function callback()
+    {
+        return Forrest::callback();
+    }
 
 	public function __call($name, $arguments)
 	{

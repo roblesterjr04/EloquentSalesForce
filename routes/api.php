@@ -21,4 +21,16 @@ Route::post('/api/syncObject/{sfid}', function (Request $request, $sfid) {
             $model->syncWithSalesforce();
         }
     }
-});
+})->middleware('api');
+
+Route::get('/login/salesforce', function(Request $request)
+{
+    return SObjects::authenticate();
+})->middleware('web');
+
+Route::get('/login/salesforce/callback', function(Request $request)
+{
+    SObjects::callback();
+
+    return redirect(config('eloquent_sf.redirectTo', '/'));
+})->middleware('web');
