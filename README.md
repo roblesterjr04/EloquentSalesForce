@@ -1,10 +1,11 @@
 <p align="center">
   <img src="/docs/_media/banner-gray.png" alt="Logo ElSF">
-  [![Actions Status](https://github.com/roblesterjr04/EloquentSalesForce/workflows/Tests/badge.svg)](https://github.com/roblesterjr04/EloquentSalesForce/actions)
+</p>
+
+[![Actions Status](https://github.com/roblesterjr04/EloquentSalesForce/workflows/Tests/badge.svg)](https://github.com/roblesterjr04/EloquentSalesForce/actions)
   [![Latest Stable Version](https://img.shields.io/packagist/v/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
   [![Packagist](https://img.shields.io/packagist/dm/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
   [![Packagist](https://img.shields.io/packagist/l/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
-</p>
 
 ## Introduction
 
