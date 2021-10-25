@@ -490,7 +490,8 @@ class EloquentSalesForceTest extends TestCase
         $object = SObjects::object($query['records'][0]);
         $this->assertInstanceOf('Lester\EloquentSalesForce\SalesForceObject', $object);
 
-        $testLeadFields = SObjects::describe('Lead');
+        $testLeadFields = SObjects::describe('Product2');
+
         $this->assertNotNull($testLeadFields);
 
         $convertedId = SObjects::convert('5003000000D8cuI');

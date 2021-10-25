@@ -8,6 +8,7 @@ use Omniphx\Forrest\Exceptions\MissingResourceException;
 use Omniphx\Forrest\Exceptions\MissingVersionException;
 use Lester\EloquentSalesForce\Database\SOQLBatch;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Cache;
 use Session;
 use Log;
@@ -38,12 +39,16 @@ class SObjects
 				'body' => tap([
 					'allOrNone' => $allOrNone,
 					'records' => $collectionBatch->map(function($object) {
-						return $object->writeableAttributes(['IsDeleted', 'CreatedDate', 'LastModifiedDate']);
+                        $attributes = $object->writeableAttributes(['IsDeleted', 'CreatedDate', 'LastModifiedDate']);
+						//return $object->writeableAttributes(['IsDeleted', 'CreatedDate', 'LastModifiedDate']);
+                        //dd($object->getDirty() + ['Id' => $object->Id]);
+                        return $object->getDirty() + ['Id' => $object->Id, 'attributes' => $attributes['attributes']];
 					})->values()
 				], function($payload) {
 					$this->log('SOQL Bulk Update', $payload);
 				})
 			]);
+            $this->log('SOQL Bulk Update', $results);
 		}
 	}
 
@@ -101,10 +106,11 @@ class SObjects
 	 * @param  boolean $full   [description]
 	 * @return [type]          [description]
 	 */
-	public function describe($object, $full = false)
+	public function describe($object, $key = null, $filter = null)
 	{
 		self::authenticate();
-		return $full ? $this->object($object)->describe() : Forrest::describe($object);
+		if ($key === null) return Forrest::describe($object);
+        return Arr::get(Forrest::describe($object), $key, null);
 	}
 
 	/**
