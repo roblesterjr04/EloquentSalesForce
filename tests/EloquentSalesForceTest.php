@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Forrest;
 use GuzzleHttp\Client;
+use Carbon\Carbon;
 
 class EloquentSalesForceTest extends TestCase
 {
@@ -302,6 +303,8 @@ class EloquentSalesForceTest extends TestCase
 
 	    $leads = TestLead::where('FirstName', 'not like', 'xxxxxxxxxxxxx')->get();
 	    $this->assertTrue($leads->count() > 0);
+
+        $this->assertInstanceOf(Carbon::class, $leads->first()->CreatedDate);
 
         $int = 123;
         $lead = TestLead::select('Id', 'CreatedDate')->where('LastName', 'August')->where('Email', (string)$int)->first();

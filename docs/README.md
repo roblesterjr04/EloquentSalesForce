@@ -1,4 +1,4 @@
-# ElSF - Eloquent for SalesForce
+# ElSF - Eloquent for SalesForce v2.13
 
 [![Actions Status](https://github.com/roblesterjr04/EloquentSalesForce/workflows/Tests/badge.svg)](https://github.com/roblesterjr04/EloquentSalesForce/actions)
 [![Latest Stable Version](https://img.shields.io/packagist/v/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
@@ -8,6 +8,13 @@
 ## Overview
 
 Eloquent SalesForce, now known as ElSF /else-if/, is a package that allows you to interact with SalesForce objects in the same way you would interact with an Eloquent model in your local application. Simplifying the process of writing applications that leverage SalesForce APIs and data.
+
+## Updating
+
+> Important notes for updating to v2.13.
+>
+> * the `protected $dates` array is now monitored appropriately
+> * All custom or additional date fields must be listed in this array. That means if it is overridden, you must include the `LastModifiedDate` and `CreatedDate` columns. This will ensure that dates are formatted as Carbon objects, and also that they are properly formatted in the queries being sent to SalesForce.
 
 # Getting Started
 
@@ -19,7 +26,7 @@ Install via composer
 composer require rob-lester-jr04/eloquent-sales-force
 ```
 
-*Note: This package is only tested and supported Laravel 7.0 and up.
+> Note: This package is only tested and supported Laravel 7.0 and up.
 
 ## Setting up your connected app
 
