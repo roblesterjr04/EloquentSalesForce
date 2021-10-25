@@ -31,6 +31,24 @@ class EloquentSalesForceTest extends TestCase
 
     private $lead;
 
+    public function testDirtyAndChanges()
+    {
+        $email = strtolower(Str::random(10) . '@test.com');
+        $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => $email]);
+
+        $this->assertFalse($lead->isDirty());
+
+        $lead->FirstName = 'Testing';
+
+        $this->assertTrue($lead->isDirty());
+
+        $this->assertCount(1, $lead->getDirty());
+
+        $lead->save();
+
+        $this->assertCount(1, $lead->getChanges());
+    }
+
     public function testWebAuthentication()
     {
         config([
