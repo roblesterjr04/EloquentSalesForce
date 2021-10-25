@@ -22,7 +22,7 @@ abstract class Model extends EloquentModel
         'LastModifiedDate',
     ];
 
-    public $timestamps = false;
+    //public $timestamps = false;
 
     /**
      * The name of the "created at" column.
