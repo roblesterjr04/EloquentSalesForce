@@ -304,7 +304,7 @@ class EloquentSalesForceTest extends TestCase
 	    $this->assertTrue($leads->count() > 0);
 
         $int = 123;
-        $lead = TestLead::where('Email', (string)$int)->first();
+        $lead = TestLead::select('Id', 'CreatedDate')->where('LastName', 'August')->where('Email', (string)$int)->first();
 
         $this->assertNull($lead);
 

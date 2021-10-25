@@ -17,6 +17,11 @@ abstract class Model extends EloquentModel
 	protected $guarded = [];
 	protected $readonly = [];
 
+    protected $dates = [
+        'CreatedDate',
+        'LastModifiedDate',
+    ];
+
     public $timestamps = false;
 
     /**

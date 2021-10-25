@@ -10,6 +10,7 @@ use Lester\EloquentSalesForce\Facades\SObjects;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use PDO;
+use Lester\EloquentSalesForce\Model;
 
 class SOQLBuilder extends Builder
 {
@@ -27,6 +28,22 @@ class SOQLBuilder extends Builder
 
 		parent::__construct($query);
 	}
+
+    /**
+     * Set a model instance for the model being queried.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return $this
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+        $this->query->grammar->setModel($model);
+
+        $this->query->from($model->getTable());
+
+        return $this;
+    }
 
 	public function batch($tag = null)
 	{

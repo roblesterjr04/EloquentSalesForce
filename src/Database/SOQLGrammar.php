@@ -12,6 +12,8 @@ use SObjects;
 
 class SOQLGrammar extends Grammar
 {
+    protected $model;
+
 	/**
 	 * The components that make up a select clause.
 	 *
@@ -30,6 +32,12 @@ class SOQLGrammar extends Grammar
 		'offset',
 		'lock',
 	];
+
+    public function setModel($model)
+    {
+        $this->model = $model;
+        return $model;
+    }
 
 	/**
 	 * Wrap a single string in keyword identifiers.
@@ -56,8 +64,10 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function whereBasic(Builder $query, $where)
 	{
-
-		// allow for "false" values to not be wrapped.
+        if ($this->isDate($where['column'])) {
+            return $this->whereDate($query, $where);
+        }
+        // allow for "false" values to not be wrapped.
 		if (is_bool($where['value'])) {
 			return $this->whereBoolean($query, $where);
 		}
@@ -78,6 +88,11 @@ class SOQLGrammar extends Grammar
         return parent::whereBasic($query, $where);
 	}
 
+    protected function whereDate(Builder $query, $where)
+    {
+        return $this->wrap($where['column']) . $where['operator'] . $where['value'];
+    }
+
     /**
      * Compile the "limit" portions of the query.
      *
@@ -90,15 +105,20 @@ class SOQLGrammar extends Grammar
         return 'limit '.(int) $limit;
     }
 
+    protected function isDate($column)
+    {
+        return in_array($column, $this->model->getDates());
+    }
+
     /**
      * Get the appropriate query parameter place-holder for a value.
      *
      * @param  mixed   $value
      * @return string
      */
-    public function parameter($value)
+    public function parameter($value, $column = null)
     {
-        if (!SObjects::isSalesForceId($value) && strtotime($value) !== false && !is_numeric($value)) {
+        if (is_int($value)) {
             return '?';
         }
         if (SObjects::isSalesForceId($value) || is_string($value)) {
