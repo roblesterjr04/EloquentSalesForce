@@ -267,12 +267,12 @@ The abstract model declares `$dates` appropriately so that they are casted and q
 
 ```
 
-When you're working with `Date` types in SalesForce, instead of `DateTime` types, declare the `$dateFormats` array in your model, indicating which columns use the `toDateString` method. Here is an example.
+When you're working with `Date` types in SalesForce, instead of `DateTime` types, declare the `$shortDates` array in your model, indicating which columns are only dates, and not date-times. This is required if working with a field in SalesForce that is expecting a short-date, ie `2010-01-01`.
 
 ```php
 ...
-  protected $dateFormats = [
-    'Custom_Date_Field__c' => 'toDateString'
+  protected $shortDates = [
+    'Custom_Date_Field__c'
   ];
 
 ```

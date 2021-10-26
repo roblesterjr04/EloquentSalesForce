@@ -384,9 +384,9 @@ abstract class Model extends EloquentModel
         return $this->Id !== null;
     }
 
-    public function getDateFormats($date)
+    public function getDateFormats($column)
     {
-        return Arr::get($this->dateFormats ?? [], $date, 'toIso8601ZuluString');
+        return in_array($column, $this->shortDates) ? 'toDateString' : 'toIso8601ZuluString';
     }
 
 }

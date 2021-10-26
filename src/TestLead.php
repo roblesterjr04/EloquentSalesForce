@@ -12,8 +12,8 @@ class TestLead extends Model
         'LastModifiedDate',
     ];
 
-    protected $dateFormats = [
-        'Custom_Date_Field__c' => 'toDateString'
+    protected $shortDates = [
+        'Custom_Date_Field__c'
     ];
 
     public function tasks()
