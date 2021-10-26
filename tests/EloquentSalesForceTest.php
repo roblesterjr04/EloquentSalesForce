@@ -378,10 +378,27 @@ class EloquentSalesForceTest extends TestCase
 	 */
     public function testWhereDate()
     {
-        TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
+        TestLead::create([
+            'FirstName' => 'Rob',
+            'LastName' => 'Lester',
+            'Company' => 'Test',
+            'Email' => 'test@test.com',
+            'Custom_Date_Field__c' => now()->subDay(),
+        ]);
 
-	    $leads = TestLead::where('CreatedDate', '>=', '2010-10-01T12:00:00.000+00:00')->limit(5)->get();
+	    $leads = TestLead::where('CreatedDate', '>=', today())->get();
 	    $this->assertTrue($leads->count() > 0);
+
+        $lead = TestLead::where('Email', 'test@test.com')->first();
+
+        $now = now();
+        $lead->update([
+            'Custom_Date_Field__c' => $now,
+            'Company' => 'Test Co',
+        ]);
+        $lead = TestLead::select('Custom_Date_Field__c', 'Id')->where('Email', 'test@test.com')->first();
+
+        $this->assertEquals($now->startOfDay(), $lead->Custom_Date_Field__c);
     }
 
     public function testOrWhere()

@@ -4,6 +4,7 @@ namespace Lester\EloquentSalesForce;
 
 use Session;
 use Log;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
@@ -132,6 +133,15 @@ abstract class Model extends EloquentModel
         // table from the database. Not all tables have to be incrementing though.
         $attributes = method_exists($this, 'getAttributesForInsert') ? $this->getAttributesForInsert() : $this->getAttributes();
 
+        $attributes = collect($this->getDirty())->map(function($field, $key) {
+            if ($this->isDateAttribute($key)) {
+                $carbon = new Carbon($field);
+                $format = $this->getDateFormats($key);
+                $field = $carbon->$format();
+            }
+            return $field;
+        });
+
         if (empty($attributes)) {
             return $this;
         }
@@ -183,16 +193,23 @@ abstract class Model extends EloquentModel
         // Once we have run the update operation, we will fire the "updated" event for
         // this model instance. This will allow developers to hook into these after
         // models are updated, giving them a chance to do any special processing.
-        $dirty = $this->getDirty();
+        $dirty = collect($this->getDirty())->map(function($field, $key) {
+            if ($this->isDateAttribute($key)) {
+                $carbon = new Carbon($field);
+                $format = $this->getDateFormats($key);
+                $field = $carbon->$format();
+            }
+            return $field;
+        });
 
-        if (count($dirty) > 0) {
+        if ($dirty->count() > 0) {
 
             SObjects::authenticate();
             $object = $this->sfObject();
 
             $result = SObjects::sobjects($object, [
                 'method' => 'patch',
-                'body' => $dirty
+                'body' => $dirty->toArray(),
             ]);
 
             $this->syncChanges();
@@ -365,6 +382,11 @@ abstract class Model extends EloquentModel
     public function getExistsAttribute()
     {
         return $this->Id !== null;
+    }
+
+    public function getDateFormats($date)
+    {
+        return Arr::get($this->dateFormats ?? [], $date, 'toIso8601ZuluString');
     }
 
 }

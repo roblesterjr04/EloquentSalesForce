@@ -9,6 +9,7 @@ use Illuminate\Database\Query\JsonExpression;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Lester\EloquentSalesForce\ServiceProvider;
 use SObjects;
+use Carbon\Carbon;
 
 class SOQLGrammar extends Grammar
 {
@@ -65,7 +66,7 @@ class SOQLGrammar extends Grammar
 	protected function whereBasic(Builder $query, $where)
 	{
         if ($this->isDate($where['column'])) {
-            return $this->whereDate($query, $where);
+            return $this->whereDate($query, $where, $this->model->getDateFormats($where['column']));
         }
         // allow for "false" values to not be wrapped.
 		if (is_bool($where['value'])) {
@@ -88,9 +89,10 @@ class SOQLGrammar extends Grammar
         return parent::whereBasic($query, $where);
 	}
 
-    protected function whereDate(Builder $query, $where)
+    protected function whereDate(Builder $query, $where, $format = 'toIso8601ZuluString')
     {
-        return $this->wrap($where['column']) . $where['operator'] . $where['value'];
+        $date = new Carbon($where['value']);
+        return $this->wrap($where['column']) . $where['operator'] . $date->$format();
     }
 
     /**

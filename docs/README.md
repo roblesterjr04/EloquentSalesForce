@@ -267,6 +267,16 @@ The abstract model declares `$dates` appropriately so that they are casted and q
 
 ```
 
+When you're working with `Date` types in SalesForce, instead of `DateTime` types, declare the `$dateFormats` array in your model, indicating which columns use the `toDateString` method. Here is an example.
+
+```php
+...
+  protected $dateFormats = [
+    'Custom_Date_Field__c' => 'toDateString'
+  ];
+
+```
+
 ## Where / Order By
 The `where` and `orderBy` methods work as usual as well.
 
