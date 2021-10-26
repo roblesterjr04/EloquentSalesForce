@@ -1,4 +1,4 @@
-# ElSF - Eloquent for SalesForce v2.13
+# ElSF - Eloquent for SalesForce
 
 [![Actions Status](https://github.com/roblesterjr04/EloquentSalesForce/workflows/Tests/badge.svg)](https://github.com/roblesterjr04/EloquentSalesForce/actions)
 [![Latest Stable Version](https://img.shields.io/packagist/v/rob-lester-jr04/eloquent-sales-force.svg)](https://packagist.org/packages/rob-lester-jr04/eloquent-sales-force)
@@ -11,7 +11,7 @@ Eloquent SalesForce, now known as ElSF /else-if/, is a package that allows you t
 
 ## Updating
 
-> Important notes for updating to v2.13.
+> Important notes for updating to 2.13
 >
 > * the `protected $dates` array is now monitored appropriately
 > * All custom or additional date fields must be listed in this array. That means if it is overridden, you must include the `LastModifiedDate` and `CreatedDate` columns. This will ensure that dates are formatted as Carbon objects, and also that they are properly formatted in the queries being sent to SalesForce.
@@ -119,9 +119,9 @@ This will generate the model as you see above without any changes necessary
 
 # The Basics
 
-## Queries
+ElSF was designed so even a junior Laravel developer could interact with SalesForce with ease and familiarity. One of the best features of Laravel is the Eloquent ORM. It is so easy to work with and to scale upon. Why can't interacting with a third party system be just as easy. Define your model as shown above, and begin treating it like a normal local eloquent model.
 
-Now use it like you normally would!
+## Queries
 
 ```php
 $leads = Lead::where('Email', 'user@test.com')->get();
@@ -169,8 +169,6 @@ $lead->update([
 
 ## Delete
 
-Exactly as you'd expect.
-
 ```php
 $lead = Lead::first();
 
@@ -179,9 +177,11 @@ $lead->delete();
 
 # Advanced Usage
 
+Many of the familiar advanced capabilities of Eloquent objects are available on the Eloquent SF Objects as well.
+
 ## Observers
 
-The latest version updates allow the use of observers now! Here is an example setting a static observer in the model using the `booted()` method.
+Eloquent SF Objects support the standard use of [Observers](https://laravel.com/docs/8.x/eloquent#observers) supported in Laravel. The following example is a static observer on the model, added in the `booted()` method.
 
 ```php
 /* Lead Model */
@@ -196,7 +196,7 @@ public static function booted()
 
 ## Soft Deletes
 
-SalesForce already handles soft-deleting - What the package now does is expose the traditional soft-delete methods that Eloquent has to query upon trashed elements.
+SalesForce already handles soft-deleting natively on every object. ElSF expose the traditional soft-delete methods that Eloquent has to query upon trashed elements.
 
 ```php
 
@@ -236,6 +236,35 @@ To return the columns currently available on a model, use the `describe` method 
 
 ```php
 $fields = Lead::describe();
+```
+
+## Dates
+
+In Laravel, there are 2 very important date fields; `created_at` and `updated_at`. SalesForce models have the same, but the names are different. They are `CreatedDate` and `LastModifiedDate`, respectively.
+
+> There is no (native) equivalent to `deleted_at`.
+
+The abstract model declares `$dates` appropriately so that they are casted and queried correctly. If you have custom date columns you want to query on in this model, it is strongly recommended that you override this array and add those date fields. This is how ElSF knows what fields are dates and what fields are not, and SalesForce can be picky about how dates are passed in the queries.
+
+```php
+...
+
+  protected $dates = [
+    'CreatedDate',
+    'LastModifiedDate',
+  ];
+
+```
+
+```php
+...
+
+  protected $dates = [
+    'CreatedDate',
+    'LastModifiedDate',
+    'Form_Fill_Date__c', // Our custom date field we want handled as a date
+  ];
+
 ```
 
 ## Where / Order By

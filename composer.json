@@ -47,7 +47,8 @@
     "test": "vendor/bin/phpunit --bootstrap=./vendor/autoload.php",
     "post-autoload-dump": [
         "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
-    ]
+    ],
+    "docs": "docsify serve ./docs"
   },
   "extra": {
     "laravel": {

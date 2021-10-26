@@ -6,6 +6,8 @@ use Lester\EloquentSalesForce\Facades\SObjects as SfFacade;
 use Illuminate\Support\Arr;
 use Lester\EloquentSalesForce\Console\MakeModelCommand;
 use Lester\EloquentSalesForce\Console\SyncFromSalesforce;
+use Lester\EloquentSalesForce\TestLead;
+use Lester\EloquentSalesForce\TestObserver;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -26,6 +28,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         }
 
         $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+
+        TestLead::observe(TestObserver::class);
 	}
 
 	public function register()
