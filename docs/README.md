@@ -244,6 +244,17 @@ In Laravel, there are 2 very important date fields; `created_at` and `updated_at
 
 > There is no (native) equivalent to `deleted_at`.
 
+```php
+
+Lead::where('CreatedDate', '>=', today())->get();
+
+Lead::insert([
+  ...
+  'Custom_Date_Field__c' => now()
+]);
+
+```
+
 The abstract model declares `$dates` appropriately so that they are casted and queried correctly. If you have custom date columns you want to query on in this model, it is strongly recommended that you override this array and add those date fields. This is how ElSF knows what fields are dates and what fields are not, and SalesForce can be picky about how dates are passed in the queries.
 
 ```php
