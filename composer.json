@@ -57,7 +57,7 @@
     }
   },
   "config": {
-    "preferred-install": "dist",
+    "preferred-install": "latest-stable",
     "sort-packages": true,
     "optimize-autoloader": true
   }
