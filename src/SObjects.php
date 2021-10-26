@@ -67,6 +67,11 @@ class SObjects
 		return $tokens;
 	}
 
+    public function authorize()
+    {
+        return Forrest::authenticate();
+    }
+
 	public function instanceUrl()
 	{
 		return Session::get('eloquent_sf_instance_url');
