@@ -402,13 +402,48 @@ class SalesLead extends Model
 		'type',
 	];
 
-	protected $salesForceFieldMap = [ // Mapping of the local fields to SF fields
-		'email' => 'Email',
-		'firstName' => 'FirstName',
-		'lastName' => 'LastName',
-		'company' => 'Company',
+	protected $salesForceFieldMap = [ // Mapping of the SF fields to local fields
+		'Email' => 'email',
+		'FirstName' => 'firstName',
+		'LastName' => 'lastName',
+		'Company' => 'company',
 	];
 }
+```
+
+If you need to perform more complex data manipulation when syncing, just use mutators on your local model and map the SF fields to the mutated fields. Here's an example.
+
+```php
+  protected $salesForceFieldMap = [ // Mapping of the SF fields to local fields
+    'Email' => 'email',
+    'FirstName' => 'first_name',
+    'LastName' => 'last_name',
+    'Company' => 'company',
+  ];
+
+  public function getFirstNameAttribute()
+  {
+    return Str::before($this->name, ' ');
+  }
+
+  public function getLastNameAttribute()
+  {
+    return Str::after($this->name, ' ');
+  }
+
+  public function setFirstNameAttribute($value)
+  {
+    $nameParts = explode(' ', $this->attributes['name']);
+    $nameParts[0] = $value;
+    $this->attributes['name'] = implode(' ', $nameParts);
+  }
+
+  public function setLastNameAttribute($value)
+  {
+    $nameParts = explode(' ', $this->attributes['name']);
+    $nameParts[1] = $value;
+    $this->attributes['name'] = implode(' ', $nameParts);
+  }
 ```
 
 ## Custom Objects

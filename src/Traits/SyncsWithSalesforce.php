@@ -66,7 +66,7 @@ trait SyncsWithSalesforce
 
     public function syncSalesforceToLocal($object)
     {
-        foreach ($this->getSalesforceMapping() as $modelKey => $sfKey) {
+        foreach ($this->getSalesforceMapping() as $sfKey => $modelKey) {
             $this->{$modelKey} = $object->{$sfKey};
         }
         $this->withoutEvents(function() {
@@ -88,8 +88,12 @@ trait SyncsWithSalesforce
     public function getSalesforceSyncedValues()
     {
         $values = collect([]);
-        foreach ($this->getSalesforceMapping() as $modelKey => $sfKey) {
-            $values->put($sfKey, $this->$modelKey);
+        foreach ($this->getSalesforceMapping() as $sfKey => $modelKey) {
+            if ($modelKey instanceof \Closure) {
+                $values->put($sfKey, $modelKey($this));
+            } else {
+                $values->put($sfKey, $this->$modelKey);
+            }
         }
         return $values->toArray();
     }

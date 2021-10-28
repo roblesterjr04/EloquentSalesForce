@@ -99,16 +99,14 @@ class EloquentSalesForceTest extends TestCase
             $table->id();
             $table->string('email')->unique();
             $table->string('salesforce')->nullable();
-            $table->string('firstName');
-            $table->string('lastName');
+            $table->string('name');
             $table->string('company');
             $table->timestamps();
         });
 
         $test = TestModel::create([
             'email' => 'test@test.com',
-            'firstName' => 'Rob',
-            'lastName' => 'Test',
+            'name' => 'Rob Lester',
             'company' => 'Test Company',
         ]);
 
@@ -143,12 +141,12 @@ class EloquentSalesForceTest extends TestCase
 
         $test4 = TestModel::create([
             'email' => 'test4@test.com',
-            'firstName' => 'Rob',
-            'lastName' => 'Test',
+            'name' => 'Rob Lester',
             'company' => 'Test Company',
         ]);
 
         $this->assertNotNull(TestLead::where('Email', 'test4@test.com')->first());
+        $this->assertEquals('Rob', TestLead::where('Email', 'test4@test.com')->first()->FirstName);
 
         $object = TestLead::where('Email', 'test4@test.com')->first();
 
