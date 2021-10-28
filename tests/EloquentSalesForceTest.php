@@ -176,16 +176,14 @@ class EloquentSalesForceTest extends TestCase
             $table->id();
             $table->string('email')->unique();
             $table->string('salesforce')->nullable();
-            $table->string('firstName');
-            $table->string('lastName');
+            $table->string('name');
             $table->string('company');
             $table->timestamps();
         });
 
         $test = TestModel::create([
             'email' => 'test@test.com',
-            'firstName' => 'Rob',
-            'lastName' => 'Test',
+            'name' => 'Rob Test',
             'company' => 'Test Company',
         ]);
 
