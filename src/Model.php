@@ -386,7 +386,7 @@ abstract class Model extends EloquentModel
 
     public function getDateFormats($column)
     {
-        return in_array($column, $this->shortDates) ? 'toDateString' : 'toIso8601ZuluString';
+        return in_array($column, $this->shortDates ?? []) ? 'toDateString' : 'toIso8601ZuluString';
     }
 
 }
