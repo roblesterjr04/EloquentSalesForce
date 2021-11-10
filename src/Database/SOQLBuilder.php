@@ -25,6 +25,7 @@ class SOQLBuilder extends Builder
 
 		$query->connection = new SOQLConnection();
 		$query->grammar = new SOQLGrammar();
+        $query->connection->setGrammar($query->grammar);
 
 		parent::__construct($query);
 	}
@@ -53,12 +54,9 @@ class SOQLBuilder extends Builder
 	public function toSql()
 	{
         $columns = implode(', ', $this->describe());
-		$query = str_replace('*', $columns, parent::toSql());
+        $query = str_replace('*', $columns, parent::toSql());
 		$query = str_replace('`', '', $query);
-		/*$bindings = array_map(function($item) {
-            return (is_int($item) || is_float($item)) ? $item : "'$item'";
-        }, $this->getBindings());*/
-		$prepared = Str::replaceArray('?', $this->getBindings(), $query);
+        $prepared = Str::replaceArray('?', $this->getBindings(), $query);
 		return $prepared;
 	}
 
@@ -237,5 +235,6 @@ class SOQLBuilder extends Builder
         $this->query->from($table);
         return $this;
     }
+
 
 }

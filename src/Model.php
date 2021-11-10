@@ -18,6 +18,8 @@ abstract class Model extends EloquentModel
 	protected $guarded = [];
 	protected $readonly = [];
 
+    protected $dateFormat = 'Y-m-d\TH:i:s\Z';
+
     protected $dates = [
         'CreatedDate',
         'LastModifiedDate',
@@ -136,8 +138,8 @@ abstract class Model extends EloquentModel
         $attributes = collect($this->getDirty())->map(function($field, $key) {
             if ($this->isDateAttribute($key)) {
                 $carbon = new Carbon($field);
-                $format = $this->getDateFormats($key);
-                $field = $carbon->$format();
+                $format = $this->getDateFormat($key);
+                $field = $carbon->format($format);
             }
             return $field;
         });
@@ -196,8 +198,8 @@ abstract class Model extends EloquentModel
         $dirty = collect($this->getDirty())->map(function($field, $key) {
             if ($this->isDateAttribute($key)) {
                 $carbon = new Carbon($field);
-                $format = $this->getDateFormats($key);
-                $field = $carbon->$format();
+                $format = $this->getDateFormat();
+                $field = $carbon->format($format);
             }
             return $field;
         });
@@ -384,9 +386,9 @@ abstract class Model extends EloquentModel
         return $this->Id !== null;
     }
 
-    public function getDateFormats($column)
+    public function getShortDates()
     {
-        return in_array($column, $this->shortDates ?? []) ? 'toDateString' : 'toIso8601ZuluString';
+        return $this->shortDates;
     }
 
 }

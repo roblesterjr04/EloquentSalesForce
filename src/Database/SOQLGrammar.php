@@ -34,6 +34,11 @@ class SOQLGrammar extends Grammar
 		'lock',
 	];
 
+    public function getModel()
+    {
+        return $this->model;
+    }
+
     public function setModel($model)
     {
         $this->model = $model;
@@ -66,7 +71,7 @@ class SOQLGrammar extends Grammar
 	protected function whereBasic(Builder $query, $where)
 	{
         if ($this->isDate($where['column'])) {
-            return $this->whereDate($query, $where, $this->model->getDateFormats($where['column']));
+            return $this->whereDate($query, $where);
         }
         // allow for "false" values to not be wrapped.
 		if (is_bool($where['value'])) {
@@ -87,12 +92,13 @@ class SOQLGrammar extends Grammar
 		}
 
         return parent::whereBasic($query, $where);
+
+        //return $this->wrap($where['column']) . $where['operator'] . $this->parameter($where['value']);
 	}
 
-    protected function whereDate(Builder $query, $where, $format = 'toIso8601ZuluString')
+    protected function whereDate(Builder $query, $where)
     {
-        $date = new Carbon($where['value']);
-        return $this->wrap($where['column']) . $where['operator'] . $date->$format();
+        return $this->wrap($where['column']) . $where['operator'] . '?';
     }
 
     /**
@@ -313,4 +319,15 @@ class SOQLGrammar extends Grammar
             "LAST_N_FISCAL_​YEARS",
         ]);
     }
+
+    /**
+     * Get the format for database stored dates.
+     *
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return 'Y-m-d\TH:i:s\Z';
+    }
+
 }

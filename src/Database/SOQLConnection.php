@@ -12,6 +12,8 @@ use Lester\EloquentSalesForce\Facades\SObjects;
 use Closure;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use DateTimeInterface;
+use Illuminate\Support\Carbon as SupportCarbon;
 
 class SOQLConnection extends Connection
 {
@@ -22,6 +24,11 @@ class SOQLConnection extends Connection
     {
         $this->all = $all;
     }
+
+    public function setGrammar($grammar)
+    {
+        $this->queryGrammar = $grammar;
+    }
 	/**
 	 * {@inheritDoc}
 	 */
@@ -30,8 +37,7 @@ class SOQLConnection extends Connection
 		return $this->run($query, $bindings, function($query, $bindings) use ($useReadPdo) {
 
 			$statement = $this->prepare($query, $bindings);
-
-			/** @scrutinizer ignore-call */
+            /** @scrutinizer ignore-call */
 			$result = $this->all ? SObjects::queryAll($statement) : SObjects::query($statement);
 
 			SObjects::log('SOQL Query', [
@@ -109,8 +115,33 @@ class SOQLConnection extends Connection
 
 	private function prepare($query, $bindings)
 	{
+        $bindings = $this->prepareBindings($bindings);
         $query = Str::replaceArray('?', $bindings, $query);
 		return $query;
 	}
+
+    /**
+     * Prepare the query bindings for execution.
+     *
+     * @param  array  $bindings
+     * @return array
+     */
+    public function prepareBindings(array $bindings)
+    {
+        $grammar = $this->getQueryGrammar();
+
+        foreach ($bindings as $key => $value) {
+            // We need to transform all instances of DateTimeInterface into the actual
+            // date string. Each query grammar maintains its own date string format
+            // so we'll just ask the grammar for the format to get from the date.
+            if ($value instanceof DateTimeInterface) {
+                $bindings[$key] = $value->format($grammar->getDateFormat());
+            } elseif (is_bool($value)) {
+                $bindings[$key] = (int) $value;
+            }
+        }
+
+        return $bindings;
+    }
 
 }

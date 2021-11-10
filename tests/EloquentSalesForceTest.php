@@ -382,7 +382,15 @@ class EloquentSalesForceTest extends TestCase
             'Custom_Date_Field__c' => now()->subDay(),
         ]);
 
-	    $leads = TestLead::where('CreatedDate', '>=', today())->get();
+        /*$query = TestLead::query()
+            ->where('CreatedDate', '>=', today())
+            ->where('Email', 'test@test.com')
+            ->where('Id', 'fffff')
+            ->toSql();
+
+        dd($query);*/
+
+	    $leads = TestLead::where('CreatedDate', '>=', today())->where('Id' , '<>', '0030000000Db7DuAAJ')->get();
 	    $this->assertTrue($leads->count() > 0);
 
         $lead = TestLead::where('Email', 'test@test.com')->first();
@@ -392,7 +400,7 @@ class EloquentSalesForceTest extends TestCase
             'Custom_Date_Field__c' => $now,
             'Company' => 'Test Co',
         ]);
-        $lead = TestLead::select('Custom_Date_Field__c', 'Id')->where('Email', 'test@test.com')->first();
+        $lead = TestLead::select('Custom_Date_Field__c', 'Id')->where('Email', 'test@test.com')->whereDate('Custom_Date_Field__c', '>=', today())->first();
 
         $this->assertEquals($now->startOfDay(), $lead->Custom_Date_Field__c);
     }
