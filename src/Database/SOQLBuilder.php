@@ -236,5 +236,9 @@ class SOQLBuilder extends Builder
         return $this;
     }
 
+    public function whereTime(...$args)
+    {
+        return $this->where(...$args);
+    }
 
 }

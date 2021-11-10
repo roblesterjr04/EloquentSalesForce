@@ -278,15 +278,15 @@ The abstract model declares `$dates` appropriately so that they are casted and q
 
 ```
 
-When you're working with `Date` types in SalesForce, instead of `DateTime` types, declare the `$shortDates` array in your model, indicating which columns are only dates, and not date-times. This is required if working with a field in SalesForce that is expecting a short-date, ie `2010-01-01`.
+When you're working with `Date` types in SalesForce, instead of `DateTime` types, query your  model with `whereDate()` instead of `where()` - This will format your date values correctly when passing to SalesForce. This is required if working with a field in SalesForce that is expecting a short-date, ie `2010-01-01`.
 
 ```php
 ...
-  protected $shortDates = [
-    'Custom_Date_Field__c'
-  ];
+  Lead::whereDate('Custom_Date_Field__c', '>', today())->get();
 
 ```
+
+As SalesForce does not have a type of only `Time`, the native Laravel `whereTime()` query method will alias `where()` and query SalesForce as `DateTime`.
 
 ## Where / Order By
 The `where` and `orderBy` methods work as usual as well.

@@ -402,6 +402,8 @@ class EloquentSalesForceTest extends TestCase
         ]);
         $lead = TestLead::select('Custom_Date_Field__c', 'Id')->where('Email', 'test@test.com')->whereDate('Custom_Date_Field__c', '>=', today())->first();
 
+        TestLead::whereTime('CreatedDate', now())->get();
+
         $this->assertEquals($now->startOfDay(), $lead->Custom_Date_Field__c);
     }
 
