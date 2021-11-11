@@ -194,7 +194,9 @@ class EloquentSalesForceTest extends TestCase
             'company' => 'Test Company',
         ]);
 
-        $object = TestLead::find($test->refresh()->salesforce)->first();
+        sleep(2);
+
+        $object = TestLead::find($test->refresh()->salesforce);
 
         $this->assertNotNull($object);
 
