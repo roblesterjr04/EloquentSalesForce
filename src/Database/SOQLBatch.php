@@ -46,12 +46,6 @@ class SOQLBatch extends Collection
         ];
     }
 
-    public function push(...$builders)
-    {
-        trigger_error('This method will be depricated in the next release to allow for legacy support - use query() instead.', \E_USER_WARNING);
-        return $this->query($builders);
-    }
-
     public function query(...$builders)
     {
         $tempColl = null;
