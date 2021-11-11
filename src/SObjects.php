@@ -218,4 +218,12 @@ class SObjects
         return boolval(\preg_match('/^[0-9a-zA-Z]{15,18}$/', $str));
     }
 
+    public function versions()
+    {
+        $expire = config('eloquent_sf.forrest.storage.expires');
+        return Cache::remember('sfdc_versions', $expire, function() {
+            return Forrest::versions();
+        });
+    }
+
 }

@@ -31,6 +31,13 @@ class EloquentSalesForceTest extends TestCase
 
     private $lead;
 
+    public function testFacadeVersions()
+    {
+        $this->assertFalse(cache()->has('sfdc_versions'));
+        $versions = SObjects::versions();
+        $this->assertTrue(cache()->has('sfdc_versions'));
+    }
+
     public function testDirtyAndChanges()
     {
         $email = strtolower(Str::random(10) . '@test.com');

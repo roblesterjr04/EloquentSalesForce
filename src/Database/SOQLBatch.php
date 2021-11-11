@@ -83,7 +83,7 @@ class SOQLBatch extends Collection
             \SObjects::log('Salesforce will only allow select batchs of 25 queries.', [], 'warn');
         }
 
-        $version = 'v' . collect(\SObjects::versions())->last()['version'];
+        $version = config('eloquent_sf.forrest.version') ?: 'v' . collect(\SObjects::versions())->last()['version'];
 
         foreach ($this->chunk($chunkSize) as $chunk) {
             $results = \SObjects::composite('batch', [
