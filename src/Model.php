@@ -18,7 +18,7 @@ abstract class Model extends EloquentModel
 	protected $guarded = [];
 	protected $readonly = [];
 
-    protected $dateFormat = 'Y-m-d\TH:i:s\Z';
+    protected $dateFormat = 'Y-m-d\TH:i:s';
 
     protected $dates = [
         'CreatedDate',
