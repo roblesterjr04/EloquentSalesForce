@@ -5,6 +5,7 @@ namespace Lester\EloquentSalesForce\Traits;
 use Lester\EloquentSalesForce\Facades\SObjects;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Lester\EloquentSalesForce\Observers\Syncronizer;
 use Lester\EloquentSalesForce\SalesForceObject;
 
 trait SyncsWithSalesforce
@@ -13,14 +14,15 @@ trait SyncsWithSalesforce
 
     public static function booted()
     {
-        dd($this);
-        static::creating(function ($model) {
+        /*static::creating(function ($model) {
             $model->syncWithSalesforce();
         });
 
         static::updating(function ($model) {
             $model->syncWithSalesforce();
-        });
+        });*/
+
+        self::observe(Syncronizer::class);
     }
 
     public function syncWithSalesforce()
