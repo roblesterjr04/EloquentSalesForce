@@ -12,15 +12,9 @@ trait SyncsWithSalesforce
 {
     private $tempSyncObject = null;
 
-    public static function booted()
+    public static function boot()
     {
-        /*static::creating(function ($model) {
-            $model->syncWithSalesforce();
-        });
-
-        static::updating(function ($model) {
-            $model->syncWithSalesforce();
-        });*/
+        parent::boot();
 
         self::observe(Syncronizer::class);
     }
