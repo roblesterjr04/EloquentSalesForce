@@ -103,7 +103,7 @@ class EloquentSalesForceTest extends TestCase
     public function testSyncsModelsToSalesforce()
     {
         Schema::create('test_models', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id');
             $table->string('email')->unique();
             $table->string('salesforce')->nullable();
             $table->string('name');
@@ -180,7 +180,7 @@ class EloquentSalesForceTest extends TestCase
         ]);
 
         Schema::create('test_models', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id');
             $table->string('email')->unique();
             $table->string('salesforce')->nullable();
             $table->string('name');
