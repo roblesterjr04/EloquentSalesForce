@@ -13,6 +13,7 @@ trait SyncsWithSalesforce
 
     public static function booted()
     {
+        dd($this);
         static::creating(function ($model) {
             $model->syncWithSalesforce();
         });
