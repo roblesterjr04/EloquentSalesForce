@@ -15,6 +15,7 @@ Eloquent SalesForce, now known as ElSF /else-if/, is a package that allows you t
 >
 > * the `protected $dates` array is now monitored appropriately
 > * All custom or additional date fields must be listed in this array. That means if it is overridden, you must include the `LastModifiedDate` and `CreatedDate` columns. This will ensure that dates are formatted as Carbon objects, and also that they are properly formatted in the queries being sent to SalesForce.
+> * The `push()` method on a SoqlBatch no longer conflicts with older versions of Laravel, but it also should not be used for batching. Instead, use `query()`.
 
 # Getting Started
 
