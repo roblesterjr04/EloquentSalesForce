@@ -32,6 +32,7 @@ class SOQLGrammar extends Grammar
 		'limit',
 		'offset',
 		'lock',
+        'for',
 	];
 
     public function getModel()
@@ -328,6 +329,11 @@ class SOQLGrammar extends Grammar
     public function getDateFormat()
     {
         return 'Y-m-d\TH:i:s\Z';
+    }
+
+    public function compileLock($query, $value)
+    {
+        return 'FOR UPDATE';
     }
 
 }

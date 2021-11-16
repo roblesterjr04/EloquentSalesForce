@@ -20,6 +20,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Forrest;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
+use Lester\EloquentSalesForce\Exceptions\MalformedQueryException;
+use Lester\EloquentSalesForce\Exceptions\RestAPIException;
 
 class EloquentSalesForceTest extends TestCase
 {
@@ -30,6 +32,20 @@ class EloquentSalesForceTest extends TestCase
     }
 
     private $lead;
+
+    public function testForUpdate()
+    {
+        $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
+
+        $this->expectException(RestAPIException::class);
+        TestLead::where('Id', 'test')->get();
+
+        $this->expectException(MalformedQueryException::class);
+        TestLead::select('Id')->limit(1)->lockForUpdate()->get();
+
+
+
+    }
 
     public function testFacadeVersions()
     {

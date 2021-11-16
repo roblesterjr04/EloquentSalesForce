@@ -14,6 +14,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use DateTimeInterface;
 use Illuminate\Support\Carbon as SupportCarbon;
+use Omniphx\Forrest\Exceptions\SalesforceException;
+use Lester\EloquentSalesForce\Exceptions;
 
 class SOQLConnection extends Connection
 {
@@ -34,27 +36,36 @@ class SOQLConnection extends Connection
 	 */
 	public function select($query, $bindings = [], $useReadPdo = true)
 	{
-		return $this->run($query, $bindings, function($query, $bindings) use ($useReadPdo) {
+        try {
+		    return $this->run($query, $bindings, function($query, $bindings) use ($useReadPdo) {
 
-			$statement = $this->prepare($query, $bindings);
-            /** @scrutinizer ignore-call */
-			$result = $this->all ? SObjects::queryAll($statement) : SObjects::query($statement);
+			    $statement = $this->prepare($query, $bindings);
+                /** @scrutinizer ignore-call */
+                try {
+			        $result = $this->all ? SObjects::queryAll($statement) : SObjects::query($statement);
+                } catch (SalesforceException $e) {
+                    $response = json_decode($e->getMessage());
+                    $this->processExceptions($response);
+                }
 
-			SObjects::log('SOQL Query', [
-				'query' => $statement
-			]);
+			    SObjects::log('SOQL Query', [
+				    'query' => $statement
+			    ]);
 
-			$records = $result['records'];
+			    $records = $result['records'];
 
-			while (isset($result['nextRecordsUrl'])) {
-				$result = SObjects::next($result['nextRecordsUrl']);
-				if (isset($result['records'])) {
-					$records = \array_merge($records, $result['records']);
-				}
-			}
+			    while (isset($result['nextRecordsUrl'])) {
+				    $result = SObjects::next($result['nextRecordsUrl']);
+				    if (isset($result['records'])) {
+					    $records = \array_merge($records, $result['records']);
+				    }
+			    }
 
-			return $records;
-		});
+			    return $records;
+		    });
+        } catch (\Exception $e) {
+            throw $e->getPrevious();
+        }
 	}
 
 	/**
@@ -142,6 +153,24 @@ class SOQLConnection extends Connection
         }
 
         return $bindings;
+    }
+
+    private function processExceptions($exceptions)
+    {
+        foreach ($exceptions as $restException) {
+            switch ($restException->errorCode) {
+                case 'UNABLE_TO_LOCK_ROW':
+                    throw new Exceptions\UnableToLockRowException($restException->message);
+                    break;
+                case 'MALFORMED_QUERY':
+                    throw new Exceptions\MalformedQueryException($restException->message);
+                    break;
+                case 'REQUEST_LIMIT_EXCEEDED':
+                    throw new Exceptions\RequestLimitExceeded($restException->message);
+                default:
+                    throw new Exceptions\RestAPIException($restException->message);
+            }
+        }
     }
 
 }

@@ -14,6 +14,7 @@ use Lester\EloquentSalesForce\Model;
 
 class SOQLBuilder extends Builder
 {
+
     /**
 	 * {@inheritDoc}
 	 */
