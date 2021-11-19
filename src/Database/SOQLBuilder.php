@@ -203,6 +203,7 @@ class SOQLBuilder extends Builder
                     'ids' => implode(',',$chunk->pluck('Id')->values()->toArray()),
                 ]
             ]);
+            SObjects::queryHistory()->push(['delete' => $chunk->pluck('Id')]);
         }
 
     }

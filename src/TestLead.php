@@ -6,6 +6,19 @@ class TestLead extends Model
 {
 	protected $table = 'Lead';
 
+    public $columns = [
+        'Custom_Text_Field__c',
+        'Email',
+        'FirstName',
+        'LastName',
+        'Company',
+        'Custom_Date_Field__c',
+        'Id',
+        'CreatedDate',
+        'LastModifiedDate',
+        'IsDeleted',
+    ];
+
     protected $dates = [
         'Custom_Date_Field__c',
         'CreatedDate',

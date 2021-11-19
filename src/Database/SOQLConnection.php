@@ -43,6 +43,7 @@ class SOQLConnection extends Connection
                 /** @scrutinizer ignore-call */
                 try {
 			        $result = $this->all ? SObjects::queryAll($statement) : SObjects::query($statement);
+                    SObjects::queryHistory()->push($statement);
                 } catch (SalesforceException $e) {
                     $response = json_decode($e->getMessage());
                     if (is_array($response)) $this->processExceptions($response);

@@ -33,6 +33,21 @@ class EloquentSalesForceTest extends TestCase
 
     private $lead;
 
+    public function testStringType()
+    {
+        $lead = TestLead::create([
+            'FirstName' => 'Rob',
+            'LastName' => 'Lester',
+            'Company' => 'Test',
+            'Email' => 'test@test.com',
+            'Custom_Text_Field__c' => '009',
+        ]);
+
+        $lead->refresh();
+
+        $this->assertEquals('009', $lead->Custom_Text_Field__c);
+    }
+
     public function testForUpdate()
     {
         $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
@@ -474,6 +489,8 @@ class EloquentSalesForceTest extends TestCase
 	    $task->delete();
 
 	    $lead->delete();
+
+        //dd(SObjects::queryHistory());
 
     }
 

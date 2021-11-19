@@ -18,9 +18,12 @@ class SObjects
 
 	private $batch;
 
+    private $queryHistory;
+
 	public function __construct()
 	{
 		$this->batch = new SOQLBatch([]);
+        $this->queryHistory = collect();
 	}
 
 	public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
@@ -224,6 +227,11 @@ class SObjects
         return Cache::remember('sfdc_versions', $expire, function() {
             return Forrest::versions();
         });
+    }
+
+    public function queryHistory()
+    {
+        return $this->queryHistory;
     }
 
 }
