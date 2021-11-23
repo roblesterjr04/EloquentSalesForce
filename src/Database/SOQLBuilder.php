@@ -216,12 +216,14 @@ class SOQLBuilder extends Builder
     public function withTrashed()
     {
         $this->query->connection = new SOQLConnection(true);
+        $this->query->connection->setGrammar($this->query->grammar);
         return $this;
     }
 
     public function onlyTrashed()
     {
         $this->query->connection = new SOQLConnection(true);
+        $this->query->connection->setGrammar($this->query->grammar);
         return $this->where('IsDeleted', true);
     }
 
