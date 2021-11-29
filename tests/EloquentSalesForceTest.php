@@ -591,6 +591,7 @@ class EloquentSalesForceTest extends TestCase
     public function testSoftDeletes()
     {
         $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
+        $id = $lead->Id;
 
         $allLeads = TestLead::get();
         $this->assertCount(1, $allLeads);
@@ -607,8 +608,12 @@ class EloquentSalesForceTest extends TestCase
         $this->assertTrue($allLeads->count() > 0);
 
         $deleted = TestLead::withTrashed()->where('IsDeleted', TRUE)->first();
+        $idFind = TestLead::onlyTrashed()->where('Id', $id)->first();
+
+
 
         $this->assertTrue($deleted->trashed());
+        $this->assertEquals($idFind->Id, $id);
 
         $this->expectException(\Exception::class);
         $deleted->restore();

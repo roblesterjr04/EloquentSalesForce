@@ -76,7 +76,7 @@ class SOQLGrammar extends Grammar
         }
         // allow for "false" values to not be wrapped.
 		if (is_bool($where['value'])) {
-			return $this->whereBoolean($query, $where);
+            return $this->whereBoolean($query, $where);
 		}
 
         // allow for literal string values
@@ -236,12 +236,12 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function whereNotNull(Builder $query, $where)
 	{
-		return $this->wrap($where['column']) . ' <> null';
+		return $this->wrap($where['column']) . ' <> NULL';
 	}
 
 	protected function whereNull(Builder $query, $where)
 	{
-		return $this->wrap($where['column']) . ' = null';
+		return $this->wrap($where['column']) . ' = NULL';
 	}
 
 	/**
@@ -252,11 +252,7 @@ class SOQLGrammar extends Grammar
 	 */
 	protected function whereBoolean(Builder $query, $where)
 	{
-		if ($where['value'] === true) {
-			return $this->wrap($where['column']) . $where['operator'] . 'TRUE';
-		} else {
-			return $this->wrap($where['column']) . $where['operator'] . 'FALSE';
-		}
+		return $this->wrap($where['column']) . ' = ?';
 	}
 
     /**
