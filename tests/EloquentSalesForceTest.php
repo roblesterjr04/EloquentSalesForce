@@ -588,6 +588,15 @@ class EloquentSalesForceTest extends TestCase
 
     }
 
+    public function testQueryLiterals()
+    {
+        $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
+
+        $results = TestLead::onlyTrashed()->where('CreatedDate', 'THIS_WEEK')->get();
+
+        $this->assertTrue($results->count() > 0);
+    }
+
     public function testSoftDeletes()
     {
         $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
