@@ -82,6 +82,10 @@ class SOQLConnection extends Connection
 
 			$statement = $this->prepare($query, $bindings);
 
+            if ($this->all) {
+                return SObjects::queryAll($statement);
+            }
+
 			/** @scrutinizer ignore-call */
 			return SObjects::query($statement);
 		});
