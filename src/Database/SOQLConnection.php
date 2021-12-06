@@ -82,8 +82,7 @@ class SOQLConnection extends Connection
 
 			$statement = $this->prepare($query, $bindings);
 
-            if ( $this->all ) {
-                /** @scrutinizer ignore-call */
+            if ($this->all) {
                 return SObjects::queryAll($statement);
             }
 
@@ -135,7 +134,7 @@ class SOQLConnection extends Connection
 	{
         $bindings = $this->prepareBindings($bindings);
         $query = Str::replaceArray('?', $bindings, $query);
-		return $query;
+        return $query;
 	}
 
     /**
@@ -154,8 +153,8 @@ class SOQLConnection extends Connection
             // so we'll just ask the grammar for the format to get from the date.
             if ($value instanceof DateTimeInterface) {
                 $bindings[$key] = $value->format($grammar->getDateFormat());
-            } elseif (is_bool($value)) {
-                $bindings[$key] = (int) $value;
+            } else if (is_bool($value)) {
+                $bindings[$key] = $value ? 'TRUE' : 'FALSE';
             }
         }
 

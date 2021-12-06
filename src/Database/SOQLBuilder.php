@@ -224,7 +224,7 @@ class SOQLBuilder extends Builder
     {
         $this->query->connection = new SOQLConnection(true);
         $this->query->connection->setGrammar($this->query->grammar);
-        return $this->where('IsDeleted', true);
+        return $this->where('IsDeleted', TRUE);
     }
 
     public function getPicklistValues($field)
