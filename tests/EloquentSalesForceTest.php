@@ -17,6 +17,7 @@ use Illuminate\Support\Arr;
 use PHPUnit\Framework\Error\Notice;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Testing\WithFaker;
 use Forrest;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
@@ -25,6 +26,7 @@ use Lester\EloquentSalesForce\Exceptions\RestAPIException;
 
 class EloquentSalesForceTest extends TestCase
 {
+    use WithFaker;
 
     protected function getPackageProviders($app)
     {
@@ -612,6 +614,39 @@ class EloquentSalesForceTest extends TestCase
 
         $this->expectException(\Exception::class);
         $deleted->restore();
+
+    }
+
+    public function testCursorWithSoftDeletes()
+    {
+        $leadOne = TestLead::create(['FirstName' => $this->faker->firstName(), 'LastName' => $this->faker->lastName(), 'Company' => $this->faker->company(), 'Email' => $this->faker->email()]);
+
+        $leadTwo = TestLead::create(['FirstName' => $this->faker->firstName(), 'LastName' => $this->faker->lastName(), 'Company' => $this->faker->company(), 'Email' => $this->faker->email()]);
+
+
+        $leadsByGetCount = TestLead::get()->count();
+        $leadsByCursorCount = TestLead::cursor()->count();
+        $this->assertEquals($leadsByGetCount, $leadsByCursorCount);
+
+        $allLeadsByGetCount = TestLead::withTrashed()->get()->count();
+        $allLeadsByCursorCount = TestLead::withTrashed()->cursor()->count();
+        $this->assertEquals($allLeadsByGetCount, $allLeadsByCursorCount);
+
+        $onlyTrashedLeadsByGetCount = TestLead::onlyTrashed()->get()->count();
+        $onlyTrashedLeadsByCursorCount = TestLead::onlyTrashed()->cursor()->count();
+        $this->assertEquals($onlyTrashedLeadsByGetCount, $onlyTrashedLeadsByCursorCount);
+
+
+        $leadOne->delete();
+
+        $newLeadsByCursorCount = TestLead::cursor()->count();
+        $this->assertEquals($leadsByCursorCount-1, $newLeadsByCursorCount);
+
+        $newAllLeadsByCursorCount = TestLead::withTrashed()->cursor()->count();
+        $this->assertEquals($allLeadsByCursorCount, $newAllLeadsByCursorCount);
+
+        $newOnlyTrashedLeadsByCursorCount = TestLead::onlyTrashed()->cursor()->count();
+        $this->assertEquals($onlyTrashedLeadsByCursorCount+1, $newOnlyTrashedLeadsByCursorCount);
 
     }
 
