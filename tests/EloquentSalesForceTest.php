@@ -664,7 +664,7 @@ class EloquentSalesForceTest extends TestCase
 
     }
 
-    public function testReplicate()
+    /*public function testReplicate()
     {
         $lead = TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
 
@@ -674,7 +674,7 @@ class EloquentSalesForceTest extends TestCase
 
         $this->assertTrue($leadTwo->wasRecentlyCreated);
 
-    }
+    }*/
 
     public function setUp(): void
 	{
