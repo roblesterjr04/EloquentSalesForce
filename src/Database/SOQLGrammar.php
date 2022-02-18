@@ -2,14 +2,14 @@
 
 namespace Lester\EloquentSalesForce\Database;
 
+use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Grammars\Grammar;
+use Illuminate\Database\Query\JsonExpression;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Query\JsonExpression;
-use Illuminate\Database\Query\Grammars\Grammar;
+use Lester\EloquentSalesForce\Facades\SObjects;
 use Lester\EloquentSalesForce\ServiceProvider;
-use SObjects;
-use Carbon\Carbon;
 
 class SOQLGrammar extends Grammar
 {
