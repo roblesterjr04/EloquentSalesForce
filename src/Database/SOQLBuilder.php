@@ -10,7 +10,10 @@ use Lester\EloquentSalesForce\Facades\SObjects;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use PDO;
+use Closure;
 use Lester\EloquentSalesForce\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+
 
 class SOQLBuilder extends Builder
 {
@@ -30,6 +33,12 @@ class SOQLBuilder extends Builder
 
 		parent::__construct($query);
 	}
+
+    //TODO
+    /*public function exists()
+    {
+        dd('here');
+    }*/
 
     /**
      * Set a model instance for the model being queried.
