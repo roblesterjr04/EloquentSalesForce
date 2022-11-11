@@ -798,6 +798,11 @@ class EloquentSalesForceTest extends TestCase
 	{
 		if (getenv('GIT_TEST')) return parent::createApplication();
 
+        if (!file_exists(__DIR__.'/../.env')) {
+            $ex = new \Exception("Local testing requires a .env file!");
+            throw $ex;
+        }
+
         $env = file_get_contents(__DIR__.'/../.env');
 
         $lines = explode("\n", $env);
@@ -806,7 +811,8 @@ class EloquentSalesForceTest extends TestCase
             if ($line) putenv(trim($line));
         }
 
-		return parent::createApplication();
+        return parent::createApplication();
+
 	}
 
     protected function tearDown(): void
