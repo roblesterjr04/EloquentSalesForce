@@ -100,12 +100,18 @@ abstract class Model extends EloquentModel
 
 	public function delete()
 	{
+
+        if ($this->fireModelEvent('deleting') === false) {
+            return false;
+        }
+
 		try {
 			/** @scrutinizer ignore-call */
 			SObjects::sobjects($this->table . '/' . $this->Id, [
 				'method' => 'delete'
 			]);
 			SObjects::log("{$this->table} object {$this->Id} deleted.");
+            $this->fireModelEvent('deleted', false);
 			return true;
 		} catch (\Exception $e) {
 			SObjects::log("{$this->table} object {$this->Id} failed to delete.", (array)$e, 'warning');
