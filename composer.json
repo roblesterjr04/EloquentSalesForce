@@ -28,7 +28,7 @@
   "require-dev": {
     "laravel/dusk": "^6.19",
     "orchestra/testbench": ">=3.5",
-    "phpunit/phpunit": ">=6.0"
+    "phpunit/phpunit": ">=6.0 || >=10.0"
   },
   "autoload": {
     "psr-4": {
