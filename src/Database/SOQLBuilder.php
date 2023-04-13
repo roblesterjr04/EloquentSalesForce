@@ -179,7 +179,9 @@ class SOQLBuilder extends Builder
 
 			return $responseCollection;
 		} catch (\Exception $e) {
-			throw $e;
+			$response = json_decode($e->getMessage());
+            if (is_array($response)) SObjects::processExceptions($response);
+            else throw $e;
 		}
 	}
 

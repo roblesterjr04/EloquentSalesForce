@@ -6,6 +6,7 @@ namespace Lester\EloquentSalesForce;
 use Omniphx\Forrest\Exceptions\MissingTokenException;
 use Omniphx\Forrest\Exceptions\MissingResourceException;
 use Omniphx\Forrest\Exceptions\MissingVersionException;
+use Omniphx\Forrest\Exceptions\SalesforceException;
 use Lester\EloquentSalesForce\Database\SOQLBatch;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
@@ -54,14 +55,20 @@ class SObjects
 	 */
 	public function authenticate()
 	{
-		$storage = ucwords(config('eloquent_sf.forrest.storage.type'));
-		if (!$storage::has(config('eloquent_sf.forrest.storage.path') . 'token')) {
-			if (config('eloquent_sf.forrest.authentication') == 'WebServer') return Forrest::authenticate();
-            else Forrest::authenticate();
-        }
-		$tokens = (object) decrypt($storage::get(config('eloquent_sf.forrest.storage.path') . 'token'));
-		Session::put('eloquent_sf_instance_url', $tokens->instance_url);
-		return $tokens;
+        return $this->saleforceAttempt(function() {
+		    $storage = ucwords(config('eloquent_sf.forrest.storage.type'));
+		    if (!$storage::has(config('eloquent_sf.forrest.storage.path') . 'token')) {
+			    if (config('eloquent_sf.forrest.authentication') == 'WebServer') return Forrest::authenticate();
+                else {
+                    $this->saleforceAttempt(function() {
+                        Forrest::authenticate();
+                    });
+                }
+            }
+		    $tokens = (object) decrypt($storage::get(config('eloquent_sf.forrest.storage.path') . 'token'));
+		    Session::put('eloquent_sf_instance_url', $tokens->instance_url);
+		    return $tokens;
+        });
 	}
 
     public function authorize()
@@ -232,6 +239,36 @@ class SObjects
     public function queryHistory()
     {
         return $this->queryHistory;
+    }
+
+    public function processExceptions($exceptions)
+    {
+        foreach ($exceptions as $restException) {
+            switch ($restException->errorCode) {
+                case 'UNABLE_TO_LOCK_ROW':
+                    throw new Exceptions\UnableToLockRowException($restException->message);
+                    break;
+                case 'MALFORMED_QUERY':
+                    throw new Exceptions\MalformedQueryException($restException->message);
+                    break;
+                case 'REQUEST_LIMIT_EXCEEDED':
+                    throw new Exceptions\RequestLimitExceeded($restException->message);
+                    break;
+                default:
+                    throw new Exceptions\RestAPIException($restException->message);
+            }
+        }
+    }
+
+    public function saleforceAttempt(\Closure $callback)
+    {
+        try {
+            return $callback();
+        } catch (\Exception $e) {
+            $response = json_decode($e->getMessage());
+            if (is_array($response)) $this->processExceptions($response);
+            else throw $e;
+        }
     }
 
 }

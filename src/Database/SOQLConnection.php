@@ -44,9 +44,9 @@ class SOQLConnection extends Connection
                 try {
 			        $result = $this->all ? SObjects::queryAll($statement) : SObjects::query($statement);
                     SObjects::queryHistory()->push($statement);
-                } catch (SalesforceException $e) {
+                } catch (\Exception $e) {
                     $response = json_decode($e->getMessage());
-                    if (is_array($response)) $this->processExceptions($response);
+                    if (is_array($response)) SObjects::processExceptions($response);
                     else throw $e;
                 }
 
@@ -159,24 +159,6 @@ class SOQLConnection extends Connection
         }
 
         return $bindings;
-    }
-
-    private function processExceptions($exceptions)
-    {
-        foreach ($exceptions as $restException) {
-            switch ($restException->errorCode) {
-                case 'UNABLE_TO_LOCK_ROW':
-                    throw new Exceptions\UnableToLockRowException($restException->message);
-                    break;
-                case 'MALFORMED_QUERY':
-                    throw new Exceptions\MalformedQueryException($restException->message);
-                    break;
-                case 'REQUEST_LIMIT_EXCEEDED':
-                    throw new Exceptions\RequestLimitExceeded($restException->message);
-                default:
-                    throw new Exceptions\RestAPIException($restException->message);
-            }
-        }
     }
 
 }
