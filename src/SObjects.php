@@ -211,7 +211,10 @@ class SObjects
 	public function log($message, $details = [], $level = 'info')
 	{
 		$logs = config('eloquent_sf.logging', config('logging.default'));
-
+        if ($logs === false) {
+            return;
+        }
+        
 		Log::channel($logs)->$level($message, $details);
 	}
 
