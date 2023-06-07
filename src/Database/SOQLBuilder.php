@@ -56,23 +56,30 @@ class SOQLBuilder extends Builder
         return $this;
     }
 
-	public function batch($tag = null)
+	/*public function batch($tag = null)
 	{
 		return SObjects::getBatch()->batch($this, $tag);
-	}
+	}*/
+
+    public function batch($tag = null, Closure $fn = null)
+    {
+        if ($fn !== null) $fn($this, $tag);
+        SObjects::getBatch()->batch($this, $tag);
+        return $this;
+    }
 
 	public function toSql()
 	{
         $columns = implode(', ', $this->describe());
         $query = str_replace('*', $columns, parent::toSql());
 		$query = str_replace('`', '', $query);
-        
+
         $bindings = array_map(
             fn ($value) => Str::replace("'", "\'", $value),
             $this->getBindings()
         );
         $prepared = Str::replaceArray('?', $bindings, $query);
-        
+
 		return $prepared;
 	}
 

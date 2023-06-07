@@ -402,11 +402,4 @@ abstract class Model extends EloquentModel
         return $this->shortDates;
     }
 
-    public function batch(Closure $function)
-    {
-        $function($this);
-
-        return $this;
-    }
-
 }
