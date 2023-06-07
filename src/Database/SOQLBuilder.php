@@ -66,7 +66,13 @@ class SOQLBuilder extends Builder
         $columns = implode(', ', $this->describe());
         $query = str_replace('*', $columns, parent::toSql());
 		$query = str_replace('`', '', $query);
-        $prepared = Str::replaceArray('?', $this->getBindings(), $query);
+        
+        $bindings = array_map(
+            fn ($value) => Str::replace("'", "\'", $value),
+            $this->getBindings()
+        );
+        $prepared = Str::replaceArray('?', $bindings, $query);
+        
 		return $prepared;
 	}
 
