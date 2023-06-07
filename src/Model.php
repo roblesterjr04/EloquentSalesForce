@@ -12,6 +12,7 @@ use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
 use Lester\EloquentSalesForce\Database\SOQLHasOne as HasOne;
 use Lester\EloquentSalesForce\Facades\SObjects;
+use Lester\EloquentSalesForce\Database\SOQLBatch;
 
 abstract class Model extends EloquentModel
 {
@@ -399,6 +400,13 @@ abstract class Model extends EloquentModel
     public function getShortDates()
     {
         return $this->shortDates;
+    }
+
+    public function batch(Closure $function)
+    {
+        $function($this);
+
+        return $this;
     }
 
 }

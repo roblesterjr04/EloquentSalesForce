@@ -316,6 +316,13 @@ class EloquentSalesForceTest extends TestCase
         $this->assertCount(0, TestLead::all());
     }
 
+    /*public function testNewBatchClosures()
+    {
+        $batch = TestLead::batch(function($query) {
+            $query->where('Company', 'Test');
+        });
+    }*/
+
     /*
 	 * @covers Lester\EloquentSalesForce\Model
 	 * @covers Lester\EloquentSalesForce\Model::save
