@@ -28,11 +28,6 @@ class SalesForce
         $this->queryHistory = collect();
 	}
 
-    public function fake()
-    {
-        $this->fake = true;
-    }
-
 	public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
         $chunkSize = config('eloquent_sf.batch.insert.size', 200) <= 200 ? config('eloquent_sf.batch.insert.size', 200) : 200;
