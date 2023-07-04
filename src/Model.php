@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
 use Lester\EloquentSalesForce\Database\SOQLHasOne as HasOne;
-use Lester\EloquentSalesForce\Facades\SObjects;
+use Lester\EloquentSalesForce\Facades\SalesForce;
 
 abstract class Model extends EloquentModel
 {
@@ -107,14 +107,14 @@ abstract class Model extends EloquentModel
 
 		try {
 			/** @scrutinizer ignore-call */
-			SObjects::sobjects($this->table . '/' . $this->Id, [
+			SalesForce::sobjects($this->table . '/' . $this->Id, [
 				'method' => 'delete'
 			]);
-			SObjects::log("{$this->table} object {$this->Id} deleted.");
+			SalesForce::log("{$this->table} object {$this->Id} deleted.");
             $this->fireModelEvent('deleted', false);
 			return true;
 		} catch (\Exception $e) {
-			SObjects::log("{$this->table} object {$this->Id} failed to delete.", (array)$e, 'warning');
+			SalesForce::log("{$this->table} object {$this->Id} failed to delete.", (array)$e, 'warning');
 			return false;
 		}
 	}
@@ -154,15 +154,15 @@ abstract class Model extends EloquentModel
             return $this;
         }
 
-        SObjects::authenticate();
+        SalesForce::authenticate();
         $object = $this->sfObject();
 
-        $result = SObjects::sobjects($object, [
+        $result = SalesForce::sobjects($object, [
             'method' => 'post',
             'body' => $attributes
         ]);
 
-        SObjects::queryHistory()->push(['insert' => $attributes]);
+        SalesForce::queryHistory()->push(['insert' => $attributes]);
 
         if (isset($result['success'])) {
             if (isset($result['id'])) {
@@ -214,15 +214,15 @@ abstract class Model extends EloquentModel
 
         if ($dirty->count() > 0) {
 
-            SObjects::authenticate();
+            SalesForce::authenticate();
             $object = $this->sfObject();
 
-            $result = SObjects::sobjects($object, [
+            $result = SalesForce::sobjects($object, [
                 'method' => 'patch',
                 'body' => $dirty->toArray(),
             ]);
 
-            SObjects::queryHistory()->push(['update' => $dirty->toArray()]);
+            SalesForce::queryHistory()->push(['update' => $dirty->toArray()]);
 
             $this->syncChanges();
 
@@ -252,7 +252,7 @@ abstract class Model extends EloquentModel
 	public function newEloquentBuilder($query)
 	{
 		/** @scrutinizer ignore-call */
-		SObjects::authenticate();
+		SalesForce::authenticate();
 		return new Builder($query);
 	}
 
@@ -367,7 +367,7 @@ abstract class Model extends EloquentModel
 
 	public function getWebLinkAttribute()
 	{
-		$instance = SObjects::instanceUrl();
+		$instance = SalesForce::instanceUrl();
 		return $instance ? rtrim($instance, '/') . Str::start($this->Id, '/') : null;
 	}
 

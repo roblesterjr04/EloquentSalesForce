@@ -46,7 +46,7 @@ abstract class SOQLHasOneOrMany extends Relation
 		$this->localKey = $localKey;
 		$this->foreignKey = $foreignKey;
 
-		SObjects::authenticate(); // Solve intermittent "No Resources Available" Error --- Experimental.
+		SalesForce::authenticate(); // Solve intermittent "No Resources Available" Error --- Experimental.
 
 		parent::__construct($query, $parent);
 	}

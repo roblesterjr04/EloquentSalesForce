@@ -80,13 +80,13 @@ class SOQLBatch extends Collection
         if ($this->isEmpty()) return $this;
         $chunkSize = config('eloquent_sf.batch.select.size', 25);
         if ($chunkSize > 25) {
-            \SObjects::log('Salesforce will only allow select batchs of 25 queries.', [], 'warn');
+            \SalesForce::log('Salesforce will only allow select batchs of 25 queries.', [], 'warn');
         }
 
-        $version = config('eloquent_sf.forrest.version') ?: 'v' . collect(\SObjects::versions())->last()['version'];
+        $version = config('eloquent_sf.forrest.version') ?: 'v' . collect(\SalesForce::versions())->last()['version'];
 
         foreach ($this->chunk($chunkSize) as $chunk) {
-            $results = \SObjects::composite('batch', [
+            $results = \SalesForce::composite('batch', [
                 'method' => 'post',
                 'body' => [
                     'batchRequests' => tap($chunk->map(function($query) use ($version) {
@@ -95,7 +95,7 @@ class SOQLBatch extends Collection
                             'url' => $version . '/query?q=' . urlencode($query->builder->toSql()),
                         ];
                     })->values()->toArray(), function($payload) {
-    					\SObjects::log('SOQL Batch Query', $payload);
+    					\SalesForce::log('SOQL Batch Query', $payload);
     				})
                 ]
             ]);

@@ -67,7 +67,7 @@ class EloquentSalesForceTest extends TestCase
     public function testFacadeVersions()
     {
         $this->assertFalse(cache()->has('sfdc_versions'));
-        $versions = SObjects::versions();
+        $versions = SalesForce::versions();
         $this->assertTrue(cache()->has('sfdc_versions'));
     }
 
@@ -272,7 +272,7 @@ class EloquentSalesForceTest extends TestCase
 
     /**
      * @covers Lester\EloquentSalesForce\Database\SOQLBuilder::insert
-     * @covers Lester\EloquentSalesForce\SObjects::update
+     * @covers Lester\EloquentSalesForce\SalesForce::update
      */
     public function testObjectMass()
     {
@@ -293,7 +293,7 @@ class EloquentSalesForceTest extends TestCase
             return $lead;
         });
 
-        SObjects::update($results);
+        SalesForce::update($results);
 
         $lead = TestLead::find($results->first()->Id);
 
@@ -495,7 +495,7 @@ class EloquentSalesForceTest extends TestCase
 
 	    $lead->delete();
 
-        //dd(SObjects::queryHistory());
+        //dd(SalesForce::queryHistory());
 
     }
 
@@ -548,7 +548,7 @@ class EloquentSalesForceTest extends TestCase
 
     /*
      * @covers Lester\EloquentSalesForce\Model::getPicklistValues
-     * @covers Lester\EloquentSalesForce\SObjects::getPicklistValues
+     * @covers Lester\EloquentSalesForce\SalesForce::getPicklistValues
      */
     public function testGetPicklistValues()
     {
@@ -579,27 +579,27 @@ class EloquentSalesForceTest extends TestCase
     }
 
     /**
-     * @covers Lester\EloquentSalesForce\SObjects::object
-     * @covers Lester\EloquentSalesForce\SObjects::convert
-     * @covers Lester\EloquentSalesForce\SObjects::is_uppercase
-     * @covers Lester\EloquentSalesForce\SObjects::describe
+     * @covers Lester\EloquentSalesForce\SalesForce::object
+     * @covers Lester\EloquentSalesForce\SalesForce::convert
+     * @covers Lester\EloquentSalesForce\SalesForce::is_uppercase
+     * @covers Lester\EloquentSalesForce\SalesForce::describe
      */
     public function testFacadeFuncs()
     {
-        //SObjects::authenticate();
+        //SalesForce::authenticate();
 
         TestLead::create(['FirstName' => 'Rob', 'LastName' => 'Lester', 'Company' => 'Test', 'Email' => 'test@test.com']);
 
         $query = \Forrest::query('select Id from Lead limit 1');
 
-        $object = SObjects::object($query['records'][0]);
+        $object = SalesForce::object($query['records'][0]);
         $this->assertInstanceOf('Lester\EloquentSalesForce\SalesForceObject', $object);
 
-        $testLeadFields = SObjects::describe('Product2');
+        $testLeadFields = SalesForce::describe('Product2');
 
         $this->assertNotNull($testLeadFields);
 
-        $convertedId = SObjects::convert('5003000000D8cuI');
+        $convertedId = SalesForce::convert('5003000000D8cuI');
         $this->assertEquals('5003000000D8cuIAAR', $convertedId);
 
         TestLead::truncate();

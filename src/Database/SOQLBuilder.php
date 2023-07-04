@@ -58,7 +58,7 @@ class SOQLBuilder extends Builder
 
 	public function batch($tag = null)
 	{
-		return SObjects::getBatch()->batch($this, $tag);
+		return SalesForce::getBatch()->batch($this, $tag);
 	}
 
 	public function toSql()
@@ -118,7 +118,7 @@ class SOQLBuilder extends Builder
 		$table = $this->model->getTable();
 
 		/** @scrutinizer ignore-call */
-		//$total = SObjects::query("SELECT COUNT() FROM $table")['totalSize'];
+		//$total = SalesForce::query("SELECT COUNT() FROM $table")['totalSize'];
 		$builder = $this->getQuery()->cloneWithout(
 			['columns', 'orders', 'limit', 'offset']
 		);
@@ -167,8 +167,8 @@ class SOQLBuilder extends Builder
 					]
 				];
 
-				$response = SObjects::composite('tree/' . $table, $payload);
-				SObjects::log("SOQL Bulk Insert", $payload);
+				$response = SalesForce::composite('tree/' . $table, $payload);
+				SalesForce::log("SOQL Bulk Insert", $payload);
 
 				$response = collect($response['results']);
 				$model = $this->model;
@@ -186,7 +186,7 @@ class SOQLBuilder extends Builder
 			return $responseCollection;
 		} catch (\Exception $e) {
 			$response = json_decode($e->getMessage());
-            if (is_array($response)) SObjects::processExceptions($response);
+            if (is_array($response)) SalesForce::processExceptions($response);
             else throw $e;
 		}
 	}
@@ -218,14 +218,14 @@ class SOQLBuilder extends Builder
     {
         $models = collect($this->getModels());
         foreach ($models->chunk(200) as $chunk) {
-            SObjects::composite('sobjects', [
+            SalesForce::composite('sobjects', [
                 'method' => 'delete',
                 'query' => [
                     'allOrNone' => $allOrNone,
                     'ids' => implode(',',$chunk->pluck('Id')->values()->toArray()),
                 ]
             ]);
-            SObjects::queryHistory()->push(['delete' => $chunk->pluck('Id')]);
+            SalesForce::queryHistory()->push(['delete' => $chunk->pluck('Id')]);
         }
 
     }
@@ -252,7 +252,7 @@ class SOQLBuilder extends Builder
     public function getPicklistValues($field)
     {
         $table = $this->model->getTable();
-        return SObjects::getPicklistValues($table, $field);
+        return SalesForce::getPicklistValues($table, $field);
     }
 
     public function from($table)

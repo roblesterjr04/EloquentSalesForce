@@ -8,7 +8,7 @@ use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Query\JsonExpression;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Lester\EloquentSalesForce\Facades\SObjects;
+use Lester\EloquentSalesForce\Facades\SalesForce;
 use Lester\EloquentSalesForce\ServiceProvider;
 
 class SOQLGrammar extends Grammar
@@ -130,7 +130,7 @@ class SOQLGrammar extends Grammar
         if (is_int($value)) {
             return '?';
         }
-        if (SObjects::isSalesForceId($value) || is_string($value)) {
+        if (SalesForce::isSalesForceId($value) || is_string($value)) {
             return "'?'";
         }
 

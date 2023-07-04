@@ -371,7 +371,7 @@ $statusValues = $lead->getPicklistValues('Status');
 ```php
 // Provide a salesforce object name, IE Lead
 
-$statusValue = SObjects::getPicklistValues('Lead', 'Status');
+$statusValue = SalesForce::getPicklistValues('Lead', 'Status');
 ```
 
 ## Local Sync (NEW!)
@@ -472,14 +472,14 @@ class TouchPoint extends Model
 
 SalesForce has API limits. We know this. It sucks. For us at least. So now in the package, you can batch several queries and make a single API call to execute them, and get the results back in a handy collection object.
 
-At the end of most queries we commonly call `get()` to retrieve the results of our assembled query. We can queue up a batch call by calling `batch()` instead of `get()`. After queuing up the desired queries, you can call `SObjects::runBatch()` and it will return the results of the batched queries in an array.
+At the end of most queries we commonly call `get()` to retrieve the results of our assembled query. We can queue up a batch call by calling `batch()` instead of `get()`. After queuing up the desired queries, you can call `SalesForce::runBatch()` and it will return the results of the batched queries in an array.
 
 ```php
 Lead::select(['Id', 'FirstName', 'Company'])->limit(100)->batch(); // instead of get.
 
 Contact::select(['Id', 'FirstName', 'Phone'])->limit(50)->batch();
 
-$batch = SObjects::runBatch();
+$batch = SalesForce::runBatch();
 
 $leads = $batch->results('Lead_0'); // get() also works here...
 $contacts = $batch->results('Contact_1'); // ... and here.
@@ -492,7 +492,7 @@ Lead::select(['Id', 'FirstName', 'Company'])->limit(100)->batch(); // Will be ta
 
 Lead::select(['Id', 'FirstName', 'Company'])->limit(30)->where('Company', 'Test')->batch('test_company');
 
-$batch = SObjects::runBatch();
+$batch = SalesForce::runBatch();
 
 $firstCentLeads = $batch->get('Lead_0');
 $testCompanyLeads = $batch->get('test_company');
@@ -501,7 +501,7 @@ $testCompanyLeads = $batch->get('test_company');
 
 ## Batch Collection Object
 
-The batch collection object can be used independently of the facade if you'd like to create a batch over time and then execute later. When using the `batch()` method on the query builder, the assembled query builder is added to a collection on the facade. You can either run that batch collection by using the method `SObjects::runBatch()` or you can access the collection by returning `SObjects::getBatch()`. If you have the object stored in a variable, you can run it with `->run()` or you can add more query builders to it with `->batch`
+The batch collection object can be used independently of the facade if you'd like to create a batch over time and then execute later. When using the `batch()` method on the query builder, the assembled query builder is added to a collection on the facade. You can either run that batch collection by using the method `SalesForce::runBatch()` or you can access the collection by returning `SalesForce::getBatch()`. If you have the object stored in a variable, you can run it with `->run()` or you can add more query builders to it with `->batch`
 
 ```php
 $batchCollection = new SOQLBatch();
@@ -535,13 +535,13 @@ $accounts = $accounts->map(function($account) {
 	return $account;
 });
 
-SObjects::update($accounts); // Sends all these objects to SF with updates.
+SalesForce::update($accounts); // Sends all these objects to SF with updates.
 ```
 
 SalesForce will execute each update individually and will not fail the batch if any individual update fails. If you want success to be dependent on all updates succeeding (all or nothing), then you can pass `true` as the second parameter. If this is set, the batch of updates must all succeed, or none will.
 
 ```php
-SObjects::update($accounts, true); // All or none.
+SalesForce::update($accounts, true); // All or none.
 ```
 
 ## Bulk Delete
@@ -567,10 +567,10 @@ The `authenticate()` method in the facade will return the token information that
 Sometimes you want to grab a record from SalesForce casually without having to pre-generate a model for it. Now you can do that easily with the `object` method on the facade. Example:
 
 ```php
-$queryResult = SObjects::query("Select Id, FirstName from Lead where Email like 'test@%'");
+$queryResult = SalesForce::query("Select Id, FirstName from Lead where Email like 'test@%'");
 
 $leads = collect($queryResult['records'])->map(function($record) {
-	return SObjects::object($record);
+	return SalesForce::object($record);
 });
 
 ```
@@ -589,7 +589,7 @@ $leads = SalesForceObject::select('Email', 'Id')->from('Lead')->get();
 You can get the possible pick list values from a dropdown by using this method on the facade.
 
 ```php
-$listValues = SObjects::getPicklistValues('Lead', 'Status');
+$listValues = SalesForce::getPicklistValues('Lead', 'Status');
 ```
 
 ## Logging

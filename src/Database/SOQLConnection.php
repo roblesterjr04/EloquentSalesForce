@@ -8,7 +8,7 @@ use Illuminate\Database\Query\Processors\MySqlProcessor;
 use Illuminate\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
 use Omniphx\Forrest\Exceptions\MissingResourceException;
-use Lester\EloquentSalesForce\Facades\SObjects;
+use Lester\EloquentSalesForce\Facades\SalesForce;
 use Closure;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -42,22 +42,22 @@ class SOQLConnection extends Connection
 			    $statement = $this->prepare($query, $bindings);
                 /** @scrutinizer ignore-call */
                 try {
-			        $result = $this->all ? SObjects::queryAll($statement) : SObjects::query($statement);
-                    SObjects::queryHistory()->push($statement);
+			        $result = $this->all ? SalesForce::queryAll($statement) : SalesForce::query($statement);
+                    SalesForce::queryHistory()->push($statement);
                 } catch (\Exception $e) {
                     $response = json_decode($e->getMessage());
-                    if (is_array($response)) SObjects::processExceptions($response);
+                    if (is_array($response)) SalesForce::processExceptions($response);
                     else throw $e;
                 }
 
-			    SObjects::log('SOQL Query', [
+			    SalesForce::log('SOQL Query', [
 				    'query' => $statement
 			    ]);
 
 			    $records = $result['records'];
 
 			    while (isset($result['nextRecordsUrl'])) {
-				    $result = SObjects::next($result['nextRecordsUrl']);
+				    $result = SalesForce::next($result['nextRecordsUrl']);
 				    if (isset($result['records'])) {
 					    $records = \array_merge($records, $result['records']);
 				    }
@@ -83,11 +83,11 @@ class SOQLConnection extends Connection
 			$statement = $this->prepare($query, $bindings);
 
             if ($this->all) {
-                return SObjects::queryAll($statement);
+                return SalesForce::queryAll($statement);
             }
 
 			/** @scrutinizer ignore-call */
-			return SObjects::query($statement);
+			return SalesForce::query($statement);
 		});
 
 		while (true) {
@@ -97,7 +97,7 @@ class SOQLConnection extends Connection
 			if (!isset($result['nextRecordsUrl'])) {
 				break;
 			}
-			$result = SObjects::next($result['nextRecordsUrl']);
+			$result = SalesForce::next($result['nextRecordsUrl']);
 		}
 	}
 

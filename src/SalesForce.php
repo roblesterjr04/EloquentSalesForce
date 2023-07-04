@@ -14,18 +14,24 @@ use Cache;
 use Session;
 use Log;
 
-class SObjects
+class SalesForce
 {
 
 	private $batch;
 
     private $queryHistory;
+    private $fake = false;
 
 	public function __construct()
 	{
 		$this->batch = new SOQLBatch([]);
         $this->queryHistory = collect();
 	}
+
+    public function fake()
+    {
+        $this->fake = true;
+    }
 
 	public function update(\Illuminate\Support\Collection $collection, $allOrNone = false)
 	{
@@ -214,7 +220,7 @@ class SObjects
         if ($logs === false) {
             return;
         }
-        
+
 		Log::channel($logs)->$level($message, $details);
 	}
 

@@ -47,13 +47,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			'Omniphx\Forrest\Providers\Laravel\ForrestServiceProvider'
 		);
 
-		$this->app->bind('sobjects', function() {
+		/*$this->app->bind('sobjects', function() {
 			return new SObjects();
-		});
+		});*/
+
+        $this->app->bind('salesforce', function() {
+            return new SalesForce();
+        });
 
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 		$loader->alias('Forrest', 'Omniphx\Forrest\Providers\Laravel\Facades\Forrest');
-		$loader->alias('SObjects', 'Lester\EloquentSalesForce\Facades\SObjects');
+		//$loader->alias('SObjects', 'Lester\EloquentSalesForce\Facades\SObjects');
+        $loader->alias('SalesForce', 'Lester\EloquentSalesForce\Facades\SalesForce');
 	}
 
 	/**

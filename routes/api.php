@@ -25,12 +25,12 @@ Route::post('/api/syncObject/{sfid}', function (Request $request, $sfid) {
 
 Route::get('/login/salesforce', function(Request $request)
 {
-    return SObjects::authenticate();
+    return SalesForce::authenticate();
 })->middleware('web');
 
 Route::get('/login/salesforce/callback', function(Request $request)
 {
-    SObjects::callback();
+    SalesForce::callback();
 
     return redirect(config('eloquent_sf.redirectTo', '/'));
 })->middleware('web');
