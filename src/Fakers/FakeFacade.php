@@ -4,6 +4,7 @@ namespace Lester\EloquentSalesForce\Fakers;
 
 use Lester\EloquentSalesForce\SalesForce;
 use Lester\EloquentSalesForce\SalesForceObject;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 class FakeFacade
@@ -24,20 +25,26 @@ class FakeFacade
 
     public function sobjects($object, $arguments = null)
     {
+
+        $id = Str::contains($object, '/') ? Str::after($object, '/') : Str::random(18);
+        $response = [
+            'success' => true,
+            'id' => $id,
+        ];
+
         $method = $arguments['method'] ?? '';
-        $this->commands[$method . $object] = $arguments;
 
         if ($arguments === null) {
+            $this->commands[$method . $object] = $arguments;
             return $this->fakeFields();
         }
 
-        $arguments['body']['CreatedDate'] = now()->subDay();
-        $arguments['body']['LastModifiedDate'] = now()->subHours(12);
+        $arguments['body']['Id'] = $id;
+        //$arguments['body']['CreatedDate'] = now()->subDay();
+        //$arguments['body']['LastModifiedDate'] = now()->subHours(12);
+        $this->commands[$method . $object] = $arguments;
 
-        return [
-            'success' => true,
-            'id' => 'NewID',
-        ];
+        return $response;
     }
 
     public function assertRequestSent($method, $arguments)
@@ -101,7 +108,7 @@ class FakeFacade
     private function fakeRecord()
     {
         return [
-            'Id' => 'SalesForceIdString',
+            'Id' => Str::random(18),
             'Email' => fake()->safeEmail(),
             'Phone' => fake()->e164PhoneNumber(),
             'Company' => fake()->company(),
@@ -130,7 +137,6 @@ class FakeFacade
     {
         return [
             'records' => [
-                $this->fakeRecord,
                 $this->fakeRecord()
             ]
         ];
@@ -152,25 +158,36 @@ class FakeFacade
         $method = $requestParameters['method'];
         $body = $requestParameters['body'];
 
-        unset($body['Id']);
-
         PHPUnit::assertTrue($method == 'post' && $body == $arguments);
 
     }
 
     public function assertModelUpdated($object, $arguments = [])
     {
-        if (empty($this->commands['patch' . $object])) {
+        $id = $arguments['Id'] ?? '';
+        if (empty($this->commands['patch' . "$object/$id"])) {
             PHPUnit::assertTrue(false);
             return false;
         }
 
-        dd($this->commands);
-
-        $requestParameters = $this->commands['patch' . $object];
+        $requestParameters = $this->commands['patch' . "$object/$id"];
         $method = $requestParameters['method'];
         $body = $requestParameters['body'];
 
-        PHPUnit::assertTrue($method == 'patch' && $body == $arguments);
+        PHPUnit::assertTrue($method == 'patch' && $body['Id'] == $arguments['Id']);
+    }
+
+    public function assertModelDeleted($object, $arguments)
+    {
+        $id = $arguments['Id'] ?? '';
+        if (empty($this->commands['delete' . "$object/$id"])) {
+            PHPUnit::assertTrue(false);
+            return false;
+        }
+
+        $requestParameters = $this->commands['delete' . "$object/$id"];
+        $method = $requestParameters['method'];
+
+        PHPUnit::assertTrue($method == 'delete');
     }
 }

@@ -10,12 +10,16 @@ trait CreatesApplication
     {
         if (getenv('GIT_TEST')) return parent::createApplication();
 
-        if (!file_exists(__DIR__.'/../.env')) {
-            $ex = new \Exception("Local testing requires a .env file!");
-            throw $ex;
+        if (file_exists(__DIR__.'/../.env')) {
+            $env = file_get_contents(__DIR__.'/../.env');
+        } else {
+            $env = "";
+
+            //$ex = new \Exception("Local testing requires a .env file!");
+            //throw $ex;
         }
 
-        $env = file_get_contents(__DIR__.'/../.env');
+
 
         $lines = explode("\n", $env);
 

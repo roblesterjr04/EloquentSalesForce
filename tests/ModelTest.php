@@ -52,9 +52,23 @@ class ModelTest extends TestCase
         ]);
 
         $lead->Phone = null;
-
         $lead->save();
 
         SalesForce::assertModelUpdated('Lead', $lead->toArray());
+    }
+
+    public function test_that_model_can_be_deleted()
+    {
+        SalesForce::fake();
+
+        $lead = TestLead::create([
+            'Email' => fake()->safeEmail(),
+            'Phone' => fake()->e164PhoneNumber(),
+            'Company' => 'Test Company',
+        ]);
+
+        $lead->delete();
+
+        SalesForce::assertModelDeleted('Lead', $lead->toArray());
     }
 }
