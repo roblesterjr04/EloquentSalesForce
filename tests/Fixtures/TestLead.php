@@ -2,10 +2,13 @@
 
 namespace Lester\EloquentSalesForce\Tests\Fixtures;
 
-use Lester\EloquentSalesForce\Model;
+use Illuminate\Database\Eloquent\Model;
+use Lester\EloquentSalesForce\Traits\InteractsWithSalesforce;
 
 class TestLead extends Model
 {
+    use InteractsWithSalesforce;
+
 	protected $table = 'Lead';
 
     public $columns = [

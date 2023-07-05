@@ -3,6 +3,8 @@
 namespace Lester\EloquentSalesForce\Tests;
 
 use Lester\EloquentSalesForce\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 trait CreatesApplication
 {
@@ -34,6 +36,20 @@ trait CreatesApplication
     protected function getPackageProviders($app)
     {
         return [ServiceProvider::class];
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Schema::create('test_models', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('email')->unique();
+            $table->string('salesforce')->nullable();
+            $table->string('name');
+            $table->string('company');
+            $table->timestamps();
+        });
     }
 
 }
