@@ -4,6 +4,10 @@ namespace Lester\EloquentSalesForce;
 
 class SalesForceObject extends Model
 {
+    public $columns = [
+        'Id',
+    ];
+
     public function __construct(Array $attributes = [])
     {
         if (isset($attributes['Id'])) {

@@ -14,17 +14,30 @@ class FakeFacade
     protected $commands = [];
     protected $history;
 
+    private $fakeRecord;
+
     public function __construct(SalesForce $instance)
     {
         $this->instance = $instance;
         $this->history = collect([]);
     }
 
-    public function sobjects($object, $arguments = [])
+    public function sobjects($object, $arguments = null)
     {
-        $this->commands[$object] = $arguments;
+        $method = $arguments['method'] ?? '';
+        $this->commands[$method . $object] = $arguments;
 
-        return new SalesForceObject();
+        if ($arguments === null) {
+            return $this->fakeFields();
+        }
+
+        $arguments['body']['CreatedDate'] = now()->subDay();
+        $arguments['body']['LastModifiedDate'] = now()->subHours(12);
+
+        return [
+            'success' => true,
+            'id' => 'NewID',
+        ];
     }
 
     public function assertRequestSent($method, $arguments)
@@ -85,11 +98,40 @@ class FakeFacade
         return $this->query();
     }
 
+    private function fakeRecord()
+    {
+        return [
+            'Id' => 'SalesForceIdString',
+            'Email' => fake()->safeEmail(),
+            'Phone' => fake()->e164PhoneNumber(),
+            'Company' => fake()->company(),
+            'CreatedDate' => fake()->dateTime(),
+            'LastModifiedDate' => fake()->dateTime(),
+        ];
+    }
+
+    private function fakeFields()
+    {
+        return [
+            'Custom_Text_Field__c',
+            'Email',
+            'FirstName',
+            'LastName',
+            'Company',
+            'Custom_Date_Field__c',
+            'Id',
+            'CreatedDate',
+            'LastModifiedDate',
+            'IsDeleted',
+        ];
+    }
+
     public function query()
     {
         return [
             'records' => [
-
+                $this->fakeRecord,
+                $this->fakeRecord()
             ]
         ];
     }
@@ -101,16 +143,34 @@ class FakeFacade
 
     public function assertModelCreated($object, $arguments = [])
     {
-        if (empty($this->commands[$object])) {
+        if (empty($this->commands['post' . $object])) {
             PHPUnit::assertTrue(false);
             return false;
         }
 
-        $requestParameters = $this->commands[$object];
+        $requestParameters = $this->commands['post' . $object];
         $method = $requestParameters['method'];
         $body = $requestParameters['body'];
 
-        PHPUnit::assertTrue($method == 'post' && $body->toArray() == $arguments);
+        unset($body['Id']);
 
+        PHPUnit::assertTrue($method == 'post' && $body == $arguments);
+
+    }
+
+    public function assertModelUpdated($object, $arguments = [])
+    {
+        if (empty($this->commands['patch' . $object])) {
+            PHPUnit::assertTrue(false);
+            return false;
+        }
+
+        dd($this->commands);
+
+        $requestParameters = $this->commands['patch' . $object];
+        $method = $requestParameters['method'];
+        $body = $requestParameters['body'];
+
+        PHPUnit::assertTrue($method == 'patch' && $body == $arguments);
     }
 }

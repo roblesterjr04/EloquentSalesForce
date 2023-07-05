@@ -1,6 +1,8 @@
 <?php
 
-namespace Lester\EloquentSalesForce;
+namespace Lester\EloquentSalesForce\Tests\Fixtures;
+
+use Lester\EloquentSalesForce\Model;
 
 class TestLead extends Model
 {
@@ -34,10 +36,4 @@ class TestLead extends Model
 		return $this->hasMany(TestTask::class, 'WhoId');
 	}
 
-    public static function booted()
-    {
-        static::creating(function ($lead) {
-            $lead->Phone = '1231231234';
-        });
-    }
 }

@@ -4,7 +4,7 @@ namespace Lester\EloquentSalesForce\Tests;
 
 use Orchestra\Testbench\TestCase;
 use Lester\EloquentSalesForce\Facades\SalesForce;
-use Lester\EloquentSalesForce\TestLead;
+use Lester\EloquentSalesForce\Tests\Fixtures\TestLead;
 
 class ModelTest extends TestCase
 {
@@ -14,9 +14,18 @@ class ModelTest extends TestCase
     {
         SalesForce::fake();
 
-        $lead = TestLead::find('testsfid');
+        $lead = TestLead::get();
 
         SalesForce::assertAuthenticated();
+    }
+
+    public function test_that_model_can_be_found()
+    {
+        SalesForce::fake();
+
+        $lead = TestLead::find('SalesForceIdString');
+
+        $this->assertNotNull($lead);
     }
 
     public function test_that_model_can_be_inserted()
@@ -25,10 +34,27 @@ class ModelTest extends TestCase
 
         $lead = TestLead::create([
             'Email' => fake()->safeEmail(),
-            'Phone' => '1231231234',
+            'Phone' => fake()->e164PhoneNumber(),
             'Company' => 'Test Company',
         ]);
 
         SalesForce::assertModelCreated('Lead', $lead->toArray());
+    }
+
+    public function test_that_model_can_be_updated()
+    {
+        SalesForce::fake();
+
+        $lead = TestLead::create([
+            'Email' => fake()->safeEmail(),
+            'Phone' => fake()->e164PhoneNumber(),
+            'Company' => 'Test Company',
+        ]);
+
+        $lead->Phone = null;
+
+        $lead->save();
+
+        SalesForce::assertModelUpdated('Lead', $lead->toArray());
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lester\EloquentSalesForce;
+namespace Lester\EloquentSalesForce\Tests\Fixtures;
 
 use Illuminate\Database\Eloquent\Model;
 use Lester\EloquentSalesForce\Traits\SyncsWithSalesforce;

@@ -159,7 +159,7 @@ abstract class Model extends EloquentModel
 
         $result = SalesForce::sobjects($object, [
             'method' => 'post',
-            'body' => $attributes
+            'body' => $attributes->toArray()
         ]);
 
         SalesForce::queryHistory()->push(['insert' => $attributes]);
