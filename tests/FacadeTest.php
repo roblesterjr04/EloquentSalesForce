@@ -4,7 +4,7 @@ namespace Lester\EloquentSalesForce\Tests;
 
 use Orchestra\Testbench\TestCase;
 use Lester\EloquentSalesForce\Facades\SalesForce;
-use Lester\EloquentSalesForce\Tests\Fixtures\TestLead;
+use Lester\EloquentSalesForce\Tests\Fixtures\Lead;
 
 class FacadeTest extends TestCase
 {
@@ -14,7 +14,7 @@ class FacadeTest extends TestCase
     {
         SalesForce::fake();
 
-        TestLead::create([]);
+        Lead::create([]);
 
         SalesForce::assertHistoryAltered();
 

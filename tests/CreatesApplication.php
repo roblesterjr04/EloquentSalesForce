@@ -42,7 +42,16 @@ trait CreatesApplication
     {
         parent::setUp();
 
-        Schema::create('test_models', function (Blueprint $table) {
+        Schema::create('leads', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('email')->unique();
+            $table->string('salesforce')->nullable();
+            $table->string('name');
+            $table->string('company');
+            $table->timestamps();
+        });
+
+        Schema::create('synced_leads', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('email')->unique();
             $table->string('salesforce')->nullable();

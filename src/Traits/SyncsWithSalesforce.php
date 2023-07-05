@@ -17,6 +17,21 @@ trait SyncsWithSalesforce
         parent::boot();
 
         self::observe(Syncronizer::class);
+
+    }
+
+    public function initializeSyncsWithSalesforce()
+    {
+        if ($this->canInteract()) {
+            function salesforce() {
+                dd('hi');
+            }
+        }
+    }
+
+    private function canInteract()
+    {
+        return method_exists($this, 'canSync');
     }
 
     public function syncWithSalesforce()
@@ -41,6 +56,11 @@ trait SyncsWithSalesforce
             $this->syncSalesforceToLocal($object);
         }
         return $this->syncLocalToSalesforce();
+    }
+
+    public function syncGetSalesforceAttributes()
+    {
+
     }
 
     public function syncLocalToSalesforce()

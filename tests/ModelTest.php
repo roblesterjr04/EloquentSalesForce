@@ -4,7 +4,8 @@ namespace Lester\EloquentSalesForce\Tests;
 
 use Orchestra\Testbench\TestCase;
 use Lester\EloquentSalesForce\Facades\SalesForce;
-use Lester\EloquentSalesForce\Tests\Fixtures\TestLead;
+use Lester\EloquentSalesForce\Tests\Fixtures\Lead;
+use Lester\EloquentSalesForce\Tests\Fixtures\SyncedLead;
 
 class ModelTest extends TestCase
 {
@@ -14,7 +15,7 @@ class ModelTest extends TestCase
     {
         SalesForce::fake();
 
-        $lead = TestLead::get();
+        $lead = Lead::get();
 
         SalesForce::assertAuthenticated();
     }
@@ -23,7 +24,7 @@ class ModelTest extends TestCase
     {
         SalesForce::fake();
 
-        $lead = TestLead::find('SalesForceIdString');
+        $lead = Lead::find('SalesForceIdString');
 
         $this->assertNotNull($lead);
     }
@@ -32,7 +33,7 @@ class ModelTest extends TestCase
     {
         SalesForce::fake();
 
-        $lead = TestLead::create([
+        $lead = Lead::create([
             'Email' => fake()->safeEmail(),
             'Phone' => fake()->e164PhoneNumber(),
             'Company' => 'Test Company',
@@ -45,7 +46,7 @@ class ModelTest extends TestCase
     {
         SalesForce::fake();
 
-        $lead = TestLead::create([
+        $lead = Lead::create([
             'Email' => fake()->safeEmail(),
             'Phone' => fake()->e164PhoneNumber(),
             'Company' => 'Test Company',
@@ -61,7 +62,7 @@ class ModelTest extends TestCase
     {
         SalesForce::fake();
 
-        $lead = TestLead::create([
+        $lead = Lead::create([
             'Email' => fake()->safeEmail(),
             'Phone' => fake()->e164PhoneNumber(),
             'Company' => 'Test Company',
@@ -70,5 +71,14 @@ class ModelTest extends TestCase
         $lead->delete();
 
         SalesForce::assertModelDeleted('Lead', $lead->toArray());
+    }
+
+    public function test_that_model_can_use_sync_trait()
+    {
+        SalesForce::fake();
+
+        $model = new SyncedLead();
+
+        $this->assertTrue($model->salesforce() !== null);
     }
 }

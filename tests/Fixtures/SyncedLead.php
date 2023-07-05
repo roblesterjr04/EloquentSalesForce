@@ -4,12 +4,13 @@ namespace Lester\EloquentSalesForce\Tests\Fixtures;
 
 use Illuminate\Database\Eloquent\Model;
 use Lester\EloquentSalesForce\Traits\InteractsWithSalesforce;
+use Lester\EloquentSalesForce\Traits\SyncsWithSalesforce;
 
-class TestLead extends Model
+class SyncedLead extends Model
 {
-    use InteractsWithSalesforce;
+    use InteractsWithSalesforce, SyncsWithSalesforce;
 
-	protected $table = 'Lead';
+	protected $salesForceObject = 'Lead';
 
     public $columns = [
         'Custom_Text_Field__c',

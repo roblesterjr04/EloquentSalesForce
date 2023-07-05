@@ -78,6 +78,8 @@ trait InteractsWithSalesforce
      */
     protected function performInsert($query)
     {
+        if ($this->canSync()) return parent::performInsert($query);
+
         if ($this->fireModelEvent('creating') === false) {
             return false;
         }
@@ -141,6 +143,8 @@ trait InteractsWithSalesforce
      */
     protected function performUpdate($query)
     {
+        if ($this->canSync()) return parent::performUpdate($query);
+
         // If the updating event returns false, we will cancel the update operation so
         // developers can hook Validation systems into their models and cancel this
         // operation if the model does not pass validation. Otherwise, we update.
@@ -182,8 +186,8 @@ trait InteractsWithSalesforce
 
     private function sfObject()
     {
-        /** @scrutinizer ignore-call */
-        return Arr::has($this->attributes, 'Id') ? $this->table . '/' . $this->Id : $this->table;
+        $table = $this->salesForceObject ?: $this->table;
+        return Arr::has($this->attributes, 'Id') ? $table . '/' . $this->Id : $this->table;
     }
 
     private function sfMethod()
@@ -199,12 +203,17 @@ trait InteractsWithSalesforce
      */
     public function newEloquentBuilder($query)
     {
-        if (method_exists($this, 'syncWithSalesforce')) {
+        if ($this->canSync()) {
             return parent::newEloquentBuilder($query);
         }
         /** @scrutinizer ignore-call */
         SalesForce::authenticate();
         return new Builder($query);
+    }
+
+    public function canSync()
+    {
+        return method_exists($this, 'syncWithSalesforce');
     }
 
     /**
