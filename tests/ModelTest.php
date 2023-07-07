@@ -6,6 +6,7 @@ use Orchestra\Testbench\TestCase;
 use Lester\EloquentSalesForce\Facades\SalesForce;
 use Lester\EloquentSalesForce\Tests\Fixtures\Lead;
 use Lester\EloquentSalesForce\Tests\Fixtures\SyncedLead;
+use Lester\EloquentSalesForce\Tests\Fixtures\TestModel;
 
 class ModelTest extends TestCase
 {
@@ -77,8 +78,23 @@ class ModelTest extends TestCase
     {
         SalesForce::fake();
 
-        $model = new SyncedLead();
+        /*TestModel::create([
+            'email' => fake()->safeEmail(),
+            'name' => fake()->name(),
+            'company' => fake()->company(),
+        ]);*/
 
-        $this->assertTrue($model->salesforce() !== null);
+        $email = fake()->safeEmail();
+        $model = new SyncedLead();
+        $model->email = $email;
+        $model->name = fake()->name();
+        $model->company = fake()->company();
+        $model->save();
+
+        $this->assertTrue($model->syncWith() !== null);
+        $this->assertEquals($email, $model->refresh()->email);
+
+        Salesforce::assertModelCreated("Lead", $model->syncWith()->toArray());
+
     }
 }

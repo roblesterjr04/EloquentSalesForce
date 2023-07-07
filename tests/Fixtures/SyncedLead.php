@@ -12,7 +12,11 @@ class SyncedLead extends Model
 
 	protected $salesForceObject = 'Lead';
 
-    public $columns = [
+    protected $salesForceFieldMap = [
+        'Email' => 'email',
+    ];
+
+    /*public $columns = [
         'Custom_Text_Field__c',
         'Email',
         'FirstName',
@@ -38,6 +42,6 @@ class SyncedLead extends Model
     public function tasks()
 	{
 		return $this->hasMany(TestTask::class, 'WhoId');
-	}
+	}*/
 
 }

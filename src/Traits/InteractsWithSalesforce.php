@@ -23,6 +23,7 @@ trait InteractsWithSalesforce
 
     public function initializeInteractsWithSalesforce()
     {
+        if ($this->canSync()) return;
         if (isset($attributes['Id'])) {
             $this->exists = true;
         }
@@ -34,7 +35,7 @@ trait InteractsWithSalesforce
     private function sfAttributesHeader()
     {
         return [
-            'type' => $this->table
+            'type' => $this->table,
         ];
     }
 
@@ -46,6 +47,7 @@ trait InteractsWithSalesforce
 
     public function delete()
     {
+        if ($this->canSync()) return parent::delete();
 
         if ($this->fireModelEvent('deleting') === false) {
             return false;
@@ -304,6 +306,7 @@ trait InteractsWithSalesforce
      */
     public function getForeignKey()
     {
+        if ($this->canSync()) return parent::getForeignKey();
         return Str::camel(class_basename($this) . '_' . $this->getKeyName());
     }
 

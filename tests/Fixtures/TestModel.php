@@ -12,6 +12,8 @@ class TestModel extends Model
 
     protected $salesForceObject = 'Lead';
 
+    protected $table = 'leads';
+
     protected $fillable = [
         'email',
         'name',

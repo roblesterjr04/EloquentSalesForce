@@ -12,21 +12,20 @@ trait SyncsWithSalesforce
 {
     private $tempSyncObject = null;
 
-    public static function boot()
+    public static function bootSyncsWithSalesforce()
     {
-        parent::boot();
-
-        self::observe(Syncronizer::class);
+        static::observe(Syncronizer::class);
 
     }
 
     public function initializeSyncsWithSalesforce()
     {
-        if ($this->canInteract()) {
-            function salesforce() {
-                dd('hi');
-            }
-        }
+
+    }
+
+    public function syncWith()
+    {
+        return $this->syncTempObject();
     }
 
     private function canInteract()
