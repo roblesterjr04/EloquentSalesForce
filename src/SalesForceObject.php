@@ -2,8 +2,13 @@
 
 namespace Lester\EloquentSalesForce;
 
+use Illuminate\Database\Eloquent\Model;
+use Lester\EloquentSalesForce\Traits\InteractsWithSalesforce;
+
 class SalesForceObject extends Model
 {
+    use InteractsWithSalesforce;
+
     public $columns = [
         'Id',
     ];

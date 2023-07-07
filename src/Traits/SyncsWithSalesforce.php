@@ -11,6 +11,7 @@ use Lester\EloquentSalesForce\SalesForceObject;
 trait SyncsWithSalesforce
 {
     private $tempSyncObject = null;
+    public $shouldSync = true;
 
     public static function bootSyncsWithSalesforce()
     {
@@ -62,6 +63,12 @@ trait SyncsWithSalesforce
 
     }
 
+    public function shouldNotSync()
+    {
+        $this->shouldSync = false;
+        return $this;
+    }
+
     public function syncLocalToSalesforce()
     {
         $sfModel = new SalesForceObject([
@@ -75,6 +82,7 @@ trait SyncsWithSalesforce
             ],
             $this->getSalesforceSyncedValues()
         );
+
         $this->{$this->getSalesforceIdField()} = $sfModel->Id;
 
         return $this;

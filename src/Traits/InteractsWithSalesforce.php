@@ -24,6 +24,7 @@ trait InteractsWithSalesforce
     public function initializeInteractsWithSalesforce()
     {
         if ($this->canSync()) return;
+
         if (isset($attributes['Id'])) {
             $this->exists = true;
         }
@@ -80,10 +81,14 @@ trait InteractsWithSalesforce
      */
     protected function performInsert($query)
     {
-        if ($this->canSync()) return parent::performInsert($query);
+        //if ($this->canSync()) return parent::performInsert($query);
 
         if ($this->fireModelEvent('creating') === false) {
             return false;
+        }
+
+        if ($this->fireModelEvent('creating') === 'sync') {
+            return parent::performInsert($query);
         }
 
         // If the model has an incrementing key, we can use the "insertGetId" method on
@@ -145,13 +150,17 @@ trait InteractsWithSalesforce
      */
     protected function performUpdate($query)
     {
-        if ($this->canSync()) return parent::performUpdate($query);
+        //if ($this->canSync()) return parent::performUpdate($query);
 
         // If the updating event returns false, we will cancel the update operation so
         // developers can hook Validation systems into their models and cancel this
         // operation if the model does not pass validation. Otherwise, we update.
         if ($this->fireModelEvent('updating') === false) {
             return false;
+        }
+
+        if ($this->fireModelEvent('updating') === 'sync') {
+            return parent::performInsert($query);
         }
 
         // Once we have run the update operation, we will fire the "updated" event for

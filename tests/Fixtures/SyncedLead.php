@@ -14,6 +14,7 @@ class SyncedLead extends Model
 
     protected $salesForceFieldMap = [
         'Email' => 'email',
+        'Phone' => 'phone',
     ];
 
     /*public $columns = [

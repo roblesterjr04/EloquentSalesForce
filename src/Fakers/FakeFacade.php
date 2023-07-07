@@ -25,7 +25,7 @@ class FakeFacade
 
     public function sobjects($object, $arguments = null)
     {
-
+        dump($object);
         $id = Str::contains($object, '/') ? Str::after($object, '/') : Str::random(18);
         $response = [
             'success' => true,
@@ -149,10 +149,7 @@ class FakeFacade
 
     public function assertModelCreated($object, $arguments = [])
     {
-        if (empty($this->commands['post' . $object])) {
-            PHPUnit::assertTrue(false);
-            return false;
-        }
+        PHPUnit::assertArrayHasKey('post' . $object, $this->commands);
 
         $requestParameters = $this->commands['post' . $object];
         $method = $requestParameters['method'];
@@ -162,13 +159,23 @@ class FakeFacade
 
     }
 
+    public function assertModelUpdatedOrCreated($object, $arguments = [])
+    {
+        dump($this->commands);
+
+        PHPUnit::assertArrayHasKey('patch' . $object . '/', $this->commands);
+
+        $requestParameters = $this->commands['patch' . $object . '/'];
+        $method = $requestParameters['method'];
+        $body = $requestParameters['body'];
+
+        PHPUnit::assertTrue($method == 'patch' && $body == $arguments);
+    }
+
     public function assertModelUpdated($object, $arguments = [])
     {
         $id = $arguments['Id'] ?? '';
-        if (empty($this->commands['patch' . "$object/$id"])) {
-            PHPUnit::assertTrue(false);
-            return false;
-        }
+        PHPUnit::assertArrayHasKey('patch' . "$object/$id", $this->commands);
 
         $requestParameters = $this->commands['patch' . "$object/$id"];
         $method = $requestParameters['method'];
