@@ -23,10 +23,17 @@ class FakeFacade
         $this->history = collect([]);
     }
 
+    private function fakeSalesforceId()
+    {
+        dump('new id');
+        return Str::random(18);
+    }
+
     public function sobjects($object, $arguments = null)
     {
-        dump($object);
-        $id = Str::contains($object, '/') ? Str::after($object, '/') : Str::random(18);
+
+        $id = Str::contains($object, '/') ? Str::after($object, '/') : $this->fakeSalesforceId();
+
         $response = [
             'success' => true,
             'id' => $id,
@@ -108,7 +115,7 @@ class FakeFacade
     private function fakeRecord()
     {
         return [
-            'Id' => Str::random(18),
+            'Id' => 'JaBINGZyEF2mZ2tJcA',
             'Email' => fake()->safeEmail(),
             'Phone' => fake()->e164PhoneNumber(),
             'Company' => fake()->company(),
@@ -161,13 +168,16 @@ class FakeFacade
 
     public function assertModelUpdatedOrCreated($object, $arguments = [])
     {
-        dump($this->commands);
 
-        PHPUnit::assertArrayHasKey('patch' . $object . '/', $this->commands);
+        $id = $arguments['Id'] ?? '';
+        PHPUnit::assertArrayHasKey('patch' . "$object/$id", $this->commands);
 
-        $requestParameters = $this->commands['patch' . $object . '/'];
+        $requestParameters = $this->commands['patch' . "$object/$id"];
         $method = $requestParameters['method'];
         $body = $requestParameters['body'];
+
+        dump($body);
+        dump($arguments);
 
         PHPUnit::assertTrue($method == 'patch' && $body == $arguments);
     }

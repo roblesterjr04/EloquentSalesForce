@@ -8,12 +8,11 @@ use Lester\EloquentSalesForce\Traits\SyncsWithSalesforce;
 
 class SyncedLead extends Model
 {
-    use InteractsWithSalesforce, SyncsWithSalesforce;
+    use SyncsWithSalesforce;
 
 	protected $salesForceObject = 'Lead';
 
     protected $salesForceFieldMap = [
-        'Email' => 'email',
         'Phone' => 'phone',
     ];
 

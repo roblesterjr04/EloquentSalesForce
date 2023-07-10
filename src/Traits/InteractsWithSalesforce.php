@@ -7,6 +7,7 @@ use Log;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Lester\EloquentSalesForce\LocalModel;
 //use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Lester\EloquentSalesForce\Database\SOQLBuilder as Builder;
 use Lester\EloquentSalesForce\Database\SOQLHasMany as HasMany;
@@ -16,6 +17,8 @@ use Lester\EloquentSalesForce\Facades\SalesForce;
 trait InteractsWithSalesforce
 {
 
+    private $localModel;
+
     public static function bootInteractsWithSalesforce()
     {
         static::$unguarded = true;
@@ -23,6 +26,8 @@ trait InteractsWithSalesforce
 
     public function initializeInteractsWithSalesforce()
     {
+        $this->localModel = new LocalModel();
+
         if ($this->canSync()) return;
 
         if (isset($attributes['Id'])) {
@@ -160,7 +165,7 @@ trait InteractsWithSalesforce
         }
 
         if ($this->fireModelEvent('updating') === 'sync') {
-            return parent::performInsert($query);
+            return parent::performUpdate($query);
         }
 
         // Once we have run the update operation, we will fire the "updated" event for
