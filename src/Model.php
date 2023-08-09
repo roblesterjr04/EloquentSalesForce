@@ -220,11 +220,7 @@ abstract class Model extends EloquentModel
             $object = $this->sfObject();
 
             // The user can set this property on it's models to set some custom value for the headers
-            if (count($this->custom_headers) > 0) {
-                $headers = $this->custom_headers;
-            } else {
-                $headers = null;
-            }
+            $headers = $this->custom_headers ?: null;
 
             $result = SObjects::sobjects($object, [
                 'method' => 'patch',
