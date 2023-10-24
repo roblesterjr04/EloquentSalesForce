@@ -25,6 +25,8 @@ abstract class Model extends EloquentModel
         'LastModifiedDate',
     ];
 
+    public $custom_headers = [];
+
     //public $timestamps = false;
 
     /**
@@ -217,9 +219,13 @@ abstract class Model extends EloquentModel
             SObjects::authenticate();
             $object = $this->sfObject();
 
+            // The user can set this property on it's models to set some custom value for the headers
+            $headers = $this->custom_headers ?: null;
+
             $result = SObjects::sobjects($object, [
                 'method' => 'patch',
                 'body' => $dirty->toArray(),
+                'headers' => $headers
             ]);
 
             SObjects::queryHistory()->push(['update' => $dirty->toArray()]);
