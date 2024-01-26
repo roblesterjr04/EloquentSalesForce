@@ -156,7 +156,7 @@ class SOQLConnection extends Connection
             } else if (is_bool($value)) {
                 $bindings[$key] = $value ? 'TRUE' : 'FALSE';
             } else if (is_string($value) {
-            	$bindings[$key] = Str::of($value)->replace("'", "\'");
+            	$bindings[$key] = Str::replace("'", "\'", $value);
             }
         }
 
