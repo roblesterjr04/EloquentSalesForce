@@ -155,6 +155,8 @@ class SOQLConnection extends Connection
                 $bindings[$key] = $value->format($grammar->getDateFormat());
             } else if (is_bool($value)) {
                 $bindings[$key] = $value ? 'TRUE' : 'FALSE';
+            } else if (is_string($value) {
+            	$bindings[$key] = Str::of($value)->replace("'", "\'");
             }
         }
 
