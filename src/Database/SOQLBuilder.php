@@ -66,13 +66,13 @@ class SOQLBuilder extends Builder
         $columns = implode(', ', $this->describe());
         $query = str_replace('*', $columns, parent::toSql());
 		$query = str_replace('`', '', $query);
-        
+
         $bindings = array_map(
             fn ($value) => Str::replace("'", "\'", $value),
             $this->getBindings()
         );
         $prepared = Str::replaceArray('?', $bindings, $query);
-        
+
 		return $prepared;
 	}
 
@@ -110,8 +110,13 @@ class SOQLBuilder extends Builder
 
 	/**
 	 * {@inheritDoc}
-	 */
-	public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
+     * @param null $perPage
+     * @param array|string|string[] $columns
+     * @param string $pageName
+     * @param null $page
+     * @param null $total
+     */
+	public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null, $total = null)
 	{
 		$columns = $this->getSalesForceColumns($columns);
 
