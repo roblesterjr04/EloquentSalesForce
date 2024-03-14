@@ -746,7 +746,7 @@ class EloquentSalesForceTest extends TestCase
 				    ],
 
 				    /*
-				     * If you'd like to specify an API version manually it can be done here.
+				     * If you'd like to specify an API version manually, it can be done here.
 				     * Format looks like '32.0'
 				     */
 				    'version'        => '',

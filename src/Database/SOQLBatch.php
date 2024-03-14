@@ -80,7 +80,7 @@ class SOQLBatch extends Collection
         if ($this->isEmpty()) return $this;
         $chunkSize = config('eloquent_sf.batch.select.size', 25);
         if ($chunkSize > 25) {
-            \SObjects::log('Salesforce will only allow select batchs of 25 queries.', [], 'warn');
+            \SObjects::log('Salesforce will only allow select batches of 25 queries.', [], 'warn');
         }
 
         $version = config('eloquent_sf.forrest.version') ?: 'v' . collect(\SObjects::versions())->last()['version'];

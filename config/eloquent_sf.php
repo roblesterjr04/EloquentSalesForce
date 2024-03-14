@@ -20,8 +20,8 @@ return [
         'User',
     ],
 
-    'syncTwoWay' => false, // Indicate if you want SF changes to feed back to your local database. Otherwise it is a one-way sync. local->salesforce
-    'syncPriority' => 'salesforce', // If there is a conflict, noteablly a dirty local model when an inbound sync is occuring, ElSF will prefer this setting: 'salesforce' or 'local' or 'exception' or 'silent'
+    'syncTwoWay' => false, // Indicate if you want SF changes to feed back to your local database. Otherwise, it is a one-way sync. local->salesforce
+    'syncPriority' => 'salesforce', // If there is a conflict, notably a dirty local model when an inbound sync is occurring, ElSF will prefer this setting: 'salesforce' or 'local' or 'exception' or 'silent'
     'syncTwoWayModels' => [
 
     ],
@@ -71,7 +71,7 @@ return [
 		],
 
 		/*
-	     * If you'd like to specify an API version manually it can be done here.
+	     * If you'd like to specify an API version manually, it can be done here.
 	     * Format looks like '32.0'
 	     */
 		'version'        => '',

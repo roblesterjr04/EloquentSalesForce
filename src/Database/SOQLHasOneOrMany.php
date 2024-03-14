@@ -52,7 +52,7 @@ abstract class SOQLHasOneOrMany extends Relation
 	}
 
 	/**
-	 * Create and return an un-saved instance of the related model.
+	 * Create and return an unsaved instance of the related model.
 	 *
 	 * @param  array  $attributes
 	 * @return \Illuminate\Database\Eloquent\Model
@@ -128,7 +128,7 @@ abstract class SOQLHasOneOrMany extends Relation
 	{
 		$dictionary = $this->buildDictionary($results);
 
-		// Once we have the dictionary we can simply spin through the parent models to
+		// Once we have the dictionary, we can simply spin through the parent models to
 		// link them up with their children using the keyed dictionary to make the
 		// matching very convenient and easy work. Then we'll just return them.
 		foreach ($models as $model) {
@@ -425,7 +425,7 @@ abstract class SOQLHasOneOrMany extends Relation
 	}
 
 	/**
-	 * Get default key for the relationship
+	 * Get the default key for the relationship
 	 *
 	 * @param  [type] $model [description]
 	 * @return [type]        [description]
