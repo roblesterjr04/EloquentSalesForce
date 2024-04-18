@@ -121,8 +121,8 @@ class SOQLConnection extends Connection
 				$e, $query, $bindings, $callback
 			);
 		}
-		// Once we have run the query we will calculate the time that it took to run and
-		// then log the query, bindings, and execution time so we will report them on
+		// Once we have run the query, we will calculate the time that it took to run and
+		// then log the query, bindings, and execution time, so we will report them on
 		// the event that the developer needs them. We'll log time in milliseconds.
 		$this->logQuery(
 			$query, $bindings, $this->getElapsedTime($start)
@@ -149,7 +149,7 @@ class SOQLConnection extends Connection
 
         foreach ($bindings as $key => $value) {
             // We need to transform all instances of DateTimeInterface into the actual
-            // date string. Each query grammar maintains its own date string format
+            // date string. Each query grammar maintains its own date string format,
             // so we'll just ask the grammar for the format to get from the date.
             if ($value instanceof DateTimeInterface) {
                 $bindings[$key] = $value->format($grammar->getDateFormat());
