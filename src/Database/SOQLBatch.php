@@ -106,10 +106,7 @@ class SOQLBatch extends Collection
                 if ($batch_result['statusCode'] != 200) {
                     $batch->results = (object)$batch_result;
                 } else {
-                    $batch->results = collect($batch_result['result']['records'])->map(function($item) use ($batch) {
-                        $model = $batch->class;
-                        return new $model($item);
-                    });
+                    $batch->results = $batch->builder->hydrate($batch_result['result']['records']);
                 }
                 $this->put($key, $batch);
                 $index++;
