@@ -175,7 +175,7 @@ class SObjects
 	 * @param  [type] $field  [description]
 	 * @return [type]         [description]
 	 */
-	public function getPicklistValues($object, $field)
+	public static function getPicklistValues($object, $field)
 	{
 		Forrest::authenticate();
 		$desc = Forrest::sobjects($object . '/describe');
