@@ -77,7 +77,7 @@ You can find the config file in: `config/eloquent_sf.php`. Any of the same setti
 Create a model for the object you want to use, example:
 
 ```bash
-artisan make:model Lead
+php artisan make:model Lead
 ```
 
 Open the model file, it will look like this:
@@ -113,7 +113,7 @@ class Lead extends Model
 You can also use the new artisan command:
 
 ```bash
-artisan make:salesforce Lead
+php artisan make:salesforce Lead
 ```
 
 This will generate the model as you see above without any changes necessary
@@ -374,7 +374,7 @@ $statusValues = $lead->getPicklistValues('Status');
 $statusValue = SObjects::getPicklistValues('Lead', 'Status');
 ```
 
-## Local Sync (NEW!)
+## Local Sync
 
 A new trait has been created to make it simple to keep a local DB model in sync with a salesforce object.
 
@@ -383,7 +383,7 @@ Use this if you want to keep a local table, or just some fields, in sync with an
 ```php
 <?php
 
-namespace Lester\EloquentSalesForce;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Lester\EloquentSalesForce\Traits\SyncsWithSalesforce;
@@ -446,6 +446,7 @@ If you need to perform more complex data manipulation when syncing, just use mut
     $this->attributes['name'] = implode(' ', $nameParts);
   }
 ```
+In your `src/Console/SyncFromSalesforce.php` file you will also see an illustration for using SyncFromSalesforce to synchronize all objects in all models specified for 2way synchronization in your `config/eloquent_sf.php` file in the array 'syncTwoWayModels'. 
 
 ## Custom Objects
 
