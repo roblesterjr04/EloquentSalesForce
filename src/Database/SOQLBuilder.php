@@ -84,12 +84,15 @@ class SOQLBuilder extends Builder
 		if (count($this->model->columns) &&
 			in_array('*', $columns)) {
 			$cols = $this->model->columns;
-            if (!in_array('CreatedDate', $cols)) $cols[] = 'CreatedDate';
-            if (!in_array('LastModifiedDate', $cols)) $cols[] = 'LastModifiedDate';
 
-            if (!in_array($this->model->getTable(), config('eloquent_sf.noSoftDeletesOn', ['User'])) &&
-                !in_array('IsDeleted', $cols)) $cols[] = 'IsDeleted';
-
+            // Check if the timestamps system exist or is not disable
+			if (!property_exists($this->model, 'timestamps') || $this->model->timestamps) {
+                if (!in_array('CreatedDate', $cols)) $cols[] = 'CreatedDate';
+                if (!in_array('LastModifiedDate', $cols)) $cols[] = 'LastModifiedDate';
+    
+                if (!in_array($this->model->getTable(), config('eloquent_sf.noSoftDeletesOn', ['User'])) &&
+                    !in_array('IsDeleted', $cols)) $cols[] = 'IsDeleted';
+            }
 		} else {
 			$cols = $this->getSalesForceColumns($columns);
 		}
