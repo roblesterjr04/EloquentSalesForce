@@ -35,6 +35,21 @@ class EloquentSalesForceTest extends TestCase
 
     private $lead;
 
+    public function testStringEscapesSingleQuotes()
+    {
+        $lead = TestLead::create([
+            'FirstName' => 'Sinead',
+            'LastName' => "O'Connor",
+            'Company' => 'Test',
+            'Email' => 'test@test.com',
+            'Custom_Text_Field__c' => '009',
+        ]);
+
+        $freshLead = $lead->where('LastName', "O'Connor")->latest()->first();
+
+        $this->assertEquals($lead->Id, $freshLead->Id);
+    }
+
     public function testStringType()
     {
         $lead = TestLead::create([
