@@ -7,6 +7,7 @@ class TestTask extends Model
 	protected $table = 'Task';
 
     public $columns = [
+    	'Id',
         'WhoId',
         'Subject',
     ];
