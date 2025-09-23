@@ -28,7 +28,7 @@ class SOQLBuilder extends Builder
         //$pdo = new \Illuminate\Database\PDO\Connection($pdo);
 
 		$query->connection = new SOQLConnection();
-		$query->grammar = new SOQLGrammar();
+        $query->grammar = new SOQLGrammar($query->connection);
         $query->connection->setGrammar($query->grammar);
 
 		parent::__construct($query);
